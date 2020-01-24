@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.*?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgame.editor.GameEditorFXMLController">
+    <stylesheets>
+        <URL value="@/CSS/editorStyle.css" />
+    </stylesheets>
+    <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#newGameButonClick" text="New game" />
+              <MenuItem mnemonicParsing="false" onAction="#loadButtonClick" text="Load game" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveButtonClick" text="Save game" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Settings">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <Accordion prefHeight="723.0" prefWidth="247.0" BorderPane.alignment="CENTER">
+        <panes>
+          <TitledPane animated="false" prefHeight="643.0" prefWidth="87.0" text="Rooms">
+               <content>
+                  <VBox alignment="TOP_CENTER" prefHeight="611.0" prefWidth="0.0">
+                     <children>
+                        <Button fx:id="addRoomButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewRoom" prefHeight="31.0" prefWidth="238.0" text="+Add new room" />
+                        <ListView fx:id="allRoomListView" onDragDetected="#roomListViewOnDragDetected" prefHeight="532.0" prefWidth="221.0" />
+                     </children>
+                  </VBox>
+               </content>
+          </TitledPane>
+          <TitledPane animated="false" text="Items">
+               <content>
+                  <VBox>
+                     <children>
+                        <Button fx:id="addItempButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewItem" prefHeight="31.0" prefWidth="236.0" text="+Add new item" />
+                        <ListView fx:id="allItemListView" onDragDetected="#itemListViewOnDragDetected" prefHeight="532.0" prefWidth="221.0" />
+                     </children>
+                  </VBox>
+               </content>
+          </TitledPane>
+          <TitledPane animated="false" text="Static Objects">
+               <content>
+                  <VBox>
+                     <children>
+                        <Button fx:id="addItempButton1" alignment="CENTER" mnemonicParsing="false" onAction="#addNewStaticObject" prefHeight="31.0" prefWidth="236.0" text="+Add new static object" />
+                        <ListView fx:id="allStaticObjectListView" onDragDetected="#staticObjectListViewOnDragDetected" prefHeight="532.0" prefWidth="221.0" />
+                     </children>
+                  </VBox>
+               </content>
+          </TitledPane>
+            <TitledPane animated="false" text="Event Listeners">
+               <content>
+                  <VBox>
+                     <children>
+                        <Button fx:id="addItempButton2" alignment="CENTER" mnemonicParsing="false" onAction="#addNewEventListener" prefHeight="31.0" prefWidth="236.0" text="+Add new event listener" />
+                        <ListView fx:id="allEventListenerListView" prefHeight="532.0" prefWidth="221.0" />
+                     </children>
+                  </VBox>
+               </content>
+            </TitledPane>
+            <TitledPane animated="false" onDragDetected="#OptionListViewOnDragDetected" text="Options">
+               <content>
+                  <VBox>
+                     <children>
+                        <Button fx:id="addOptionButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewOption" prefHeight="31.0" prefWidth="236.0" text="+Add option" />
+                        <ListView fx:id="allOptionsListView" onDragDetected="#OptionListViewOnDragDetected" prefHeight="532.0" prefWidth="221.0" />
+                     </children>
+                  </VBox>
+               </content>
+            </TitledPane>
+        </panes>
+      </Accordion>
+   </left>
+   <right>
+      <ScrollPane hbarPolicy="NEVER" prefViewportHeight="736.0" prefViewportWidth="350.0">
+         <content>
+            <AnchorPane prefHeight="736.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label id="headline" alignment="CENTER" text="Inspector" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <StackPane layoutY="65.0" prefHeight="701.0" prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-52.0" AnchorPane.topAnchor="35.0">
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
+                     <children>
+                        <VBox fx:id="StaticObjectInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Static Object">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Static Object id:" underline="true" />
+                                    <Label fx:id="selectedStaticObjectIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedStaticObjectName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedStaticObjectDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Options:" underline="true" />
+                                    <ListView fx:id="selectedStaticObjectOptions" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="ItemInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false" StackPane.alignment="TOP_CENTER">
+                           <children>
+                              <Label text="Item">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Item id:" underline="true" />
+                                    <Label fx:id="selectedItemIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedItemName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedItemDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="roomInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Room">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Room id:" underline="true" />
+                                    <Label fx:id="selectedRoomIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedRoomName" onAction="#updateInspectedRoomName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Image" underline="true" />
+                                    <ImageView fx:id="roomImageView" fitHeight="156.0" fitWidth="344.0" onDragDropped="#RoomImageViewOnDragDropped" onDragOver="#RoomImageViewOnDragOver" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedRoomDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Items in room:" underline="true" />
+                                    <ListView fx:id="itemsInRoomInspectorListView" onDragDropped="#itemsInRoomListViewOnDragDropped" onDragOver="#itemsInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Paths to rooms:" underline="true" />
+                                    <ListView fx:id="roomInspectorPathsListView" onDragDropped="#roomPathListViewOnDragDropped" onDragOver="#roomPathsListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Static objects in room:" underline="true" />
+                                    <ListView fx:id="roomInspectorStaticObjectListView" onDragDropped="#staticObjectInRoomListViewOnDragDropped" onDragOver="#staticObjectInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Option in room:" underline="true" />
+                                    <ListView fx:id="roomInspectorOptionListView" onDragDropped="#OptionInRoomListViewOnDragDropped" onDragOver="#OptionInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Event Listener">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Event listener id:" underline="true" />
+                                    <Label fx:id="selectedEventListenerIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Name: " underline="true" />
+                                    <TextField fx:id="selectedEventListenerName" onAction="#updateInspectedEventListenerName" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Enabled: " underline="true" />
+                                    <CheckBox fx:id="eventListenerEnabledCheckBox" mnemonicParsing="false" onAction="#selectedEventListenerEnabledChecked" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Listens for: " underline="true" />
+                                    <ChoiceBox fx:id="selectedEventListenerListensFor" onAction="#selectedEventListenerListensForChoice" prefWidth="150.0" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Expects: " underline="true" />
+                                    <StackPane alignment="TOP_LEFT">
+                                       <children>
+                                          <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" />
+                                          <ChoiceBox fx:id="inspectedGameEventListenerExpects_ChoiceBox" prefWidth="150.0" visible="false" />
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </HBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Actions: " underline="true" />
+                                    <ListView fx:id="selectedEvenListenerActions" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addActionToSelectedEventListener" mnemonicParsing="false" onAction="#addNewActionToSelectedEventListener" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="OptionInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Option">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Option ID:" underline="true" />
+                                    <Label fx:id="inspectedOptionIDLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Label: " underline="true" />
+                                    <TextField fx:id="InspectedOptionLabel" onAction="#updateInspectedEventListenerName" />
+                                 </children>
+                              </HBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Actions: " underline="true" />
+                                    <ListView fx:id="inspectedOptionActions" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addActionToSelectedEventListener1" mnemonicParsing="false" onAction="#addNewActionToOption" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </StackPane>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </right>
+   <center>
+      <ScrollPane fx:id = "centerScrollPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <content>
+          <StackPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1000.0" StackPane.alignment="CENTER"/>
+        </content>
+      </ScrollPane>
+   </center>
+</BorderPane>

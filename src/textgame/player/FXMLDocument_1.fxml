@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgameplayer.FXMLDocumentController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Game">
+               <items>
+                  <MenuItem fx:id="load_button" mnemonicParsing="false" onAction="#loadButtonClick" text="Load game" />
+                  <MenuItem fx:id="save_button" mnemonicParsing="false" onAction="#saveButtonClick" text="Save game" />
+                  <MenuItem fx:id="start_game_button" mnemonicParsing="false" onAction="#startGame" text="New game" />
+               </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <content>
+            <VBox fx:id="optionBox" />
+         </content>
+      </ScrollPane>
+   </bottom>
+   <center>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="168.0" prefWidth="298.0">
+               <content>
+                  <VBox cacheShape="false" prefHeight="168.0" prefWidth="292.0">
+                     <children>
+                        <Label fx:id="room_label" text="Room name">
+                           <font>
+                              <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="describtion_text" text="This is a room description. Blah blah blah blah blah blah." wrapText="true" />
+                        <Label fx:id="info_line" text="Info line" textAlignment="CENTER">
+                           <font>
+                              <Font name="System Italic" size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <ImageView fx:id="imageView" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
