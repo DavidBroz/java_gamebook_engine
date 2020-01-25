@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemoveItemFromRoom extends Action {
+public class RemoveItemFromRoom implements Action {
     private Item whatToRemove;
     private Room whereToRemove;
 
@@ -23,7 +23,7 @@ public class RemoveItemFromRoom extends Action {
 
     @Override
     public void act() {
-        whereToRemove.removeItemFromRoom(whatToRemove, true);
+        whereToRemove.removeItem(whatToRemove, true);
     }
 
     @Override

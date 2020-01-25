@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class ChangeRoomName extends Action {
+public class ChangeRoomName implements Action {
     private Room whatToChange;
     private String newName;
 

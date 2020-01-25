@@ -11,7 +11,7 @@ import textgame.structure.GameEventListener;
  *
  * @author David Brož
  */
-public class DisableGameEventListener extends Action{
+public class DisableGameEventListener implements Action{
     private GameEventListener whatToDisable;
 
     public DisableGameEventListener(GameEventListener whatToDisable) {

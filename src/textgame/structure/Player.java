@@ -5,63 +5,51 @@
  */
 package textgame.structure;
 
-import textgame.structure.gameEvents.GameEvent;
 import java.util.ArrayList;
-import textgame.structure.gameEvents.GameEvent.GameEventType;
+import java.util.HashMap;
+import java.util.Map;
+import textgame.structure.gameEvents.ItemAddedToInventory;
+import textgame.structure.gameEvents.ItemRemovedFromInventory;
+import textgame.structure.gameEvents.PlayerEnteredRoom;
+import textgame.structure.gameEvents.PlayerLeftRoom;
 /**
  *
  * @author David Brož
  */
 public class Player implements java.io.Serializable {
     private Room currentRoom;
-    public int inventorySize = 10;
-    public ArrayList<Item> inventory;
-    public int maxHealth = 100;
-    public int currentHealth = 100;
+    private ArrayList<Item> inventory;
+    private HashMap<String,Integer> customValues;
+    private ArrayList<Option> playerOptions;
     
     public Player(){
         inventory = new ArrayList();
+        customValues = new HashMap<>();
+        playerOptions = new ArrayList();
     }
     
     public void MovePlayer(Room where){
+        Game.getInstance().throwGameEvent(new PlayerLeftRoom(currentRoom));
         currentRoom = where;
-        //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.PLAYER_MOVED,Integer.toString(where.getId())));
+        Game.getInstance().throwGameEvent(new PlayerEnteredRoom(where));  
     }
     
-    public boolean ItemPickUp(int item_id){
-        
-        if(inventorySize > inventory.size()){
-            System.out.println("ITEM PICKED UP -- ID: "+item_id);
-            inventory.add(Game.getInstance().getItemWithID(item_id));
-             Game.getInstance().setInfo_line("Sbral jsi "+  Game.getInstance().getItemWithID(item_id).getName());
-             Game.getInstance().removeItemWithID(item_id);
-            //System.out.println("PLAYER: THROWING EVENT "+ GameEventType.ITEM_PICKED.toString());
-            //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.ITEM_PICKED,Integer.toString(item_id)));
-            return true;
-        }else {
-            System.out.println("INVENTORY FULL");
-            //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.INVENTORY_FULL,Integer.toString(inventory.size())));
-            return false;
-        }
-    }
     public void AddItemToPlayer(Item item_to_add){
         inventory.add(item_to_add);
     }
     public void RemoveItem(Item itemToRemove){
         if(inventory.contains(itemToRemove)){
             inventory.remove(itemToRemove);
-            //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.ITEM_REMOVED, Integer.toString(itemToRemove.getId())));
+            Game.getInstance().throwGameEvent(new ItemRemovedFromInventory(itemToRemove));
         }
+    }
+    public boolean hasItem(Item item){
+        for(Item i: inventory){
+            if(i==item)return true;
+        }
+        return false;
     }
     
-    public void ChangeHealth(int amount){
-        currentHealth += amount;
-        //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.HEALTH_CHANGED, Integer.toString(amount)));
-        if(currentHealth<=0){
-            //Game.getInstance().throwGameEvent(new GameEvent(GameEventType.DEATH,""));
-        }
-    }
-
     public String inventoryToSting() {
         StringBuilder sb = new StringBuilder();
             sb.append("Mas u sebe: ");
@@ -71,18 +59,50 @@ public class Player implements java.io.Serializable {
         return sb.toString();
     }
 
-    public void PickUpItem(Item whatToPickUp) {
-         inventory.add(whatToPickUp);
-         Game.getInstance().setInfo_line("Sbral jsi "+ whatToPickUp.getName());
-         Game.getInstance().removeItem(whatToPickUp);
-    }
-
     public Room getCurrentRoom() {
         return currentRoom;
     }
 
     public void setCurrentRoom(Room currentRoom) {
         this.currentRoom = currentRoom;
+    }
+
+    public void PickUpItem(Item item) {
+        inventory.add(item);
+        Game.getInstance().removeItemFromRooms(item);
+        Game.getInstance().throwGameEvent(new ItemAddedToInventory(item));
+    }
+    public Integer getCtustomValue(String key){
+        return customValues.get(key);
+    }
+    
+    public Map<String,Integer> getCustomValues(){
+        return customValues;
+    }
+
+    public ArrayList<Option> getOptions() {
+        return playerOptions;
+    }
+
+    public ArrayList<Item> getInventory() {
+        return inventory;
+    }
+
+    public void addCustomValue(String valueName, Integer value){
+        customValues.put(valueName, value);
+    }
+    
+    public void setCustomValue(String valueName, Integer value) {
+        customValues.replace(valueName, value);
+    }
+
+    public void addCustomValues(Map<String, Integer> newCustomValue) {
+        if(newCustomValue ==null)return;
+        customValues.putAll(newCustomValue);
+    }
+
+    public boolean hasCustomValue(String valueName) {
+        return customValues.containsKey(valueName);
     }
     
 }

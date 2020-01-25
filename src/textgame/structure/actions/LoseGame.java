@@ -9,7 +9,7 @@ package textgame.structure.actions;
  *
  * @author David Brož
  */
-public class LoseGame extends Action{
+public class LoseGame implements Action{
 
     @Override
     public void act() {

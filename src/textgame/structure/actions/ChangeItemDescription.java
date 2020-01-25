@@ -11,7 +11,7 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class ChangeItemDescription extends Action {
+public class ChangeItemDescription implements Action {
     private Item whatToChange;
     private String newDescription;
 

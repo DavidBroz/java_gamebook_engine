@@ -12,7 +12,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class AddStaticObjectToRoom extends Action {
+public class AddStaticObjectToRoom implements Action {
     private StaticObject whatToAdd;
     private Room whereToAdd;
     @Override

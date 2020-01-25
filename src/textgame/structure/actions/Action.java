@@ -13,6 +13,6 @@ import textgame.structure.gameEvents.GameEvent.GameEventType;
  *
  * @author David Brož
  */
-public abstract class Action implements java.io.Serializable{
-    public abstract void act();
+public interface Action{
+    public void act();
 }

@@ -36,7 +36,7 @@ public class Room implements java.io.Serializable {
     private ArrayList<Action> actions;
     private ArrayList<Option> options;
     private transient Image image;
-    
+
     private double location_x = 0;
     private double location_y = 0;
 
@@ -44,23 +44,25 @@ public class Room implements java.io.Serializable {
         this.options = new ArrayList();
         this.items = new ArrayList();
         this.rooms = new ArrayList();
-        this.staticObjects= new ArrayList();
+        this.staticObjects = new ArrayList();
         this.id = roomId;
         this.name = roomName;
         this.description = roomDesc;
         game = Game.getInstance();
     }
+
     @Override
-    public String toString(){
-        return id+ "_" +name; 
+    public String toString() {
+        return id + "_" + name;
     }
+
     public Room(String roomName, String roomDesc) {
         id = Game.getInstance().getRoomMaxID();
         Game.getInstance().incRoomMaxID();
         this.options = new ArrayList();
         this.items = new ArrayList();
         this.rooms = new ArrayList();
-        this.staticObjects= new ArrayList();
+        this.staticObjects = new ArrayList();
         this.name = roomName;
         this.description = roomDesc;
         game = Game.getInstance();
@@ -101,7 +103,7 @@ public class Room implements java.io.Serializable {
         options.clear();
         for (Room room : rooms) {
             tempOption = new Option("Jdi do " + room.name);
-            tempOption.addAction(new AddPathFromRoom(this,room));
+            tempOption.addAction(new AddPathFromRoom(this, room));
             options.add(tempOption);
         }
 
@@ -156,6 +158,7 @@ public class Room implements java.io.Serializable {
     public ArrayList<Item> getAllItems() {
         return items;
     }
+
     public ArrayList<Option> getAllOptions() {
         return options;
     }
@@ -176,12 +179,16 @@ public class Room implements java.io.Serializable {
         staticObjects.remove(whatToRemove);
     }
 
-    public void removeItemFromRoom(Item whatToRemove, boolean throwEvents) {
-        if(throwEvents){
-            Game.getInstance().throwGameEvent(new ItemRemovedFromRoom(whatToRemove));
-            Game.getInstance().throwGameEvent(new RoomLostItem(this));
-        }
-        items.remove(whatToRemove);
+    public void removeItem(Item item, boolean throwEvents) {
+        if (items.contains(item)) {
+            if (throwEvents) {
+                Game.getInstance().throwGameEvent(new ItemRemovedFromRoom(item));
+                Game.getInstance().throwGameEvent(new RoomLostItem(this));
+            }
+            items.remove(item);
+        } else throw new IllegalArgumentException("Room "+ this.toString()+" doesnt have item "+item.toString());
+        
+
     }
 
     public void removeOption(Option whatToRemove) {
@@ -193,7 +200,7 @@ public class Room implements java.io.Serializable {
     }
 
     public void setDescription(String newDesctiption) {
-        description= newDesctiption;
+        description = newDesctiption;
     }
 
     public void setName(String name) {
@@ -241,26 +248,28 @@ public class Room implements java.io.Serializable {
     }
 
     public void setImage(Image img) {
-        image=img;
+        image = img;
     }
 
     public Image getImage() {
         return image;
     }
-    
+
     public void readAndSetImage(ObjectInputStream s) throws IOException, ClassNotFoundException {
         //s.defaultReadObject();
         image = SwingFXUtils.toFXImage(ImageIO.read(s), null);
     }
 
     public void writeImage(ObjectOutputStream s) throws IOException {
-       // s.defaultWriteObject();
+        // s.defaultWriteObject();
         ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", s);
     }
 
     public boolean hasPathTo(Room room) {
-        for(Room r :rooms){
-            if(r.equals(room)) return true;
+        for (Room r : rooms) {
+            if (r.equals(room)) {
+                return true;
+            }
         }
         return false;
     }
@@ -280,7 +289,9 @@ public class Room implements java.io.Serializable {
     public void setLocation_y(double location_y) {
         this.location_y = location_y;
     }
-    
-    
-}
 
+    public boolean hasItem(Item item) {
+        return items.contains(item);
+    }
+
+}

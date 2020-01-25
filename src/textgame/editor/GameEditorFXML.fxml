@@ -36,6 +36,16 @@
    <left>
       <Accordion prefHeight="723.0" prefWidth="247.0" BorderPane.alignment="CENTER">
         <panes>
+            <TitledPane animated="false" prefHeight="643.0" prefWidth="87.0" text="Project">
+               <content>
+                  <VBox alignment="TOP_CENTER" prefHeight="611.0" prefWidth="0.0">
+                     <children>
+                        <Button fx:id="inspectPlayer" alignment="CENTER" mnemonicParsing="false" onAction="#inspectPlayer" prefHeight="31.0" prefWidth="238.0" text="Player" />
+                        <Button fx:id="inspectGame" alignment="CENTER" mnemonicParsing="false" onAction="#inspectGame" prefHeight="31.0" prefWidth="238.0" text="Game" />
+                     </children>
+                  </VBox>
+               </content>
+            </TitledPane>
           <TitledPane animated="false" prefHeight="643.0" prefWidth="87.0" text="Rooms">
                <content>
                   <VBox alignment="TOP_CENTER" prefHeight="611.0" prefWidth="0.0">
@@ -335,6 +345,49 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
+                        <VBox fx:id="gameInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Game">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="playerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Player">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <VBox>
+                                 <children>
+                                    <Label text="Options:" underline="true" />
+                                    <ListView fx:id="playerOptionsListView" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Custom values:" underline="true" />
+                                    <ListView fx:id="playerCustomValuesListView" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button mnemonicParsing="false" onAction="#playerAddNewCustomValue" prefHeight="31.0" prefWidth="775.0" text="+Add new custom value" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Inventory" underline="true" />
+                                    <ListView fx:id="playerInventoryListView" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
                      </children>
                   </StackPane>
                </children>
@@ -343,9 +396,9 @@
       </ScrollPane>
    </right>
    <center>
-      <ScrollPane fx:id = "centerScrollPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="centerScrollPane" prefHeight="200.0" prefWidth="200.0" styleClass="diagram-pane" BorderPane.alignment="CENTER">
         <content>
-          <StackPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1000.0" StackPane.alignment="CENTER"/>
+          <StackPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="1000.0" StackPane.alignment="CENTER" />
         </content>
       </ScrollPane>
    </center>

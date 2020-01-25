@@ -12,7 +12,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class RemoveStaticObjectFromRoom extends Action {
+public class RemoveStaticObjectFromRoom implements Action {
     private StaticObject whatToRemove;
     private Room whereToRemove;
 

@@ -8,6 +8,7 @@ package textgame.editor;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ import textgame.structure.actions.AddItemToRoom;
 import textgame.structure.actions.AddOptionToRoom;
 import textgame.structure.actions.AddPathFromRoom;
 import textgame.structure.actions.AddStaticObjectToRoom;
+import textgame.structure.actions.AddToCustomValue;
 import textgame.structure.actions.ChangeItemDescription;
 import textgame.structure.actions.ChangeItemName;
 import textgame.structure.actions.ChangeRoomDescription;
@@ -52,6 +54,7 @@ import textgame.structure.actions.RemoveItemFromRoom;
 import textgame.structure.actions.RemoveOptionFromRoom;
 import textgame.structure.actions.RemovePathFromRoom;
 import textgame.structure.actions.RemoveStaticObjectFromRoom;
+import textgame.structure.actions.SetCustomValue;
 import textgame.structure.actions.ShowPlayerInventory;
 import textgame.structure.actions.ThrowGameEvent;
 import textgame.structure.actions.WinGame;
@@ -92,7 +95,8 @@ public class AddActionController implements Initializable {
             changeItemName_TextField,
             throwGameEvent_SingleTextField_TextField,
             throwGameEvent_DoubleTextField_TextField_1,
-            throwGameEvent_DoubleTextField_TextField_2;
+            throwGameEvent_DoubleTextField_TextField_2,
+            customValue_TextField;
 
     @FXML
     ChoiceBox<Option> addOptionToRoom_ChoiceBox_Option_ChoiceBox,
@@ -133,7 +137,8 @@ public class AddActionController implements Initializable {
     private ChoiceBox<GameEvent.GameEventType> throwGameEvent_ChoiceBox_GameEvent;
 
     @FXML
-    private ChoiceBox throwGameEvent_ChoiceBox;
+    private ChoiceBox throwGameEvent_ChoiceBox,
+            customValue_choiceBox;
 
     @FXML
     private Label throwGameEvent_ChoiceBox_Label;
@@ -163,7 +168,8 @@ public class AddActionController implements Initializable {
             loseGame_GridPane,
             pickUpItem_GridPane,
             pushMessage_GridPane,
-            throwGameEvent_GridPane;
+            throwGameEvent_GridPane,
+            customValue_GridPane;
 
     /**
      * Initializes the controller class.
@@ -744,6 +750,41 @@ public class AddActionController implements Initializable {
         throwGameEvent_GridPane.setVisible(true);
     }
 
+    @FXML
+    private void choiceSetCustomValue() {
+        custom(true);
+    }
+
+    @FXML
+    private void choiceAddToCustomValue() {
+        custom(false);
+    }
+
+    private void custom(boolean isSetting) {
+        resetLayout();
+        customValue_GridPane.setVisible(true);
+        isOK = true;
+        HashMap map = (HashMap) Game.getInstance().getPlayer().getCustomValues();
+        customValue_choiceBox.getItems().clear();
+        if (map.isEmpty()) {
+            isOK = false;
+        } else {
+            customValue_choiceBox.getItems().addAll(map.keySet());
+            customValue_choiceBox.getSelectionModel().select(0);
+        }
+        customValue_TextField.setText("0");
+        if (isOK) {
+            if (isSetting) {
+                result = new SetCustomValue((String) customValue_choiceBox.getSelectionModel().getSelectedItem(), 0);
+                currentActionLabel.setText("Set Custom value");
+            } else {
+                result = new AddToCustomValue((String) customValue_choiceBox.getSelectionModel().getSelectedItem(), 0);
+                currentActionLabel.setText("Add to Custom value");
+            }
+        }
+
+    }
+
     //------ChoiceBox_onAction--------------------------------------------------
     private void update_addItemToPlayer() {
         if (result instanceof AddItemToPlayer) {
@@ -939,29 +980,51 @@ public class AddActionController implements Initializable {
                     int max = Integer.parseInt(throwGameEvent_DoubleTextField_TextField_2.getText());
                     if (min <= max) {
                         ge = new RandomNumber(max, min);
-                        isOK=true;
+                        isOK = true;
                     }
                 }
             } else if (settingClass.equals(String.class)) {
                 ge = (GameEvent) settingClass.newInstance();
                 ge.setValue(throwGameEvent_SingleTextField_TextField.getText());
-                isOK=true;
+                isOK = true;
 
-            }else if(settingClass.equals(null)){
+            } else if (settingClass.equals(null)) {
                 ge = (GameEvent) settingClass.newInstance();
-                isOK=true;
+                isOK = true;
+            } else if (!throwGameEvent_ChoiceBox.getItems().isEmpty()) {
+                ge = (GameEvent) settingClass.newInstance();
+                ge.setValue(throwGameEvent_ChoiceBox.getValue());
+                isOK = true;
             }
-            else if(!throwGameEvent_ChoiceBox.getItems().isEmpty()){
-                 ge = (GameEvent) settingClass.newInstance();
-                 ge.setValue(throwGameEvent_ChoiceBox.getValue());
-                 isOK=true;
+
+            if (ge != null) {
+                result = new ThrowGameEvent(ge);
             }
-            
-            if(ge!=null)result = new ThrowGameEvent(ge);
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(AddActionController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    private void update_customValue() {
+        if (!customValue_TextField.getText().matches("\\d*")) {
+            customValue_TextField.setText(customValue_TextField.getText().replaceAll("[^\\d]", ""));
+        }
+        if (result instanceof AddToCustomValue) {
+            AddToCustomValue temp = (AddToCustomValue) result;
+            if (customValue_TextField.getText().equals("")) {
+                temp.setValue(0);
+            }
+            temp.setValue(Integer.parseInt(customValue_TextField.getText()));
+            temp.setValueName(customValue_choiceBox.getSelectionModel().getSelectedItem().toString());
+        } else if (result instanceof SetCustomValue) {
+            AddToCustomValue temp = (AddToCustomValue) result;
+            if (customValue_TextField.getText().equals("")) {
+                temp.setValue(0);
+            }
+            temp.setValue(Integer.parseInt(customValue_TextField.getText()));
+            temp.setValueName(customValue_choiceBox.getSelectionModel().getSelectedItem().toString());
+        }
     }
 
     //---------------------------------------------------------------------------
@@ -969,6 +1032,7 @@ public class AddActionController implements Initializable {
         okButton.setDisable(!isOK);
         currentActionLabel.setText("");
 
+        customValue_GridPane.setVisible(false);
         addItemToPlayer_GridPane.setVisible(false);
         showPlayerInventor_GridPane.setVisible(false);
         addItemToRoom_GridPane.setVisible(false);
@@ -1118,6 +1182,13 @@ public class AddActionController implements Initializable {
         });
         throwGameEvent_SingleTextField_TextField.textProperty().addListener((observable) -> {
             update_throwGameEvent();
+        });
+
+        customValue_choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
+            update_customValue();
+        });
+        customValue_TextField.textProperty().addListener((observable) -> {
+            update_customValue();
         });
 
     }

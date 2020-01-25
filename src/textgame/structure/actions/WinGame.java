@@ -9,7 +9,7 @@ package textgame.structure.actions;
  *
  * @author David Brož
  */
-public class WinGame extends Action{
+public class WinGame implements Action{
 
     @Override
     public void act() {

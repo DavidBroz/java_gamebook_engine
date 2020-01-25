@@ -12,7 +12,7 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class PickUpItem extends Action{
+public class PickUpItem implements Action{
     private Item whatToPickUp;
 
     public PickUpItem(Item whatToPickUp) {

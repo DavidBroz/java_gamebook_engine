@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class PushMessage extends Action{
+public class PushMessage implements Action{
     private String message;
     @Override
     public void act() {

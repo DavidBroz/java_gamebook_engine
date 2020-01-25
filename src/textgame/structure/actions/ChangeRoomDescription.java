@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class ChangeRoomDescription extends Action{
+public class ChangeRoomDescription implements Action{
     private Room whatToChange;
     private String newDesctiption;
 

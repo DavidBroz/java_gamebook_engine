@@ -22,7 +22,8 @@ public abstract class GameEvent implements java.io.Serializable {
         PlayerLeftRoom.class,
         RandomNumber.class,
         GameEventListenerActed.class,
-        RoomLostItem.class
+        RoomLostItem.class,
+        ItemRemovedFromInventory.class
     };
     
     public enum GameEventType{
@@ -33,7 +34,8 @@ public abstract class GameEvent implements java.io.Serializable {
         PLAYER_ENTERED_ROOM,
         PLAYER_LEFT_ROOM,
         ROOM_LOST_ITEM,
-        EVENT_LISTENER_ACTED
+        EVENT_LISTENER_ACTED,
+        ITEM_REMOVED_FROM_INVENTORY
     };
     
     public abstract GameEventType getEventType();

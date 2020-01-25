@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class AddOptionToRoom extends Action{
+public class AddOptionToRoom implements Action{
     private Option whatToAdd;
     private Room whereToAdd;
 

@@ -21,6 +21,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -71,6 +72,7 @@ import textgame.structure.gameEvents.GameEvent;
 import textgame.structure.GameEventListener;
 import textgame.structure.Item;
 import textgame.structure.Option;
+import textgame.structure.Player;
 import textgame.structure.Room;
 import textgame.structure.StaticObject;
 import textgame.structure.actions.Action;
@@ -166,7 +168,17 @@ public class GameEditorFXMLController implements Initializable {
     private TextField inspectedOptionLabel;
     @FXML
     private ListView inspectedOptionActions;
-    //--------------------------------------------------------------------------
+    //---Player----------------------------------------------------------------
+    @FXML
+    private VBox playerInspectorVBox;
+    @FXML
+    private ListView playerOptionsListView,
+            playerCustomValuesListView,
+            playerInventoryListView;
+    //----Game-----------------------------------------------------------------
+    @FXML
+    private VBox gameInspectorVBox;
+    //-------------------------------------------------------------------------
     private Graph graph;
 
     /**
@@ -348,6 +360,8 @@ public class GameEditorFXMLController implements Initializable {
     }
 
     private void updateInspector() {
+        gameInspectorVBox.setVisible(false);
+        playerInspectorVBox.setVisible(false);
         roomInspectorVBox.setVisible(false);
         ItemInspectorVBox.setVisible(false);
         StaticObjectInspectorVBox.setVisible(false);
@@ -373,6 +387,15 @@ public class GameEditorFXMLController implements Initializable {
         if (inspectedObject instanceof Option) {
             Option o = (Option) inspectedObject;
             updateOptionInspector(o);
+        }
+        if (inspectedObject instanceof Player) {
+            Player p = (Player) inspectedObject;
+            updatePlayerInspector(p);
+        }
+
+        if (inspectedObject instanceof Game) {
+            Game g = (Game) inspectedObject;
+            updateGameInspector();
         }
     }
 
@@ -771,7 +794,7 @@ public class GameEditorFXMLController implements Initializable {
             Object item = itemsInRoomInspectorListView.getSelectionModel().getSelectedItem();
             if (inspectedObject instanceof Room && item instanceof Item) {
                 Room temp = (Room) inspectedObject;
-                temp.removeItemFromRoom((Item) item, false);
+                temp.removeItem((Item) item, false);
                 update();
             }
         });
@@ -923,7 +946,7 @@ public class GameEditorFXMLController implements Initializable {
             Object item = itemsInRoomInspectorListView.getSelectionModel().getSelectedItem();
             if (inspectedObject instanceof Room && item instanceof Item) {
                 Room temp = (Room) inspectedObject;
-                temp.removeItemFromRoom((Item) item, false);
+                temp.removeItem((Item) item, false);
                 update();
             }
         });
@@ -1039,5 +1062,62 @@ public class GameEditorFXMLController implements Initializable {
             rc.getRoom().setLocation_y(graph.getGraphic(c).getLayoutY());
         }
 
+    }
+
+    @FXML
+    public void inspectPlayer() {
+        inspectedObject = Game.getInstance().getPlayer();
+        updateInspector();
+    }
+
+    private void updatePlayerInspector(Player player) {
+        playerInspectorVBox.setVisible(true);
+        playerOptionsListView.getItems().clear();
+        playerOptionsListView.getItems().addAll(player.getOptions());
+
+        playerCustomValuesListView.getItems().clear();
+        player.getCustomValues().forEach((t, u) -> {
+            playerCustomValuesListView.getItems().add(t+"="+u);
+        });
+
+        playerInventoryListView.getItems().clear();
+        playerInventoryListView.getItems().addAll(player.getInventory());
+        
+    }
+
+    @FXML
+    private void playerAddNewCustomValue() {
+        Game.getInstance().getPlayer().addCustomValues(getNewCustomValueDialog());
+        updateInspector();
+    }
+
+    private Map<String, Integer> getNewCustomValueDialog() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AddCustomValue.fxml"));
+            Parent addCustomCalueRoot = (Parent) fxmlLoader.load();
+            Stage addCustomValueStage = new Stage();
+            AddCustomValueController.addCustomValueStage = addCustomValueStage;
+            addCustomValueStage.initModality(Modality.APPLICATION_MODAL);
+            addCustomValueStage.setTitle("Add new action");
+
+            Scene scene = new Scene(addCustomCalueRoot);
+
+            addCustomValueStage.setScene(scene);
+
+            addCustomValueStage.showAndWait();
+            return AddCustomValueController.getResult();
+        } catch (IOException ex) {
+            Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void inspectGame() {
+        inspectedObject = Game.getInstance();
+        updateInspector();
+    }
+
+    private void updateGameInspector() {
+        gameInspectorVBox.setVisible(true);
     }
 }

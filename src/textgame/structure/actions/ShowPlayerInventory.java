@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class ShowPlayerInventory extends Action{
+public class ShowPlayerInventory implements Action{
 
     @Override
     public void act() {

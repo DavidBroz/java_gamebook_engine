@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemovePathFromRoom extends Action{
+public class RemovePathFromRoom implements Action{
     private Room toWhere;
     private Room fromWhere;
 

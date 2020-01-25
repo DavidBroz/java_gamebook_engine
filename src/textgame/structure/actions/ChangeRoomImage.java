@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class ChangeRoomImage extends Action {
+public class ChangeRoomImage implements Action {
     private String newImagePath;
     private Room whereToChange;
 

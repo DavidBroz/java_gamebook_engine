@@ -12,7 +12,7 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class AddItemToPlayer extends Action {
+public class AddItemToPlayer implements Action {
     private Item whatToAdd;
     @Override
     public void act() {

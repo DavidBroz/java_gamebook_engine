@@ -11,7 +11,7 @@ import textgame.structure.GameEventListener;
  *
  * @author David Brož
  */
-public class EnableGameEventListner extends Action {
+public class EnableGameEventListner implements Action {
     private GameEventListener whatToEnable;
 
     public EnableGameEventListner(GameEventListener whatToEnable) {

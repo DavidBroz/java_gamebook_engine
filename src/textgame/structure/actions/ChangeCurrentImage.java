@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class ChangeCurrentImage extends Action {
+public class ChangeCurrentImage implements Action {
     private String newImagePath;
     @Override
     

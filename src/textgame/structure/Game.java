@@ -307,6 +307,12 @@ public class Game implements java.io.Serializable{
         System.out.println("getAllIntancesOf- no match found for: "+requiredClass);
         return new ArrayList();
     }
+
+    public void removeItemFromRooms(Item item) {
+        for(Room r : allRooms){
+            if(r.hasItem(item))r.removeItem(item,true);
+        }
+    }
     
 
 }

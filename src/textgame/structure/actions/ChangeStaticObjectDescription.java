@@ -11,7 +11,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class ChangeStaticObjectDescription extends Action {
+public class ChangeStaticObjectDescription implements Action {
     private StaticObject whatToChange;
     private String newDescription;
 

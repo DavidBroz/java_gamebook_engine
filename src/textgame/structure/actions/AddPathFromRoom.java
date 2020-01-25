@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class AddPathFromRoom extends Action {
+public class AddPathFromRoom implements Action {
     private Room fromWhere;
     private Room toWhere;
     @Override

@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemoveOptionFromRoom extends Action {
+public class RemoveOptionFromRoom implements Action {
     private Option whatToRemove;
     private Room whereToRemove;
 

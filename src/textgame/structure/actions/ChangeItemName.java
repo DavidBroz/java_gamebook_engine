@@ -11,7 +11,7 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class ChangeItemName extends Action {
+public class ChangeItemName implements Action {
     private Item whatToChange;
     private String newName;
 

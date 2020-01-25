@@ -8,8 +8,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
@@ -65,14 +67,14 @@ public class Edge extends AbstractEdge {
             view.setStroke(Color.WHITE);
             view.setFill(Color.WHITE);
 
-            final Pane pane = new Pane(view);
+            final StackPane pane = new StackPane(view);
             pane.setPrefSize(50, 50);
             pane.setMinSize(50, 50);
             final Scale scale = new Scale(1, 1);
             view.getTransforms().add(scale);
             scale.xProperty().bind(pane.widthProperty().divide(50));
             scale.yProperty().bind(pane.heightProperty().divide(50));
-            
+            pane.setAlignment(Pos.CENTER);
             
             pane.layoutXProperty().bind(line.startXProperty().add(line.endXProperty()).divide(2).subtract(pane.widthProperty().divide(2)));
             pane.layoutYProperty().bind(line.startYProperty().add(line.endYProperty()).divide(2).subtract(pane.heightProperty().divide(2)));

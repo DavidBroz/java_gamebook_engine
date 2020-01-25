@@ -11,7 +11,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class ChangeStaticObjectName extends Action {
+public class ChangeStaticObjectName implements Action {
     
     private StaticObject whatToChange;
     private String newName;

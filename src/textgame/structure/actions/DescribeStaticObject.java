@@ -12,7 +12,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class DescribeStaticObject extends Action {
+public class DescribeStaticObject implements Action {
     private StaticObject whatToDescribe;
     @Override
     public void act() {

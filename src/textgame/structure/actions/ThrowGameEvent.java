@@ -12,7 +12,7 @@ import textgame.structure.gameEvents.GameEvent;
  *
  * @author David Brož
  */
-public class ThrowGameEvent extends Action {
+public class ThrowGameEvent implements Action {
 
     private GameEvent whatToThrow;
     

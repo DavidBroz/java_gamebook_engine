@@ -14,7 +14,7 @@ import textgame.structure.gameEvents.PlayerLeftRoom;
  *
  * @author David Brož
  */
-public class MovePlayerToRoom extends Action {
+public class MovePlayerToRoom implements Action {
 
     private Room whereToMove;
 
