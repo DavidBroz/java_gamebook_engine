@@ -23,7 +23,7 @@ public class RemoveOptionFromRoom extends Action {
 
     @Override
     public void act() {
-        whereToRemove.removeOptionFromRoom(whatToRemove);
+        whereToRemove.removeOption(whatToRemove);
     }
 
     @Override

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package textgame.editor;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -162,11 +163,12 @@ public class GameEditorFXMLController implements Initializable {
     @FXML
     private Label inspectedOptionIDLabel;
     @FXML
-    private TextField InspectedOptionLabel;
+    private TextField inspectedOptionLabel;
     @FXML
     private ListView inspectedOptionActions;
     //--------------------------------------------------------------------------
     private Graph graph;
+
     /**
      * Initializes the controller class.
      */
@@ -207,6 +209,35 @@ public class GameEditorFXMLController implements Initializable {
     }
 
     private void setInstantUpdates() {
+        inspectedOptionLabel.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                Option o = (Option) inspectedObject;
+                o.setLabel(newValue);
+                updateListVeiws(false);
+            }
+        });
+        selectedStaticObjectName.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                StaticObject so = (StaticObject) inspectedObject;
+                so.setName(newValue);
+                updateListVeiws(false);
+            }
+        });
+
+        selectedStaticObjectDesArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                StaticObject sc = (StaticObject) inspectedObject;
+                sc.setDesctiption(newValue);
+                updateListVeiws(false);
+            }
+        });
+
         selectedRoomName.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
@@ -362,6 +393,10 @@ public class GameEditorFXMLController implements Initializable {
         roomInspectorStaticObjectListView.getItems().clear();
         for (StaticObject so : r.getAllStaticObjects()) {
             roomInspectorStaticObjectListView.getItems().add(so);
+        }
+        roomInspectorOptionListView.getItems().clear();
+        for (Option o : r.getAllOptions()) {
+            roomInspectorOptionListView.getItems().add(o);
         }
         roomImageView.setImage(r.getImage());
     }
@@ -635,10 +670,10 @@ public class GameEditorFXMLController implements Initializable {
         try {
             List<File> files = event.getDragboard().getFiles();
             Image img = new Image(new FileInputStream(files.get(0)));
-            roomImageView.setImage(img);
 
             Room r = (Room) inspectedObject;
             r.setImage(img);
+            update();
         } catch (FileNotFoundException ex) {
             System.out.println("File not found");
             Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -867,11 +902,39 @@ public class GameEditorFXMLController implements Initializable {
         });
         allOptionsContextMenu.getItems().add(deleteOPT);
         allOptionsListView.setContextMenu(allOptionsContextMenu);
+
+        ContextMenu roomOptionsContextMenu = new ContextMenu();
+        MenuItem deleteRO = new MenuItem("Delete");
+        deleteRO.setOnAction((event) -> {
+            Object item = roomInspectorOptionListView.getSelectionModel().getSelectedItem();
+            if (inspectedObject instanceof Room && item instanceof Option) {
+                Room temp = (Room) inspectedObject;
+                temp.removeOption((Option) item);
+                update();
+            }
+        });
+
+        roomOptionsContextMenu.getItems().add(deleteRO);
+        roomInspectorOptionListView.setContextMenu(roomOptionsContextMenu);
+
+        ContextMenu roomItemContextMenu = new ContextMenu();
+        MenuItem deleteRI = new MenuItem("Delete");
+        deleteRI.setOnAction((event) -> {
+            Object item = itemsInRoomInspectorListView.getSelectionModel().getSelectedItem();
+            if (inspectedObject instanceof Room && item instanceof Item) {
+                Room temp = (Room) inspectedObject;
+                temp.removeItemFromRoom((Item) item, false);
+                update();
+            }
+        });
+
+        roomItemContextMenu.getItems().add(deleteRI);
+        itemsInRoomInspectorListView.setContextMenu(roomItemContextMenu);
     }
 
     private void updateOptionInspector(Option o) {
         OptionInspectorVBox.setVisible(true);
-        InspectedOptionLabel.setText(o.getOptionLabel());
+        inspectedOptionLabel.setText(o.getOptionLabel());
         inspectedOptionActions.getItems().clear();
         for (Action a : o.getActionList()) {
             inspectedOptionActions.getItems().add(a);
@@ -907,20 +970,18 @@ public class GameEditorFXMLController implements Initializable {
         g.addNewRoom();
         g.addNewRoom();
         ArrayList<Room> rs = g.getAllRooms();
-        
+
         rs.get(0).addPath(rs.get(1));
-        
-        
+
         g.addNewStaticObject();
     }
 
     private void setDiagram() {
         saveRoomLocation(graph);
         graph = new Graph();
-        updateDiagramCells(graph); 
+        updateDiagramCells(graph);
         centerScrollPane.setContent(graph.getCanvas());
     }
-     
 
     private void updateDiagramCells(Graph graph) {
         final Model model = graph.getModel();
@@ -931,28 +992,28 @@ public class GameEditorFXMLController implements Initializable {
         RoomCell temp;
         for (Room r : rooms) {
             //System.out.println("ROOM: "+r);
-            temp = new RoomCell(this,r);
+            temp = new RoomCell(this, r);
             map.put(r, temp);
             model.addCell(temp);
         }
-        
+
         map.forEach((Room r_1, ICell cell_1) -> {
             map.forEach((Room _r2, ICell cell_2) -> {
-                 if(r_1.hasPathTo(_r2) && !r_1.equals(_r2)){
-                    addEdge(cell_1,cell_2,model);
-                 }
+                if (r_1.hasPathTo(_r2) && !r_1.equals(_r2)) {
+                    addEdge(cell_1, cell_2, model);
+                }
             });
         });
-        
+
         graph.endUpdate();
         graph.layout(new CustomLayout());
         //graph.layout(new AbegoTreeLayout(200, 300, Configuration.Location.Top));
 //graph.layout(new RandomLayout());
     }
 
-    public  Object getInspectedObject() {
+    public Object getInspectedObject() {
         return inspectedObject;
-        
+
     }
 
     public void setInspectedObject(Object inspectedObject) {
@@ -960,21 +1021,23 @@ public class GameEditorFXMLController implements Initializable {
         update();
     }
 
-    private void addEdge(ICell cell_1, ICell cell_2,Model model) {
+    private void addEdge(ICell cell_1, ICell cell_2, Model model) {
         Edge edge;
         edge = new Edge(cell_1, cell_2);
         model.addEdge(edge);
     }
 
     private void saveRoomLocation(Graph graph) {
-        if(graph == null) return;
+        if (graph == null) {
+            return;
+        }
         RoomCell rc;
         List<ICell> cells = graph.getModel().getAllCells();
-        for(ICell c : cells){
-            rc=(RoomCell)c;
+        for (ICell c : cells) {
+            rc = (RoomCell) c;
             rc.getRoom().setLocation_x(graph.getGraphic(c).getLayoutX());
             rc.getRoom().setLocation_y(graph.getGraphic(c).getLayoutY());
         }
-        
+
     }
 }

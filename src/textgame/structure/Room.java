@@ -184,7 +184,7 @@ public class Room implements java.io.Serializable {
         items.remove(whatToRemove);
     }
 
-    public void removeOptionFromRoom(Option whatToRemove) {
+    public void removeOption(Option whatToRemove) {
         options.remove(whatToRemove);
     }
 

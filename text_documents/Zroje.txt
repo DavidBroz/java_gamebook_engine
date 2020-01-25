@@ -1,0 +1,9 @@
+Idea z:
+https://stackoverflow.com/questions/30679025/graph-visualisation-like-yfiles-in-javafx
+
+projekt:
+
+https://github.com/sirolf2009/fxgraph
+
+Library:
+https://sourceforge.net/projects/treelayout/
