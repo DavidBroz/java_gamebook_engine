@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class AddToCustomValue implements Action{
+public class AddToCustomValue implements Action, java.io.Serializable {
 
     private String valueName;
     private Integer value;
@@ -36,17 +36,26 @@ public class AddToCustomValue implements Action{
     public void setValue(Integer value) {
         this.value = value;
     }
-    
-    
+
     @Override
-    public void act(){
-        Game.getInstance().getPlayer().setCustomValue(valueName,value+Game.getInstance().getPlayer().getCtustomValue(valueName));
+    public void act() {
+        Game.getInstance().getPlayer().setCustomValue(valueName, value + Game.getInstance().getPlayer().getCtustomValue(valueName), true);
     }
 
     @Override
     public String toString() {
-        return "AddToCustomValue{"+ valueName +":+"+value+ '}';
+        return "AddToCustomValue{" + valueName + ":+" + value + '}';
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }
-   

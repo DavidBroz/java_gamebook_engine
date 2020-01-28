@@ -9,7 +9,7 @@ package textgame.structure.actions;
  *
  * @author David Brož
  */
-public class WinGame implements Action{
+public class WinGame implements Action, java.io.Serializable{
 
     @Override
     public void act() {
@@ -20,5 +20,15 @@ public class WinGame implements Action{
     public String toString() {
         return "WinGame{" + '}';
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

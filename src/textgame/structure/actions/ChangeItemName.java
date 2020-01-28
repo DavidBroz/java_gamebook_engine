@@ -11,7 +11,8 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class ChangeItemName implements Action {
+public class ChangeItemName implements Action, java.io.Serializable {
+
     private Item whatToChange;
     private String newName;
 
@@ -27,7 +28,7 @@ public class ChangeItemName implements Action {
 
     @Override
     public String toString() {
-        return "ChangeItemName{"+ whatToChange + ", Name: " + newName + '}';
+        return "ChangeItemName{" + whatToChange + ", Name: " + newName + '}';
     }
 
     public Item getWhatToChange() {
@@ -45,6 +46,17 @@ public class ChangeItemName implements Action {
     public void setNewName(String newName) {
         this.newName = newName;
     }
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemoveItemFromRoom implements Action {
+public class RemoveItemFromRoom implements Action, java.io.Serializable {
     private Item whatToRemove;
     private Room whereToRemove;
 
@@ -46,6 +46,16 @@ public class RemoveItemFromRoom implements Action {
     public void setWhereToRemove(Room whereToRemove) {
         this.whereToRemove = whereToRemove;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
     
 }

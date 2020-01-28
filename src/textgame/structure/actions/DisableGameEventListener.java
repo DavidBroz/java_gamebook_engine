@@ -11,7 +11,8 @@ import textgame.structure.GameEventListener;
  *
  * @author David Brož
  */
-public class DisableGameEventListener implements Action{
+public class DisableGameEventListener implements Action, java.io.Serializable {
+
     private GameEventListener whatToDisable;
 
     public DisableGameEventListener(GameEventListener whatToDisable) {
@@ -35,6 +36,17 @@ public class DisableGameEventListener implements Action{
     public void setWhatToDisable(GameEventListener whatToDisable) {
         this.whatToDisable = whatToDisable;
     }
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

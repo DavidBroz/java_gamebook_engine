@@ -77,6 +77,10 @@ public class Graph {
 		addCells(getModel().getAllCells());
 	}
 
+    public PannableCanvas getPannableCanvas() {
+        return pannableCanvas;
+    }
+
 	public PannableCanvas getCanvas() {
 		return pannableCanvas;
 	}

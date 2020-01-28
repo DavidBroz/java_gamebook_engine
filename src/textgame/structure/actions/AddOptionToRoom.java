@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class AddOptionToRoom implements Action{
+public class AddOptionToRoom implements Action, java.io.Serializable{
     private Option whatToAdd;
     private Room whereToAdd;
 
@@ -46,6 +46,16 @@ public class AddOptionToRoom implements Action{
     public void setWhereToAdd(Room whereToAdd) {
         this.whereToAdd = whereToAdd;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
     
 }

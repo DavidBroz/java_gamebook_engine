@@ -19,8 +19,10 @@ public class StaticObject implements java.io.Serializable {
     private String name;
     private String desctiption;
     private ArrayList<Option> options;
+    private ArrayList referencedBy;
 
     public StaticObject(String name, String desctiption) {
+        referencedBy=new ArrayList<>();
         this.id = Game.getInstance().getStaticObjectMaxID();
         Game.getInstance().incStaticObjectMaxID();
         this.name = name;
@@ -67,6 +69,28 @@ public class StaticObject implements java.io.Serializable {
     public void removeOption(Option optionToRemove) {
         options.remove(optionToRemove);
        
+    }
+    
+    public void deleteAllReferencesToThis() {
+        for (Object o : referencedBy) {
+            if (o instanceof Room) {
+                Room r = (Room) o;                
+                r.removeStaticObjectFromRoom(this,false);
+            }
+            else if(o instanceof Action){
+                Action a =(Action) o;
+                a.setValidity(false);
+            }
+        }
+    }
+
+    void removeIsReferencedBy(Object o) {
+        if(referencedBy.contains(o))referencedBy.remove(o);
+        else System.out.println("-STATIC-OBJECT-: Referenced by was atempted to be removed but there was not isntance of: "+o.toString() );
+    }
+
+    void addIsReferencedBy(Object o) {
+        referencedBy.add(o);
     }
     
 

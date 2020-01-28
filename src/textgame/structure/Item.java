@@ -5,6 +5,9 @@
  */
 package textgame.structure;
 
+import java.util.ArrayList;
+import textgame.structure.actions.Action;
+
 /**
  *
  * @author David Brož
@@ -14,8 +17,10 @@ public class Item implements java.io.Serializable{
     private int id;
     private String name;
     private String description;
+    private ArrayList referencedBy;
 
     public Item(String name, String description) {
+        referencedBy = new ArrayList();
         this.id = Game.getInstance().getItemMaxID();;
         Game.getInstance().incItemMaxID();
         this.name = name;
@@ -44,5 +49,29 @@ public class Item implements java.io.Serializable{
 
     public String getDescription() {
         return description;
+    }
+    
+    void removeReferencedBy(Object o) {
+        if(referencedBy.contains(o))referencedBy.remove(o);
+    }
+
+    public void deleteAllReferencesToThis() {
+        for (Object o : referencedBy) {
+            if (o instanceof Room) {
+                Room r = (Room) o;                
+                r.removeItem(this, false);
+            } else if (o instanceof Player) {
+                Player pl = (Player) o;                
+                pl.RemoveItem(this,false);
+            }if(o instanceof Action){
+                Action a = (Action)o;
+                a.setValidity(false);
+            }
+        }
+    }
+   
+
+    void addReferencedBy(Object o) {
+        referencedBy.add(o);
     }
 }

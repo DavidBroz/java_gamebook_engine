@@ -23,10 +23,12 @@ public class GameEventListener implements java.io.Serializable {
     private String name;
     private boolean enabled = true;
     private ArrayList<Action> actions;
+    private ArrayList referencedBy;
     private Object expectedValue;
 
     
     public GameEventListener(String name,GameEventType expectedvEventType, String expectedValue, Action ...actionsToDo) {
+        referencedBy=new ArrayList();
         this.name = name;
         id=Game.getInstance().getGameEventListenerMaxID();
         Game.getInstance().incGameEventListenerMaxID();
@@ -91,6 +93,7 @@ public class GameEventListener implements java.io.Serializable {
     }
 
     public ArrayList<Action> getActions() {
+        checkActionValidity();
         return actions;
     }
 
@@ -112,8 +115,33 @@ public class GameEventListener implements java.io.Serializable {
 
     private void act() {
         Game.getInstance().throwGameEvent(new GameEventListenerActed(this));
-          for(Action a : actions){
+        for(Action a : actions){
                 a.act();
             }
+    }
+    
+     public void deleteAllReferencesToThis() {
+        for (Object o : referencedBy) {
+            if(o instanceof Action){
+                Action a =(Action) o;
+                a.setValidity(false);
+            }
+        }
+    }
+
+    void removeIsReferencedBy(Object o) {
+        if(referencedBy.contains(o))referencedBy.remove(o);
+        else System.out.println("-GAME-EVENT-LISTENER-: Referenced by was atempted to be removed but there was not isntance of: "+o.toString() );
+    }
+
+    void addIsReferencedBy(Object o) {
+        referencedBy.add(o);
+    }
+    
+    
+    private void checkActionValidity() {
+        for (Action action : actions) {
+            if(!action.isValid())actions.remove(action);
+        }
     }
 }

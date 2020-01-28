@@ -11,7 +11,7 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class ChangeStaticObjectDescription implements Action {
+public class ChangeStaticObjectDescription implements Action, java.io.Serializable {
     private StaticObject whatToChange;
     private String newDescription;
 
@@ -46,6 +46,16 @@ public class ChangeStaticObjectDescription implements Action {
         this.newDescription = newDescription;
     }
     
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
     
 }

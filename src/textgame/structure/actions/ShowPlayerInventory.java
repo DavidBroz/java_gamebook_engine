@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class ShowPlayerInventory implements Action{
+public class ShowPlayerInventory implements Action, java.io.Serializable{
 
     @Override
     public void act() {
@@ -22,5 +22,15 @@ public class ShowPlayerInventory implements Action{
     public String toString() {
         return "ShowPlayerInventory{" + '}';
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

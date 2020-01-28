@@ -5,11 +5,14 @@
  */
 package textgame.structure;
 
+import textgame.structure.gameEvents.OptionRemovedFromPlayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import textgame.structure.gameEvents.CustomValueChanged;
 import textgame.structure.gameEvents.ItemAddedToInventory;
 import textgame.structure.gameEvents.ItemRemovedFromInventory;
+import textgame.structure.gameEvents.OptionAddedToPlayer;
 import textgame.structure.gameEvents.PlayerEnteredRoom;
 import textgame.structure.gameEvents.PlayerLeftRoom;
 /**
@@ -34,13 +37,14 @@ public class Player implements java.io.Serializable {
         Game.getInstance().throwGameEvent(new PlayerEnteredRoom(where));  
     }
     
-    public void AddItemToPlayer(Item item_to_add){
+    public void addItemToInvenotory(Item item_to_add,boolean throwEvent){
+        if(throwEvent)Game.getInstance().throwGameEvent(new ItemAddedToInventory(item_to_add));
         inventory.add(item_to_add);
     }
-    public void RemoveItem(Item itemToRemove){
+    public void RemoveItem(Item itemToRemove, boolean throwEvent){
         if(inventory.contains(itemToRemove)){
             inventory.remove(itemToRemove);
-            Game.getInstance().throwGameEvent(new ItemRemovedFromInventory(itemToRemove));
+            if(throwEvent)Game.getInstance().throwGameEvent(new ItemRemovedFromInventory(itemToRemove));
         }
     }
     public boolean hasItem(Item item){
@@ -92,7 +96,10 @@ public class Player implements java.io.Serializable {
         customValues.put(valueName, value);
     }
     
-    public void setCustomValue(String valueName, Integer value) {
+    public void setCustomValue(String valueName, Integer value, boolean throwEvent) {
+        if (throwEvent) {
+            Game.getInstance().throwGameEvent(new CustomValueChanged(valueName,value));
+        }
         customValues.replace(valueName, value);
     }
 
@@ -103,6 +110,19 @@ public class Player implements java.io.Serializable {
 
     public boolean hasCustomValue(String valueName) {
         return customValues.containsKey(valueName);
+    }
+
+    public void addOption(Option option, boolean throwEvent) {
+        if(throwEvent)Game.getInstance().throwGameEvent(new OptionAddedToPlayer(option));
+        option.addReferencedBy(this);
+        playerOptions.add(option);
+    }
+
+    public void removeOption(Option option , boolean throwEvent) {
+        if(playerOptions.contains(option)){
+            if(throwEvent)Game.getInstance().throwGameEvent(new OptionRemovedFromPlayer(option));
+            playerOptions.remove(option);
+        }
     }
     
 }

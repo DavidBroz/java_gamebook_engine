@@ -11,7 +11,7 @@ import textgame.structure.Game;
  *
  * @author David Brož
  */
-public class PushMessage implements Action{
+public class PushMessage implements Action, java.io.Serializable{
     private String message;
     @Override
     public void act() {
@@ -34,6 +34,16 @@ public class PushMessage implements Action{
     public void setMessage(String message) {
         this.message = message;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
     
 }

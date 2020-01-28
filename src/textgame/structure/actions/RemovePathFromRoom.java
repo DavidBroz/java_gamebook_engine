@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemovePathFromRoom implements Action{
+public class RemovePathFromRoom implements Action, java.io.Serializable{
     private Room toWhere;
     private Room fromWhere;
 
@@ -45,5 +45,15 @@ public class RemovePathFromRoom implements Action{
     public void setFromWhere(Room fromWhere) {
         this.fromWhere = fromWhere;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

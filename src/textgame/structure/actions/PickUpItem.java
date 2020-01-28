@@ -12,12 +12,14 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class PickUpItem implements Action{
+public class PickUpItem implements Action, java.io.Serializable {
+
     private Item whatToPickUp;
 
     public PickUpItem(Item whatToPickUp) {
         this.whatToPickUp = whatToPickUp;
     }
+
     @Override
     public void act() {
         Game.getInstance().getPlayer().PickUpItem(whatToPickUp);
@@ -35,5 +37,17 @@ public class PickUpItem implements Action{
     public void setWhatToPickUp(Item whatToPickUp) {
         this.whatToPickUp = whatToPickUp;
     }
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

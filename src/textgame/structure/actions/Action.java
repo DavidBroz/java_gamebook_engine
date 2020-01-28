@@ -15,4 +15,6 @@ import textgame.structure.gameEvents.GameEvent.GameEventType;
  */
 public interface Action{
     public void act();
+    public boolean isValid();
+    public void setValidity(boolean b);
 }

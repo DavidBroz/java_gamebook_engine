@@ -11,8 +11,8 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class ChangeStaticObjectName implements Action {
-    
+public class ChangeStaticObjectName implements Action, java.io.Serializable {
+
     private StaticObject whatToChange;
     private String newName;
 
@@ -46,8 +46,17 @@ public class ChangeStaticObjectName implements Action {
     public void setNewName(String newName) {
         this.newName = newName;
     }
-    
-    
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

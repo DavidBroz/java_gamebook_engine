@@ -11,7 +11,8 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class ChangeRoomDescription implements Action{
+public class ChangeRoomDescription implements Action, java.io.Serializable {
+
     private Room whatToChange;
     private String newDesctiption;
 
@@ -19,7 +20,7 @@ public class ChangeRoomDescription implements Action{
         this.whatToChange = whatToChange;
         this.newDesctiption = newDesctiption;
     }
-    
+
     @Override
     public void act() {
         whatToChange.setDescription(newDesctiption);
@@ -27,7 +28,7 @@ public class ChangeRoomDescription implements Action{
 
     @Override
     public String toString() {
-        return "ChangeRoomDescription{"+ whatToChange + '}';
+        return "ChangeRoomDescription{" + whatToChange + '}';
     }
 
     public Room getWhatToChange() {
@@ -45,5 +46,17 @@ public class ChangeRoomDescription implements Action{
     public void setNewDesctiption(String newDesctiption) {
         this.newDesctiption = newDesctiption;
     }
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

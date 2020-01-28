@@ -11,7 +11,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class AddPathFromRoom implements Action {
+public class AddPathFromRoom implements Action, java.io.Serializable {
     private Room fromWhere;
     private Room toWhere;
     @Override
@@ -44,6 +44,16 @@ public class AddPathFromRoom implements Action {
     public void setToWhere(Room toWhere) {
         this.toWhere = toWhere;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
     
 }

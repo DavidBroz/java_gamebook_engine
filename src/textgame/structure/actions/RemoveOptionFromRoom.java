@@ -12,7 +12,7 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class RemoveOptionFromRoom implements Action {
+public class RemoveOptionFromRoom implements Action, java.io.Serializable {
     private Option whatToRemove;
     private Room whereToRemove;
 
@@ -23,7 +23,7 @@ public class RemoveOptionFromRoom implements Action {
 
     @Override
     public void act() {
-        whereToRemove.removeOption(whatToRemove);
+        whereToRemove.removeOption(whatToRemove,true);
     }
 
     @Override
@@ -46,5 +46,15 @@ public class RemoveOptionFromRoom implements Action {
     public void setWhereToRemove(Room whereToRemove) {
         this.whereToRemove = whereToRemove;
     }
-    
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

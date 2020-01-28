@@ -12,9 +12,11 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class AddItemToRoom implements Action{
+public class AddItemToRoom implements Action, java.io.Serializable {
+
     private Room whereToAdd;
     private Item whatToAdd;
+
     @Override
     public void act() {
         whereToAdd.addItemToRoom(whatToAdd);
@@ -27,7 +29,7 @@ public class AddItemToRoom implements Action{
 
     @Override
     public String toString() {
-        return "AddItemToRoom{"+ whereToAdd.toString() + ", Item:" + whatToAdd.toString() + '}';
+        return "AddItemToRoom{" + whereToAdd.toString() + ", Item:" + whatToAdd.toString() + '}';
     }
 
     public Room getWhereToAdd() {
@@ -45,7 +47,17 @@ public class AddItemToRoom implements Action{
     public void setWhatToAdd(Item whatToAdd) {
         this.whatToAdd = whatToAdd;
     }
-    
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

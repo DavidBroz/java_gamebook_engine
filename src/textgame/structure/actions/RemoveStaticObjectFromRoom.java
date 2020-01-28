@@ -12,13 +12,13 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class RemoveStaticObjectFromRoom implements Action {
+public class RemoveStaticObjectFromRoom implements Action, java.io.Serializable {
     private StaticObject whatToRemove;
     private Room whereToRemove;
 
     @Override
     public void act() {
-        whereToRemove.removeStaticObjectFromRoom(whatToRemove);
+        whereToRemove.removeStaticObjectFromRoom(whatToRemove,true);
     }
 
     public RemoveStaticObjectFromRoom(StaticObject whatToRemove, Room whereToRemove) {
@@ -45,6 +45,17 @@ public class RemoveStaticObjectFromRoom implements Action {
 
     public void setWhereToRemove(Room whereToRemove) {
         this.whereToRemove = whereToRemove;
+    }
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
     }
     
     

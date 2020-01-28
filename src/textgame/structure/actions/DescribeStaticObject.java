@@ -12,8 +12,10 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class DescribeStaticObject implements Action {
+public class DescribeStaticObject implements Action, java.io.Serializable {
+
     private StaticObject whatToDescribe;
+
     @Override
     public void act() {
         Game.getInstance().setInfo_line(whatToDescribe.getName());
@@ -35,7 +37,17 @@ public class DescribeStaticObject implements Action {
     public void setWhatToDescribe(StaticObject whatToDescribe) {
         this.whatToDescribe = whatToDescribe;
     }
-    
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
+
 }

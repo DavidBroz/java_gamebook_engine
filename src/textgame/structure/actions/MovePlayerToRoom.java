@@ -14,7 +14,7 @@ import textgame.structure.gameEvents.PlayerLeftRoom;
  *
  * @author David Brož
  */
-public class MovePlayerToRoom implements Action {
+public class MovePlayerToRoom implements Action, java.io.Serializable {
 
     private Room whereToMove;
 
@@ -27,7 +27,6 @@ public class MovePlayerToRoom implements Action {
 
     public MovePlayerToRoom(Room whereToMove) {
         this.whereToMove = whereToMove;
-        Game.getInstance().setCurrentImagePath(whereToMove.getImagePath());
     }
 
     @Override
@@ -41,6 +40,18 @@ public class MovePlayerToRoom implements Action {
 
     public void setWhereToMove(Room whereToMove) {
         this.whereToMove = whereToMove;
+    }
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
     }
 
 }

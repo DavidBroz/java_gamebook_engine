@@ -11,7 +11,8 @@ import textgame.structure.Room;
  *
  * @author David Brož
  */
-public class ChangeRoomName implements Action {
+public class ChangeRoomName implements Action, java.io.Serializable {
+
     private Room whatToChange;
     private String newName;
 
@@ -45,5 +46,16 @@ public class ChangeRoomName implements Action {
     public void setNewName(String newName) {
         this.newName = newName;
     }
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

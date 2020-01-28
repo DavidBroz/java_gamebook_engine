@@ -9,6 +9,8 @@ import textgame.structure.gameEvents.GameEvent;
 import textgame.structure.actions.Action;
 import java.util.ArrayList;
 import java.util.EventListener;
+import javafx.scene.image.Image;
+import textgame.structure.actions.ChangeRoomImage;
 
 /**
  *
@@ -19,16 +21,17 @@ public class Game implements java.io.Serializable{
     
     private static int gameID = 0;
     private String name = "Unnamed_game";
-    private String currentImagePath;
     private int id;
     private String info_line;
     private static Game instance = new Game();
     private Player player;
+    private transient Image currentImage;
     private ArrayList<Room> allRooms;
     private ArrayList<Item> allItems;
     private ArrayList<StaticObject> allStaticObjects;
     private ArrayList<GameEventListener> allGameEventListeners;
     private ArrayList<Option> allOptions;
+    private ArrayList<Action> imageActionsToSave;
     
     private int itemMaxID = 0,
             optionMaxID = 0,
@@ -38,6 +41,7 @@ public class Game implements java.io.Serializable{
             
 
     private Game() {
+        imageActionsToSave= new ArrayList<>();
         id = gameID;
         gameID++;
         allStaticObjects = new ArrayList<>();
@@ -190,14 +194,6 @@ public class Game implements java.io.Serializable{
     public void removeItem(Item whatToRemove) {
         allItems.remove(whatToRemove);
     }
-    
-    public void setCurrentImagePath(String imagePath) {
-        currentImagePath = imagePath;
-    }
-
-    public String getCurrentImagePath() {
-        return currentImagePath;
-    }
 
     public String getInfo_line() {
         return info_line;
@@ -217,6 +213,7 @@ public class Game implements java.io.Serializable{
 
     public void removeRoom(Room room) {
         allRooms.remove(room);
+        room.deleteAllReferencesToThis();
     }
 
     public void removeGameEventListener(GameEventListener gameEventListener) {
@@ -312,6 +309,27 @@ public class Game implements java.io.Serializable{
         for(Room r : allRooms){
             if(r.hasItem(item))r.removeItem(item,true);
         }
+    }
+
+    public void addActionImageToSave(Action action) {
+        imageActionsToSave.add(action);
+    }
+    
+    public ArrayList<Action> getAllActionImagesToSave() {
+        return imageActionsToSave;
+    }
+
+    public void removeActionImageToSave(Action action) {
+        imageActionsToSave.add(action);
+    }
+
+    public Image getCurrentImage(){ 
+        if(currentImage==null)setCurrentImage(getPlayer().getCurrentRoom().getImage());
+        return currentImage;
+    }
+
+    public void setCurrentImage(Image currentImage) {
+        this.currentImage = currentImage;
     }
     
 

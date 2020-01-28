@@ -12,11 +12,24 @@ import textgame.structure.Item;
  *
  * @author David Brož
  */
-public class AddItemToPlayer implements Action {
+public class AddItemToPlayer implements Action, java.io.Serializable {
+
     private Item whatToAdd;
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid=b;
+    }
+
     @Override
     public void act() {
-        Game.getInstance().getPlayer().AddItemToPlayer(whatToAdd);
+        Game.getInstance().getPlayer().addItemToInvenotory(whatToAdd, true);
     }
 
     public AddItemToPlayer(Item whatToAdd) {
@@ -35,7 +48,4 @@ public class AddItemToPlayer implements Action {
     public void setWhatToAdd(Item whatToAdd) {
         this.whatToAdd = whatToAdd;
     }
-    
-    
-    
 }

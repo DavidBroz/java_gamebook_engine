@@ -12,7 +12,7 @@ import textgame.structure.gameEvents.GameEvent;
  *
  * @author David Brož
  */
-public class ThrowGameEvent implements Action {
+public class ThrowGameEvent implements Action, java.io.Serializable {
 
     private GameEvent whatToThrow;
     
@@ -27,6 +27,17 @@ public class ThrowGameEvent implements Action {
     @Override
     public String toString() {
         return "ThrowGameEvent{" + whatToThrow + '}';
+    }
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
     }
     
 }

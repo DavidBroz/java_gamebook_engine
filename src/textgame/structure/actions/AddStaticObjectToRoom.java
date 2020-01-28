@@ -12,9 +12,11 @@ import textgame.structure.StaticObject;
  *
  * @author David Brož
  */
-public class AddStaticObjectToRoom implements Action {
+public class AddStaticObjectToRoom implements Action, java.io.Serializable {
+
     private StaticObject whatToAdd;
     private Room whereToAdd;
+
     @Override
     public void act() {
         whereToAdd.addStaticObjectToRoom(whatToAdd);
@@ -27,7 +29,7 @@ public class AddStaticObjectToRoom implements Action {
 
     @Override
     public String toString() {
-        return "AddStaticObjectToRoom{" + whereToAdd +  ", Object: " +  whatToAdd + '}';
+        return "AddStaticObjectToRoom{" + whereToAdd + ", Object: " + whatToAdd + '}';
     }
 
     public StaticObject getWhatToAdd() {
@@ -45,6 +47,16 @@ public class AddStaticObjectToRoom implements Action {
     public void setWhereToAdd(Room whereToAdd) {
         this.whereToAdd = whereToAdd;
     }
-    
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

@@ -11,7 +11,8 @@ import textgame.structure.GameEventListener;
  *
  * @author David Brož
  */
-public class EnableGameEventListner implements Action {
+public class EnableGameEventListner implements Action, java.io.Serializable {
+
     private GameEventListener whatToEnable;
 
     public EnableGameEventListner(GameEventListener whatToEnable) {
@@ -35,5 +36,16 @@ public class EnableGameEventListner implements Action {
     public void setWhatToEnable(GameEventListener whatToEnable) {
         this.whatToEnable = whatToEnable;
     }
-    
+
+    private boolean isValid = true;
+
+    @Override
+    public boolean isValid() {
+        return isValid;
+    }
+
+    @Override
+    public void setValidity(boolean b) {
+        isValid = b;
+    }
 }

@@ -17,8 +17,10 @@ public class Option implements java.io.Serializable{
     private int id;
     private String optionLabel;
     private ArrayList<Action> actionList;
+    private ArrayList referencedBy;
 
     public Option(String message) {
+        referencedBy=new ArrayList<Object>();
         id=Game.getInstance().getOptionMaxID();
         Game.getInstance().incOptionMaxID();
         this.optionLabel = message;
@@ -52,6 +54,7 @@ public class Option implements java.io.Serializable{
     }
 
     public ArrayList<Action> getActionList() {
+        checkActionValidity();
         return actionList;
     }
 
@@ -66,6 +69,36 @@ public class Option implements java.io.Serializable{
 
     public void deleteAction(Action action) {
         actionList.remove(action);
+    }
+
+    void removeReferencedBy(Object o) {
+        if(referencedBy.contains(o))referencedBy.remove(o);
+        else System.out.println("-OPTION-:Object " + o + " was attemed to be removed from IsReferencedBy of" + toString() + " but was not found!");
+    }
+    
+    public void deleteAllReferencesToThis() {
+        for (Object o : referencedBy) {
+            if (o instanceof Room) {
+                Room r = (Room) o;                
+                r.removeOption(this,false);
+            } else if (o instanceof Player) {
+                Player pl = (Player) o;                
+                pl.removeOption(this,false);
+            }if(o instanceof Action){
+                Action a =(Action) o;
+                a.setValidity(false);
+            }
+        }
+    }
+
+    void addReferencedBy(Object o) {
+        referencedBy.add(o);
+    }
+
+    private void checkActionValidity() {
+        for (Action action : actionList) {
+            if(!action.isValid())actionList.remove(action);
+        }
     }
     
     
