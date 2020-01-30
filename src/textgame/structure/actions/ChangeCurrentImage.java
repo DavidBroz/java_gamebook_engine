@@ -18,7 +18,7 @@ import textgame.structure.Game;
  * @author David Brož
  */
 public class ChangeCurrentImage implements Action, java.io.Serializable {
-    private Image newImage;
+    private transient Image newImage;
     private boolean isValid=true;
     private int imageSavedID;
     @Override

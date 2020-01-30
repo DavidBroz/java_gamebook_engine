@@ -5,10 +5,14 @@
  */
 package textgame.editor;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +25,9 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -37,9 +44,11 @@ import textgame.structure.actions.AddOptionToRoom;
 import textgame.structure.actions.AddPathFromRoom;
 import textgame.structure.actions.AddStaticObjectToRoom;
 import textgame.structure.actions.AddToCustomValue;
+import textgame.structure.actions.ChangeCurrentImage;
 import textgame.structure.actions.ChangeItemDescription;
 import textgame.structure.actions.ChangeItemName;
 import textgame.structure.actions.ChangeRoomDescription;
+import textgame.structure.actions.ChangeRoomImage;
 import textgame.structure.actions.ChangeRoomName;
 import textgame.structure.actions.ChangeStaticObjectDescription;
 import textgame.structure.actions.ChangeStaticObjectName;
@@ -77,6 +86,10 @@ public class AddActionController implements Initializable {
     private Button closeButton, okButton;
     @FXML
     private Label currentActionLabel;
+
+    @FXML
+    private ImageView changeRoomImage_ImageView,
+            changeCurrentImage_ImageView;
 
     @FXML
     private HBox throwGameEvent_ChoiceBox_HBox,
@@ -122,7 +135,8 @@ public class AddActionController implements Initializable {
             removePathFromRoom_Where_Room_ChoiceBox,
             removeStaticObjectFromRoom_Room_ChoiceBox,
             changeRoomDescription_ChoiceBox,
-            changeRoomName_ChoiceBox;
+            changeRoomName_ChoiceBox,
+            changeRoomImage_ChoiceBox;
     @FXML
     private ChoiceBox<StaticObject> addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox,
             describeStaticObject_StaticObject_ChoiceBox,
@@ -169,7 +183,9 @@ public class AddActionController implements Initializable {
             pickUpItem_GridPane,
             pushMessage_GridPane,
             throwGameEvent_GridPane,
-            customValue_GridPane;
+            customValue_GridPane,
+            changeRoomImage_GridPane,
+            changeCurrentImage_GridPane;
 
     /**
      * Initializes the controller class.
@@ -179,7 +195,7 @@ public class AddActionController implements Initializable {
         result = null;
         throwGameEvent_ChoiceBox_GameEvent.getItems().addAll(GameEvent.GameEventType.values());
         throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().select(0);
-        setChoiceBoxOnChangListeners();
+        setListeners();
         resetLayout();
 
     }
@@ -691,7 +707,7 @@ public class AddActionController implements Initializable {
         }
         resetLayout();
         currentActionLabel.setText("Change Room name");
-        changeStaticObjectName_GridPane.setVisible(true);
+        changeRoomName_GridPane.setVisible(true);
     }
 
     @FXML
@@ -783,6 +799,31 @@ public class AddActionController implements Initializable {
             }
         }
 
+    }
+
+    @FXML
+    private void choiceChangeRoomImage() {
+        isOK = false;
+
+        ArrayList<Room> rooms = Game.getInstance().getAllRooms();
+
+        if (!rooms.isEmpty()) {
+            changeRoomImage_ChoiceBox.getItems().clear();
+            changeRoomImage_ChoiceBox.getItems().addAll(rooms);
+            changeRoomImage_ChoiceBox.getSelectionModel().select(0);
+        }
+        resetLayout();
+        currentActionLabel.setText("Change Room Image");
+        changeRoomImage_GridPane.setVisible(true);
+    }
+
+    @FXML
+    private void choiceChangeCurrentImage() {
+        isOK = false;
+
+        resetLayout();
+        currentActionLabel.setText("Change Current Image");
+        changeCurrentImage_GridPane.setVisible(true);
     }
 
     //------ChoiceBox_onAction--------------------------------------------------
@@ -1003,7 +1044,15 @@ public class AddActionController implements Initializable {
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(AddActionController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
 
+    private void update_changeCurrentImage() {
+        isOK=true;
+        result = new ChangeCurrentImage(changeCurrentImage_ImageView.getImage());
+        resetLayout();
+        changeCurrentImage_GridPane.setVisible(isOK);
+        
+                
     }
 
     private void update_customValue() {
@@ -1025,6 +1074,16 @@ public class AddActionController implements Initializable {
             temp.setValue(Integer.parseInt(customValue_TextField.getText()));
             temp.setValueName(customValue_choiceBox.getSelectionModel().getSelectedItem().toString());
         }
+    }
+
+    private void update_changeRoomImage() {
+        isOK = false;
+        if (!changeRoomImage_ChoiceBox.getItems().isEmpty() && changeRoomImage_ImageView.getImage() != null) {
+            isOK = true;
+            result = new ChangeRoomImage(changeRoomImage_ImageView.getImage(), changeRoomImage_ChoiceBox.getValue());
+        }
+        resetLayout();
+        changeRoomImage_GridPane.setVisible(true);
     }
 
     //---------------------------------------------------------------------------
@@ -1058,10 +1117,12 @@ public class AddActionController implements Initializable {
         pickUpItem_GridPane.setVisible(false);
         pushMessage_GridPane.setVisible(false);
         throwGameEvent_GridPane.setVisible(false);
+        changeCurrentImage_GridPane.setVisible(false);
+        changeRoomImage_GridPane.setVisible(false);
 
     }
 
-    private void setChoiceBoxOnChangListeners() {
+    private void setListeners() {
         removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
             update_removeStaticObjectFromRoom();
         });
@@ -1189,6 +1250,48 @@ public class AddActionController implements Initializable {
         });
         customValue_TextField.textProperty().addListener((observable) -> {
             update_customValue();
+        });
+
+        changeRoomImage_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
+            update_changeRoomImage();
+        });
+
+        changeRoomImage_ImageView.setOnDragOver((event) -> {
+            if (event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.ANY);
+            }
+        });
+
+        changeRoomImage_ImageView.setOnDragDropped((event) -> {
+            try {
+                List<File> files = event.getDragboard().getFiles();
+                Image img = new Image(new FileInputStream(files.get(0)));
+                changeRoomImage_ImageView.setImage(img);
+                update_changeRoomImage();
+            } catch (FileNotFoundException ex) {
+                System.out.println("File not found");
+                Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
+        });
+
+        changeCurrentImage_ImageView.setOnDragOver((event) -> {
+            if (event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.ANY);
+            }
+        });
+
+        changeCurrentImage_ImageView.setOnDragDropped((event) -> {
+            try {
+                List<File> files = event.getDragboard().getFiles();
+                Image img = new Image(new FileInputStream(files.get(0)));
+                changeCurrentImage_ImageView.setImage(img);
+                update_changeCurrentImage();
+            } catch (FileNotFoundException ex) {
+                System.out.println("File not found");
+                Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
         });
 
     }

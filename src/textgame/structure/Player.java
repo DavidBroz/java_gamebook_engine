@@ -35,6 +35,7 @@ public class Player implements java.io.Serializable {
         Game.getInstance().throwGameEvent(new PlayerLeftRoom(currentRoom));
         currentRoom = where;
         Game.getInstance().throwGameEvent(new PlayerEnteredRoom(where));  
+        Game.getInstance().setCurrentImage(currentRoom.getImage());
     }
     
     public void addItemToInvenotory(Item item_to_add,boolean throwEvent){

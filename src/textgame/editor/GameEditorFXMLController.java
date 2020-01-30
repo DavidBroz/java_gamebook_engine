@@ -76,6 +76,10 @@ import textgame.structure.Player;
 import textgame.structure.Room;
 import textgame.structure.StaticObject;
 import textgame.structure.actions.Action;
+import textgame.structure.actions.AddOptionToRoom;
+import textgame.structure.actions.AddPathFromRoom;
+import textgame.structure.actions.RemoveOptionFromRoom;
+import textgame.structure.actions.RemovePathFromRoom;
 import textgame.structure.actions.ThrowGameEvent;
 import textgame.structure.gameEvents.RandomNumber;
 
@@ -183,6 +187,8 @@ public class GameEditorFXMLController implements Initializable {
     //----Game-----------------------------------------------------------------
     @FXML
     private VBox gameInspectorVBox;
+    @FXML
+    private TextField gameInspectorName_TextField;
     //-------------------------------------------------------------------------
     private Graph graph;
 
@@ -322,6 +328,15 @@ public class GameEditorFXMLController implements Initializable {
 
                 }
                 updateListVeiws(false);
+            }
+        });
+        
+        gameInspectorName_TextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                Game.getInstance().setName(newValue);
+                updateInspector();
             }
         });
     }
@@ -491,6 +506,43 @@ public class GameEditorFXMLController implements Initializable {
         for (Option o : so.getAllOptions()) {
             selectedStaticObjectOptions.getItems().add(o);
         }
+    }
+    
+    private void updatePlayerInspector(Player player) {
+        playerInspectorVBox.setVisible(true);
+        playerOptionsListView.getItems().clear();
+        playerOptionsListView.getItems().addAll(player.getOptions());
+
+        playerCustomValuesListView.getItems().clear();
+        player.getCustomValues().forEach((t, u) -> {
+            playerCustomValuesListView.getItems().add(t+"="+u);
+        });
+
+        playerInventoryListView.getItems().clear();
+        playerInventoryListView.getItems().addAll(player.getInventory());
+        
+        startRoom_ChoiceBox.getItems().clear();
+        startRoom_ChoiceBox.getItems().addAll(Game.getInstance().getAllRooms());
+        
+        
+        if(player.getCurrentRoom()!=null){   
+            startRoom_ChoiceBox.getSelectionModel().select(player.getCurrentRoom());
+        }
+        
+    }
+     
+    private void updateGameInspector() {
+        gameInspectorVBox.setVisible(true);
+    }
+     
+     private void updateOptionInspector(Option o) {
+        OptionInspectorVBox.setVisible(true);
+        inspectedOptionLabel.setText(o.getOptionLabel());
+        inspectedOptionActions.getItems().clear();
+        for (Action a : o.getActionList()) {
+            inspectedOptionActions.getItems().add(a);
+        }
+        inspectedOptionIDLabel.setText("" + o.getId());
     }
     //---------EVENT-HANDLERS--------------------------
 
@@ -986,15 +1038,7 @@ public class GameEditorFXMLController implements Initializable {
         itemsInRoomInspectorListView.setContextMenu(roomItemContextMenu);
     }
 
-    private void updateOptionInspector(Option o) {
-        OptionInspectorVBox.setVisible(true);
-        inspectedOptionLabel.setText(o.getOptionLabel());
-        inspectedOptionActions.getItems().clear();
-        for (Action a : o.getActionList()) {
-            inspectedOptionActions.getItems().add(a);
-        }
-        inspectedOptionIDLabel.setText("" + o.getId());
-    }
+
 
     private Action addNewActionDialog() {
         try {
@@ -1018,17 +1062,7 @@ public class GameEditorFXMLController implements Initializable {
         return null;
     }
 
-    private void setDefaultGame() {
-        Game g = Game.getInstance();
-        g.addNewItem();
-        g.addNewRoom();
-        g.addNewRoom();
-        ArrayList<Room> rs = g.getAllRooms();
 
-        rs.get(0).addPath(rs.get(1));
-        g.getPlayer().setCurrentRoom(rs.get(0));
-        g.addNewStaticObject();
-    }
 
     private void setDiagram() {
         graph = new Graph();
@@ -1101,29 +1135,6 @@ public class GameEditorFXMLController implements Initializable {
         updateInspector();
     }
 
-    private void updatePlayerInspector(Player player) {
-        playerInspectorVBox.setVisible(true);
-        playerOptionsListView.getItems().clear();
-        playerOptionsListView.getItems().addAll(player.getOptions());
-
-        playerCustomValuesListView.getItems().clear();
-        player.getCustomValues().forEach((t, u) -> {
-            playerCustomValuesListView.getItems().add(t+"="+u);
-        });
-
-        playerInventoryListView.getItems().clear();
-        playerInventoryListView.getItems().addAll(player.getInventory());
-        
-        startRoom_ChoiceBox.getItems().clear();
-        startRoom_ChoiceBox.getItems().addAll(Game.getInstance().getAllRooms());
-        
-        
-        if(player.getCurrentRoom()!=null){   
-            startRoom_ChoiceBox.getSelectionModel().select(player.getCurrentRoom());
-        }
-        
-    }
-
     @FXML
     private void playerAddNewCustomValue() {
         Game.getInstance().getPlayer().addCustomValues(getNewCustomValueDialog());
@@ -1156,9 +1167,7 @@ public class GameEditorFXMLController implements Initializable {
         updateInspector();
     }
 
-    private void updateGameInspector() {
-        gameInspectorVBox.setVisible(true);
-    }
+   
 
     private void displayWarnings() {
         System.out.println("Warinings:"+warnings);
@@ -1172,9 +1181,61 @@ public class GameEditorFXMLController implements Initializable {
         String[] warnings_messages = {"Starting room is missing. (Go Project>Player)"};
         
         System.out.println("Start room:"+game.getPlayer().getCurrentRoom());
+        
         if (!warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom()==null) {
             warnings.add(warnings_messages[0]);
         }else if(warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom()!=null)warnings.remove(warnings_messages[0]);
+        
+    }
+    
+        private void setDefaultGame() {
+        Game g = Game.getInstance();
+       
+        g.addNewItem();
+        
+        g.addNewRoom();
+        g.addNewRoom();
+        g.addNewRoom();
+        
+        g.addNewStaticObject();
+        
+        g.addNewOption( new Option("Open the door"));
+        g.addNewOption( new Option("Close the door"));
+        
+        
+        ArrayList<Room> rs = g.getAllRooms();
+        ArrayList<Item> is = g.getAllItems();
+        ArrayList<Option> os = g.getAllOptions();
+
+        rs.get(0).addPath(rs.get(1));
+        rs.get(1).addPath(rs.get(0));
+        rs.get(1).addPath(rs.get(2));
+        rs.get(2).addPath(rs.get(1));
+
+        rs.get(1).addItemToRoom(is.get(0));
+        rs.get(1).addOption(os.get(2));
+        
+        os.get(1).addAction( new RemoveOptionFromRoom(os.get(1), rs.get(1)));
+        os.get(1).addAction( new AddPathFromRoom(rs.get(1), rs.get(0)));
+        os.get(1).addAction( new AddOptionToRoom(os.get(2),  rs.get(1)));
+        
+        os.get(2).addAction( new RemoveOptionFromRoom(os.get(2), rs.get(1)));
+        os.get(2).addAction( new RemovePathFromRoom(rs.get(1), rs.get(0)));
+        os.get(2).addAction( new AddOptionToRoom(os.get(1),  rs.get(1)));
+        
+        rs.get(0).setName("Start room");
+        rs.get(2).setName("End room");
+        rs.get(1).setName("Mid room");
+        
+        
+        rs.get(0).setDescription("This is a Start room");
+        rs.get(1).setDescription("This prolly is Mid room");
+        rs.get(2).setDescription("Mayhaps the End room");
+        
+        is.get(0).setName("Banana");
+        is.get(0).setDescription("Potentially dangersou fruit, rich source of potasium.");
+        
+        g.getPlayer().setCurrentRoom(rs.get(0));
         
     }
 }

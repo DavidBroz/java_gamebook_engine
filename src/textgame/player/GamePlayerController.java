@@ -50,17 +50,15 @@ public class GamePlayerController implements Initializable {
     private MenuItem load_button;
     @FXML
     private MenuItem save_button;
-    
+
     @FXML
     private MenuItem start_game_button;
-
 
     @FXML
     private ImageView imageView;
 
     /*@FXML
     private List option_list;*/
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //optionBox.setPrefWidth();
@@ -146,18 +144,17 @@ public class GamePlayerController implements Initializable {
 
     private void update() {
         System.out.println("---GAME UPDATED---");
+        System.out.println("ROOM: "+Game.getInstance());
         room_label.setText(Game.getInstance().getPlayer().getCurrentRoom().getName());
         info_line.setText(Game.getInstance().getInfo_line());
         describtion_text.setText(Game.getInstance().getPlayer().getCurrentRoom().getDescription());
         System.out.println("DO: PopulateObtionBar");
         populateOptionBar();
         System.out.println("DONE: Polulate option bar");
-        if (currentImagePath != null) {
-            imageView.setImage(Game.getInstance().getCurrentImage());
-            HBox parent = (HBox) imageView.getParent();
-            imageView.fitWidthProperty().bind(parent.widthProperty());
-            imageView.fitHeightProperty().bind(parent.heightProperty());
-        }
+        imageView.setImage(Game.getInstance().getCurrentImage());
+        HBox parent = (HBox) imageView.getParent();
+        imageView.fitWidthProperty().bind(parent.widthProperty());
+        imageView.fitHeightProperty().bind(parent.heightProperty());
 
     }
 
