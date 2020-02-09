@@ -15,13 +15,12 @@ import java.util.ArrayList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.imageio.ImageIO;
-import textgame.structure.actions.AddPathFromRoom;
 import textgame.structure.actions.MovePlayerToRoom;
 import textgame.structure.actions.PickUpItem;
 import textgame.structure.actions.ShowPlayerInventory;
-import textgame.structure.gameEvents.GameEvent;
+import textgame.structure.gameEvents.ItemAddedToRoom;
 import textgame.structure.gameEvents.ItemRemovedFromRoom;
-import textgame.structure.gameEvents.OptionRemovedFromPlayer;
+import textgame.structure.gameEvents.OptionAddedToRoom;
 import textgame.structure.gameEvents.RoomLostItem;
 
 /**
@@ -90,15 +89,9 @@ public class Room implements java.io.Serializable {
         items.remove(to_remove);
     }
     
-    public void addItemToRoom(Item item_to_add) {
+    public void addItemToRoom(Item item_to_add, boolean throwEvent) {
+        if(throwEvent)Game.getInstance().throwGameEvent(new ItemAddedToRoom(item_to_add, this));
         item_to_add.addReferencedBy(this);
-        System.out.println("Started to add");
-        if (game.getItemWithID(item_to_add.getId()) == null) {
-            game.getAllItems().add(item_to_add);
-        } else if (game.getItemWithID(item_to_add.getId()) != item_to_add) {
-            throw new IllegalArgumentException("An item with this ID already exists. Collision of IDs");
-        }
-        
         items.add(item_to_add);
     }
     
@@ -179,31 +172,28 @@ public class Room implements java.io.Serializable {
     public ArrayList<Option> getAllOptions() {
         return options;
     }
-    
-    void addOptionToRoom(Option option) {
-        option.addReferencedBy(this);
-        options.add(option);
-    }
-    
-    void removeStaticObject(StaticObject so) {
+    void removeStaticObject(StaticObject so, boolean throwEvent) {
+        if(throwEvent)Game.getInstance().throwGameEvent(new StaticObjectRemovedFromRoom(so,this));
         so.removeIsReferencedBy(this);
         staticObjects.remove(so);
     }
     
-    public void addOption(Option whatToAdd) {
-        addOptionToRoom(whatToAdd);
+    public void addOption(Option option, boolean throwEvent) {
+        option.addReferencedBy(this);
+        if(throwEvent) Game.getInstance().throwGameEvent(new OptionAddedToRoom(option, this));
+        options.add(option);
     }
     
     public void removeStaticObjectFromRoom(StaticObject whatToRemove, boolean throwEvent) {
         whatToRemove.removeIsReferencedBy(this);
-        if(throwEvent)Game.getInstance().throwGameEvent(new StaticObjectRemovedFromRoom(whatToRemove));
+        if(throwEvent)Game.getInstance().throwGameEvent(new StaticObjectRemovedFromRoom(whatToRemove,this));
         staticObjects.remove(whatToRemove);
     }
     
     public void removeItem(Item item, boolean throwEvents) {
         if (items.contains(item)) {
             if (throwEvents) {
-                Game.getInstance().throwGameEvent(new ItemRemovedFromRoom(item));
+                Game.getInstance().throwGameEvent(new ItemRemovedFromRoom(item,this));
                 Game.getInstance().throwGameEvent(new RoomLostItem(this));
             }
             item.removeReferencedBy(this);
@@ -216,7 +206,7 @@ public class Room implements java.io.Serializable {
     
     public void removeOption(Option whatToRemove, boolean throwEvent) {
         whatToRemove.removeReferencedBy(this);
-        if(throwEvent) Game.getInstance().throwGameEvent(new OptionRemovedFromRoom(whatToRemove));
+        if(throwEvent) Game.getInstance().throwGameEvent(new OptionRemovedFromRoom(whatToRemove,this));
         options.remove(whatToRemove);
     }
     
@@ -266,6 +256,7 @@ public class Room implements java.io.Serializable {
     }
     
     public void setImage(Image img) {
+        if(Game.getInstance().getPlayer().getCurrentRoom().equals(this))Game.getInstance().setCurrentImage(img);
         image = img;
     }
     

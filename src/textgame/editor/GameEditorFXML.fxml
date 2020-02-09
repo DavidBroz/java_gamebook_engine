@@ -294,7 +294,12 @@
                                           <Label text="Expects: " underline="true" />
                                           <StackPane alignment="TOP_LEFT">
                                              <children>
-                                                <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" />
+                                                <HBox>
+                                                   <children>
+                                                      <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" />
+                                                      <ChoiceBox fx:id="inspectedEventListenerGreaterLesser_ChoiceBox" prefWidth="150.0" />
+                                                   </children>
+                                                </HBox>
                                                 <ChoiceBox fx:id="inspectedGameEventListenerExpects_ChoiceBox" prefWidth="150.0" visible="false" />
                                              </children>
                                           </StackPane>

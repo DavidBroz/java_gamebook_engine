@@ -18,7 +18,7 @@ public class AddOptionToRoom implements Action, java.io.Serializable{
 
     @Override
     public void act() {
-        whereToAdd.addOption(whatToAdd);
+        whereToAdd.addOption(whatToAdd,true);
     }
 
     public AddOptionToRoom(Option whatToAdd, Room whereToAdd) {

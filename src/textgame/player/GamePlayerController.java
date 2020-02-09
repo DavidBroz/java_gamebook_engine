@@ -6,9 +6,7 @@
 package textgame.player;
 
 import textgame.utility.ResourceManager;
-import textgame.structure.StaticObject;
 import textgame.structure.Option;
-import textgame.structure.Room;
 import textgame.structure.actions.Action;
 import textgame.structure.Game;
 import textgame.structure.Item;
@@ -19,12 +17,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderImage;
+import javafx.scene.layout.BorderRepeat;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
@@ -56,6 +60,8 @@ public class GamePlayerController implements Initializable {
 
     @FXML
     private ImageView imageView;
+    @FXML
+    private StackPane optionBarStackPane;
 
     /*@FXML
     private List option_list;*/
@@ -143,6 +149,8 @@ public class GamePlayerController implements Initializable {
     }
 
     private void update() {
+        BorderImage bdrimg = new BorderImage(Game.getInstance().getCurrentImage(), new BorderWidths(100,10,10,10), new Insets(30), new BorderWidths(2,2,2,2), false, BorderRepeat.ROUND, BorderRepeat.ROUND);
+        Border brd =new Border(bdrimg);
         System.out.println("---GAME UPDATED---");
         System.out.println("ROOM: "+Game.getInstance());
         room_label.setText(Game.getInstance().getPlayer().getCurrentRoom().getName());
@@ -150,6 +158,7 @@ public class GamePlayerController implements Initializable {
         describtion_text.setText(Game.getInstance().getPlayer().getCurrentRoom().getDescription());
         System.out.println("DO: PopulateObtionBar");
         populateOptionBar();
+        optionBarStackPane.setBorder(brd);
         System.out.println("DONE: Polulate option bar");
         imageView.setImage(Game.getInstance().getCurrentImage());
         HBox parent = (HBox) imageView.getParent();

@@ -6,6 +6,8 @@
 package textgame.structure.gameEvents;
 
 import textgame.structure.Item;
+import textgame.structure.Room;
+import textgame.utility.Pair;
 
 /**
  *
@@ -14,12 +16,14 @@ import textgame.structure.Item;
 public class ItemRemovedFromRoom extends GameEvent {
     
     private Item item;
+    private Room room;
     
     public ItemRemovedFromRoom() {
     }
 
-    public ItemRemovedFromRoom(Item item) {
+    public ItemRemovedFromRoom(Item item, Room room) {
         this.item = item;
+        this.room = room;
     }
 
     @Override
@@ -29,28 +33,32 @@ public class ItemRemovedFromRoom extends GameEvent {
 
     @Override
     public Class getReturnClass() {
-        return Item.class;
+        return Pair.class;
     }
 
     @Override
     public void setValue(Object o) {
-        if(!(o instanceof Item))throw new IllegalArgumentException("Expected Item got " + o.getClass());
-            item=((Item)o);
+        if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
+        Pair temp = (Pair) o;
+        if(temp.first instanceof Item) throw new IllegalArgumentException("Expected first Item in Pair got " + temp.first.getClass());
+        if(temp.second instanceof Room) throw new IllegalArgumentException("Expected second Room in Pair got " + temp.second.getClass());
+        room = (Room) temp.second;
+        item = (Item) temp.first;
     }
 
     @Override
     public Object getValue() {
-        return item;
+        return new Pair<>(item,room);
     }
 
     @Override
     public Class getSettingClass() {
-        return Item.class;
+        return Pair.class;
     }
 
     @Override
     public String toString() {
-        return "ItemRemovedFromRoom: "+ item;
+        return "ItemRemovedFromRoom: {"+ item + ", Room: "+room+"}";
     }
     
 }

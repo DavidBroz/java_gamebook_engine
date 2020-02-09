@@ -28,7 +28,9 @@ public abstract class GameEvent implements java.io.Serializable {
         CustomValueChanged.class,
         OptionRemovedFromPlayer.class,
         OptionRemovedFromRoom.class,
-        StaticObjectRemovedFromRoom.class
+        StaticObjectRemovedFromRoom.class,
+        OptionAddedToRoom.class,
+        StaticObjectAddedToRoom.class
     };
     
     public enum GameEventType{
@@ -45,7 +47,10 @@ public abstract class GameEvent implements java.io.Serializable {
         CUSTOM_VALUE_CHANGED,
         OPTION_REMOVED_FROM_PLAYER,
         OPTION_REMOVED_FROM_ROOM,
-        STATIC_OBJECT_REMOVED_FROM_ROOM
+        STATIC_OBJECT_REMOVED_FROM_ROOM,
+        STATIC_OBJECT_ADDED_TO_ROOM,
+        OPTION_ADDED_TO_ROOM, 
+        ITEM_ADDED_TO_ROOM
     };
     
     public abstract GameEventType getEventType();

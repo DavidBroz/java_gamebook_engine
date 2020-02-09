@@ -26,41 +26,70 @@ public class GameEventListener implements java.io.Serializable {
     private ArrayList referencedBy;
     private Object expectedValue;
 
-    
-    public GameEventListener(String name,GameEventType expectedvEventType, String expectedValue, Action ...actionsToDo) {
-        referencedBy=new ArrayList();
+    public enum NumberComparasion {
+        GREATER_THAN, LESSER_THAN, EQUAL, ANY
+    };
+    private NumberComparasion numberComparator = NumberComparasion.EQUAL;
+    private boolean hasExpectedValue = false;
+
+    public GameEventListener(String name, GameEventType expectedvEventType, String expectedValue, Action... actionsToDo) {
+        referencedBy = new ArrayList();
         this.name = name;
-        id=Game.getInstance().getGameEventListenerMaxID();
+        id = Game.getInstance().getGameEventListenerMaxID();
         Game.getInstance().incGameEventListenerMaxID();
-        this.actions= new ArrayList();
-        for(Action a : actionsToDo){
+        this.actions = new ArrayList();
+        for (Action a : actionsToDo) {
             this.actions.add(a);
         }
-        this.expectedEventType=expectedvEventType;
-        this.expectedValue=expectedValue;
+        this.expectedEventType = expectedvEventType;
+        this.expectedValue = expectedValue;
     }
+
     void listen(GameEvent gameEvent) {
-        if(!enabled)return;
-        
-        System.out.println("EVENT-LISTENER: Listening to: Type("+ gameEvent.getEventType().toString()+") Value("+gameEvent.getValue()+")");
-        System.out.println("EVENT-LISTENER: Expecting: Type("+ expectedEventType.toString()+") Value("+expectedValue+")");
-        
-        if(gameEvent.getEventType()==expectedEventType && gameEvent.getValue().equals(expectedValue)){
+        if (!enabled) {
+            return;
+        }
+        hasExpectedValue = false;
+        System.out.println("EVENT-LISTENER: Listening to: Type(" + gameEvent.getEventType().toString() + ") Value(" + gameEvent.getValue() + ")");
+        System.out.println("EVENT-LISTENER: Expecting: Type(" + expectedEventType.toString() + ") Value(" + expectedValue + ")");
+        if (gameEvent.getReturnClass() == Integer.class) {
+            Integer temp_int=(Integer)gameEvent.getValue();
+            switch (numberComparator) {
+                case ANY:
+                    hasExpectedValue = true;
+                    break;
+                case EQUAL:
+                    if(temp_int.equals(expectedValue))hasExpectedValue=true;
+                    break;
+                case GREATER_THAN:
+                    if(temp_int > (Integer)expectedValue)hasExpectedValue=true;
+                    break;
+                case LESSER_THAN:
+                     if(temp_int < (Integer)expectedValue)hasExpectedValue=true;
+                    break;      
+            }
+        } else {
+            gameEvent.getValue().equals(expectedValue);
+        }
+
+        if (gameEvent.getEventType() == expectedEventType && hasExpectedValue) {
             System.out.println("EVENT-LISTENER: Game event match found.");
             act();
         }
+
     }
 
     public void enable() {
-        enabled=true;
+        enabled = true;
     }
-     public void disable() {
-        enabled=false;
+
+    public void disable() {
+        enabled = false;
     }
-    
-     @Override
-    public String toString(){
-        return id + "_" + name; 
+
+    @Override
+    public String toString() {
+        return id + "_" + name;
     }
 
     public GameEventType getExpectedEventType() {
@@ -74,7 +103,6 @@ public class GameEventListener implements java.io.Serializable {
     public int getId() {
         return id;
     }
-
 
     public String getName() {
         return name;
@@ -108,40 +136,52 @@ public class GameEventListener implements java.io.Serializable {
     public void addAction(Action actionToAdd) {
         actions.add(actionToAdd);
     }
-    
-     public void deleteAction(Action actionToDelete) {
+
+    public void deleteAction(Action actionToDelete) {
         actions.remove(actionToDelete);
     }
 
     private void act() {
         Game.getInstance().throwGameEvent(new GameEventListenerActed(this));
-        for(Action a : actions){
-                a.act();
-            }
+        for (Action a : actions) {
+            a.act();
+        }
     }
-    
-     public void deleteAllReferencesToThis() {
+
+    public void deleteAllReferencesToThis() {
         for (Object o : referencedBy) {
-            if(o instanceof Action){
-                Action a =(Action) o;
+            if (o instanceof Action) {
+                Action a = (Action) o;
                 a.setValidity(false);
             }
         }
     }
 
     void removeIsReferencedBy(Object o) {
-        if(referencedBy.contains(o))referencedBy.remove(o);
-        else System.out.println("-GAME-EVENT-LISTENER-: Referenced by was atempted to be removed but there was not isntance of: "+o.toString() );
+        if (referencedBy.contains(o)) {
+            referencedBy.remove(o);
+        } else {
+            System.out.println("-GAME-EVENT-LISTENER-: Referenced by was atempted to be removed but there was not isntance of: " + o.toString());
+        }
     }
 
     void addIsReferencedBy(Object o) {
         referencedBy.add(o);
     }
-    
-    
+
     private void checkActionValidity() {
         for (Action action : actions) {
-            if(!action.isValid())actions.remove(action);
+            if (!action.isValid()) {
+                actions.remove(action);
+            }
         }
+    }
+
+    public NumberComparasion getNumberComparator() {
+        return numberComparator;
+    }
+
+    public void setNumberComparator(NumberComparasion numberComparator) {
+        this.numberComparator = numberComparator;
     }
 }

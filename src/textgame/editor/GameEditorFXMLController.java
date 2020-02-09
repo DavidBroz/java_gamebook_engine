@@ -94,7 +94,7 @@ public class GameEditorFXMLController implements Initializable {
     @FXML
     private Label warning_label;
     private ArrayList<String> warnings;
-    
+
     @FXML
     private BorderPane borderPane;
 
@@ -162,7 +162,8 @@ public class GameEditorFXMLController implements Initializable {
     private ChoiceBox<GameEvent.GameEventType> selectedEventListenerListensFor;
 
     @FXML
-    private ChoiceBox inspectedGameEventListenerExpects_ChoiceBox;
+    private ChoiceBox inspectedEventListenerGreaterLesser_ChoiceBox,
+            inspectedGameEventListenerExpects_ChoiceBox;
 
     private boolean selectedEventListenenTextFieldIsString;
     //---Option-inspector------------------------------------------------
@@ -194,6 +195,7 @@ public class GameEditorFXMLController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -201,7 +203,7 @@ public class GameEditorFXMLController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         warning_label.setStyle("-fx-text-fill: #AB4642;");
         initializeContextMenus();
-        warnings=new ArrayList();
+        warnings = new ArrayList();
 
         //-SET-CHOICE-BOX-
         selectedEventListenerListensFor.getItems().addAll(GameEvent.GameEventType.values());
@@ -217,6 +219,7 @@ public class GameEditorFXMLController implements Initializable {
         setListViewOnClickEventHandler(allEventListenerListView);
         setListViewOnClickEventHandler(allOptionsListView);
 
+        inspectedEventListenerGreaterLesser_ChoiceBox.getItems().addAll("<", ">", "=", "*");
         setDiagram();
         setInstantUpdates();
         setDefaultGame();
@@ -330,12 +333,25 @@ public class GameEditorFXMLController implements Initializable {
                 updateListVeiws(false);
             }
         });
-        
+
         gameInspectorName_TextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
                     String oldValue, String newValue) {
                 Game.getInstance().setName(newValue);
+                updateInspector();
+            }
+        });
+        
+        inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
+            if(inspectedObject instanceof GameEventListener){
+                GameEventListener ev = (GameEventListener) inspectedObject;
+                Object selected = inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().getSelectedItem();
+                if(selected.equals("<"))ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
+                else if(selected.equals(">"))ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
+                else if(selected.equals("="))ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
+                else if(selected.equals("*"))ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
+                
                 updateInspector();
             }
         });
@@ -386,7 +402,7 @@ public class GameEditorFXMLController implements Initializable {
     private void updateInspector() {
         checkForWarnings();
         displayWarnings();
-        
+
         gameInspectorVBox.setVisible(false);
         playerInspectorVBox.setVisible(false);
         roomInspectorVBox.setVisible(false);
@@ -462,12 +478,29 @@ public class GameEditorFXMLController implements Initializable {
         Class requiredClass = GameEvent.getReturnClass(ev.getExpectedEventType());
         selectedEventListenenExpects.setVisible(false);
         inspectedGameEventListenerExpects_ChoiceBox.setVisible(false);
+        inspectedEventListenerGreaterLesser_ChoiceBox.setVisible(false);
 
         if (requiredClass.equals(Integer.class)) {
             selectedEventListenenTextFieldIsString = false;
             selectedEventListenenExpects.setVisible(true);
             selectedEventListenenExpects.setText(ev.getExpectedValue().toString());
             System.out.println("Request for Integer");
+            inspectedEventListenerGreaterLesser_ChoiceBox.setVisible(true);
+            switch (ev.getNumberComparator()) {
+                case ANY:
+                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("*");
+                    break;
+                case EQUAL:
+                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("=");
+                    break;
+                case GREATER_THAN:
+                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select(">");
+                    break;
+                case LESSER_THAN:
+                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("<");
+                    break;
+
+            }
         } else if (requiredClass.equals(String.class)) {
             selectedEventListenenTextFieldIsString = true;
             selectedEventListenenExpects.setVisible(true);
@@ -507,7 +540,7 @@ public class GameEditorFXMLController implements Initializable {
             selectedStaticObjectOptions.getItems().add(o);
         }
     }
-    
+
     private void updatePlayerInspector(Player player) {
         playerInspectorVBox.setVisible(true);
         playerOptionsListView.getItems().clear();
@@ -515,27 +548,26 @@ public class GameEditorFXMLController implements Initializable {
 
         playerCustomValuesListView.getItems().clear();
         player.getCustomValues().forEach((t, u) -> {
-            playerCustomValuesListView.getItems().add(t+"="+u);
+            playerCustomValuesListView.getItems().add(t + "=" + u);
         });
 
         playerInventoryListView.getItems().clear();
         playerInventoryListView.getItems().addAll(player.getInventory());
-        
+
         startRoom_ChoiceBox.getItems().clear();
         startRoom_ChoiceBox.getItems().addAll(Game.getInstance().getAllRooms());
-        
-        
-        if(player.getCurrentRoom()!=null){   
+
+        if (player.getCurrentRoom() != null) {
             startRoom_ChoiceBox.getSelectionModel().select(player.getCurrentRoom());
         }
-        
+
     }
-     
+
     private void updateGameInspector() {
         gameInspectorVBox.setVisible(true);
     }
-     
-     private void updateOptionInspector(Option o) {
+
+    private void updateOptionInspector(Option o) {
         OptionInspectorVBox.setVisible(true);
         inspectedOptionLabel.setText(o.getOptionLabel());
         inspectedOptionActions.getItems().clear();
@@ -667,7 +699,9 @@ public class GameEditorFXMLController implements Initializable {
         Dragboard db = allRoomListView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent cb = new ClipboardContent();
         Room r = (Room) allRoomListView.getSelectionModel().getSelectedItems().get(0);
-        if(r==null)return;
+        if (r == null) {
+            return;
+        }
         cb.put(DataFormat.PLAIN_TEXT, r.toString());
         db.setContent(cb);
         event.consume();
@@ -678,7 +712,9 @@ public class GameEditorFXMLController implements Initializable {
         Dragboard db = allStaticObjectListView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent cb = new ClipboardContent();
         StaticObject so = (StaticObject) allStaticObjectListView.getSelectionModel().getSelectedItems().get(0);
-        if(so==null)return;
+        if (so == null) {
+            return;
+        }
         cb.put(DataFormat.PLAIN_TEXT, so.toString());
         db.setContent(cb);
         event.consume();
@@ -689,7 +725,9 @@ public class GameEditorFXMLController implements Initializable {
         Dragboard db = allItemListView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent cb = new ClipboardContent();
         Item r = (Item) allItemListView.getSelectionModel().getSelectedItems().get(0);
-        if(r==null)return;
+        if (r == null) {
+            return;
+        }
         cb.put(DataFormat.PLAIN_TEXT, r.toString());
         db.setContent(cb);
         event.consume();
@@ -700,7 +738,9 @@ public class GameEditorFXMLController implements Initializable {
         Dragboard db = allOptionsListView.startDragAndDrop(TransferMode.ANY);
         ClipboardContent cb = new ClipboardContent();
         Option o = (Option) allOptionsListView.getSelectionModel().getSelectedItems().get(0);
-        if(o==null)return;
+        if (o == null) {
+            return;
+        }
         cb.put(DataFormat.PLAIN_TEXT, o.toString());
         db.setContent(cb);
         event.consume();
@@ -754,23 +794,23 @@ public class GameEditorFXMLController implements Initializable {
 
     //-------------ON-DRAG-DROPPED----------------------------------------------
     @FXML
-    private void PlayerInventoryOnDragDropped(DragEvent event){
+    private void PlayerInventoryOnDragDropped(DragEvent event) {
         Game game = Game.getInstance();
         String str = event.getDragboard().getString();
         Player pl = (Player) inspectedObject;
-        pl.addItemToInvenotory(game.getItemWithToSting(str),false);
+        pl.addItemToInvenotory(game.getItemWithToSting(str), false);
         updateInspector();
     }
-    
+
     @FXML
-    private void playerOptionsOnDragDrop(DragEvent event){
+    private void playerOptionsOnDragDrop(DragEvent event) {
         Game game = Game.getInstance();
         String str = event.getDragboard().getString();
         Player pl = (Player) inspectedObject;
-        pl.addOption(game.getOptionWithToSting(str),false);
+        pl.addOption(game.getOptionWithToSting(str), false);
         updateInspector();
     }
-    
+
     @FXML
     private void RoomImageViewOnDragDropped(DragEvent event) {
         try {
@@ -803,7 +843,7 @@ public class GameEditorFXMLController implements Initializable {
         String str = event.getDragboard().getString();
         roomInspectorOptionListView.getItems().add(game.getOptionWithToSting(str));
         Room r = (Room) inspectedObject;
-        r.addOption(game.getOptionWithToSting(str));
+        r.addOption(game.getOptionWithToSting(str),false);
         update();
     }
 
@@ -833,7 +873,7 @@ public class GameEditorFXMLController implements Initializable {
         String str = event.getDragboard().getString();
         itemsInRoomInspectorListView.getItems().add(game.getItemWithToSting(str));
         Room r = (Room) inspectedObject;
-        r.addItemToRoom(game.getItemWithToSting(str));
+        r.addItemToRoom(game.getItemWithToSting(str),false);
         update();
     }
 
@@ -1015,7 +1055,7 @@ public class GameEditorFXMLController implements Initializable {
             Object item = roomInspectorOptionListView.getSelectionModel().getSelectedItem();
             if (inspectedObject instanceof Room && item instanceof Option) {
                 Room temp = (Room) inspectedObject;
-                temp.removeOption((Option) item,false);
+                temp.removeOption((Option) item, false);
                 update();
             }
         });
@@ -1037,8 +1077,6 @@ public class GameEditorFXMLController implements Initializable {
         roomItemContextMenu.getItems().add(deleteRI);
         itemsInRoomInspectorListView.setContextMenu(roomItemContextMenu);
     }
-
-
 
     private Action addNewActionDialog() {
         try {
@@ -1062,8 +1100,6 @@ public class GameEditorFXMLController implements Initializable {
         return null;
     }
 
-
-
     private void setDiagram() {
         graph = new Graph();
         updateDiagramCells(graph);
@@ -1071,7 +1107,7 @@ public class GameEditorFXMLController implements Initializable {
     }
 
     private void updateDiagramCells(Graph graph) {
-        final Model model = graph.getModel();   
+        final Model model = graph.getModel();
         saveRoomLocation(graph);
         graph.beginUpdate();
 
@@ -1164,45 +1200,48 @@ public class GameEditorFXMLController implements Initializable {
 
     public void inspectGame() {
         inspectedObject = Game.getInstance();
+        gameInspectorName_TextField.setText(Game.getInstance().getName());
         updateInspector();
     }
 
-   
-
     private void displayWarnings() {
-        System.out.println("Warinings:"+warnings);
-        if(warnings.isEmpty()) warning_label.setText("");
-        else warning_label.setText(warnings.get(0));
+        System.out.println("Warinings:" + warnings);
+        if (warnings.isEmpty()) {
+            warning_label.setText("");
+        } else {
+            warning_label.setText(warnings.get(0));
+        }
     }
-    
-    private void checkForWarnings(){
+
+    private void checkForWarnings() {
         System.out.println("Checked for warnings");
         Game game = Game.getInstance();
         String[] warnings_messages = {"Starting room is missing. (Go Project>Player)"};
-        
-        System.out.println("Start room:"+game.getPlayer().getCurrentRoom());
-        
-        if (!warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom()==null) {
+
+        System.out.println("Start room:" + game.getPlayer().getCurrentRoom());
+
+        if (!warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom() == null) {
             warnings.add(warnings_messages[0]);
-        }else if(warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom()!=null)warnings.remove(warnings_messages[0]);
-        
+        } else if (warnings.contains(warnings_messages[0]) && game.getPlayer().getCurrentRoom() != null) {
+            warnings.remove(warnings_messages[0]);
+        }
+
     }
-    
-        private void setDefaultGame() {
+
+    private void setDefaultGame() {
         Game g = Game.getInstance();
-       
+
         g.addNewItem();
-        
+
         g.addNewRoom();
         g.addNewRoom();
         g.addNewRoom();
-        
+
         g.addNewStaticObject();
-        
-        g.addNewOption( new Option("Open the door"));
-        g.addNewOption( new Option("Close the door"));
-        
-        
+
+        g.addNewOption(new Option("Open the door"));
+        g.addNewOption(new Option("Close the door"));
+
         ArrayList<Room> rs = g.getAllRooms();
         ArrayList<Item> is = g.getAllItems();
         ArrayList<Option> os = g.getAllOptions();
@@ -1212,30 +1251,29 @@ public class GameEditorFXMLController implements Initializable {
         rs.get(1).addPath(rs.get(2));
         rs.get(2).addPath(rs.get(1));
 
-        rs.get(1).addItemToRoom(is.get(0));
-        rs.get(1).addOption(os.get(2));
-        
-        os.get(1).addAction( new RemoveOptionFromRoom(os.get(1), rs.get(1)));
-        os.get(1).addAction( new AddPathFromRoom(rs.get(1), rs.get(0)));
-        os.get(1).addAction( new AddOptionToRoom(os.get(2),  rs.get(1)));
-        
-        os.get(2).addAction( new RemoveOptionFromRoom(os.get(2), rs.get(1)));
-        os.get(2).addAction( new RemovePathFromRoom(rs.get(1), rs.get(0)));
-        os.get(2).addAction( new AddOptionToRoom(os.get(1),  rs.get(1)));
-        
+        rs.get(1).addItemToRoom(is.get(0),false);
+        rs.get(1).addOption(os.get(2),false);
+
+        os.get(1).addAction(new RemoveOptionFromRoom(os.get(1), rs.get(1)));
+        os.get(1).addAction(new AddPathFromRoom(rs.get(1), rs.get(0)));
+        os.get(1).addAction(new AddOptionToRoom(os.get(2), rs.get(1)));
+
+        os.get(2).addAction(new RemoveOptionFromRoom(os.get(2), rs.get(1)));
+        os.get(2).addAction(new RemovePathFromRoom(rs.get(1), rs.get(0)));
+        os.get(2).addAction(new AddOptionToRoom(os.get(1), rs.get(1)));
+
         rs.get(0).setName("Start room");
         rs.get(2).setName("End room");
         rs.get(1).setName("Mid room");
-        
-        
+
         rs.get(0).setDescription("This is a Start room");
         rs.get(1).setDescription("This prolly is Mid room");
         rs.get(2).setDescription("Mayhaps the End room");
-        
+
         is.get(0).setName("Banana");
         is.get(0).setDescription("Potentially dangersou fruit, rich source of potasium.");
-        
+
         g.getPlayer().setCurrentRoom(rs.get(0));
-        
+
     }
 }

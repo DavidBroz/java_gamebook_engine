@@ -5,31 +5,30 @@
  */
 package textgame.structure.gameEvents;
 
+import textgame.structure.Item;
 import textgame.structure.Room;
-import textgame.structure.StaticObject;
-import textgame.structure.gameEvents.GameEvent;
 import textgame.utility.Pair;
 
 /**
  *
  * @author David Brož
  */
-public class StaticObjectRemovedFromRoom extends GameEvent {
-
-    private StaticObject staticObject;
+public class ItemAddedToRoom extends GameEvent {
+    
+    private Item item;
     private Room room;
-
-    public StaticObjectRemovedFromRoom() {
+    
+    public ItemAddedToRoom() {
     }
 
-    public StaticObjectRemovedFromRoom(StaticObject staticObject,Room room) {
-        this.staticObject = staticObject;
+    public ItemAddedToRoom(Item item, Room room) {
+        this.item = item;
         this.room = room;
     }
 
     @Override
-    public GameEventType getEventType() {
-        return GameEventType.STATIC_OBJECT_REMOVED_FROM_ROOM;
+    public GameEvent.GameEventType getEventType() {
+        return GameEvent.GameEventType.ITEM_ADDED_TO_ROOM;
     }
 
     @Override
@@ -38,28 +37,28 @@ public class StaticObjectRemovedFromRoom extends GameEvent {
     }
 
     @Override
+    public void setValue(Object o) {
+        if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
+        Pair temp = (Pair) o;
+        if(temp.first instanceof Item) throw new IllegalArgumentException("Expected first Item in Pair got " + temp.first.getClass());
+        if(temp.second instanceof Room) throw new IllegalArgumentException("Expected second Room in Pair got " + temp.second.getClass());
+        room = (Room) temp.second;
+        item = (Item) temp.first;
+    }
+
+    @Override
+    public Object getValue() {
+        return new Pair<>(item,room);
+    }
+
+    @Override
     public Class getSettingClass() {
         return Pair.class;
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
-        Pair temp = (Pair) o;
-        if(temp.first instanceof StaticObject) throw new IllegalArgumentException("Expected first StaticObject in Pair got " + temp.first.getClass());
-        if(temp.second instanceof Room) throw new IllegalArgumentException("Expected second Room in Pair got " + temp.second.getClass());
-        room = (Room) temp.second;
-        staticObject = (StaticObject) temp.first;
-    }
-
-    @Override
-    public Object getValue() {
-        return new Pair<>(staticObject,room);
-    }
-
-    @Override
     public String toString() {
-        return "StaticObjectRemovedFromRoom{" + staticObject+", Room: " +room+ '}';
+        return "ItemAddedToRoom: {"+ item + ", Room: "+room+"}";
     }
-
+    
 }

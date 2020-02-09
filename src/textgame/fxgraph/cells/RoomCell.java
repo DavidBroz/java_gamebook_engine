@@ -136,11 +136,11 @@ public class RoomCell extends AbstractCell {
     }
 
     private void addOptionToRoom(Option temp_o) {
-        room.addOption(temp_o);
+        room.addOption(temp_o,false);
     }
 
     private void addItemToRoom(Item temp_i) {
-        room.addItemToRoom(temp_i);
+        room.addItemToRoom(temp_i,false);
     }
 
     public Room getRoom() {

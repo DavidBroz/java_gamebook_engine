@@ -5,31 +5,25 @@
  */
 package textgame.structure.gameEvents;
 
+import textgame.structure.Option;
 import textgame.structure.Room;
-import textgame.structure.StaticObject;
-import textgame.structure.gameEvents.GameEvent;
 import textgame.utility.Pair;
 
 /**
  *
  * @author David Brož
  */
-public class StaticObjectRemovedFromRoom extends GameEvent {
+public class OptionAddedToRoom extends GameEvent{
 
-    private StaticObject staticObject;
+    private Option option;
     private Room room;
-
-    public StaticObjectRemovedFromRoom() {
+    public OptionAddedToRoom() {
     }
 
-    public StaticObjectRemovedFromRoom(StaticObject staticObject,Room room) {
-        this.staticObject = staticObject;
-        this.room = room;
-    }
-
+    
     @Override
     public GameEventType getEventType() {
-        return GameEventType.STATIC_OBJECT_REMOVED_FROM_ROOM;
+        return GameEventType.OPTION_ADDED_TO_ROOM;
     }
 
     @Override
@@ -39,27 +33,32 @@ public class StaticObjectRemovedFromRoom extends GameEvent {
 
     @Override
     public Class getSettingClass() {
-        return Pair.class;
+        return Option.class;
     }
 
     @Override
     public void setValue(Object o) {
         if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
         Pair temp = (Pair) o;
-        if(temp.first instanceof StaticObject) throw new IllegalArgumentException("Expected first StaticObject in Pair got " + temp.first.getClass());
+        if(temp.first instanceof Option) throw new IllegalArgumentException("Expected first Option in Pair got " + temp.first.getClass());
         if(temp.second instanceof Room) throw new IllegalArgumentException("Expected second Room in Pair got " + temp.second.getClass());
         room = (Room) temp.second;
-        staticObject = (StaticObject) temp.first;
+        option = (Option) temp.first;
     }
 
     @Override
     public Object getValue() {
-        return new Pair<>(staticObject,room);
+        return new Pair<>(option,room);
+    }
+
+    public OptionAddedToRoom(Option option, Room room) {
+        this.option = option;
+        this.room = room;
     }
 
     @Override
     public String toString() {
-        return "StaticObjectRemovedFromRoom{" + staticObject+", Room: " +room+ '}';
+        return "OptionAddedToRoom{" + option + ", Room: " + room + '}';
     }
-
+    
 }

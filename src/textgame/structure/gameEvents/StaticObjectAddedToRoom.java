@@ -14,22 +14,22 @@ import textgame.utility.Pair;
  *
  * @author David Brož
  */
-public class StaticObjectRemovedFromRoom extends GameEvent {
+public class StaticObjectAddedToRoom extends GameEvent {
 
     private StaticObject staticObject;
     private Room room;
 
-    public StaticObjectRemovedFromRoom() {
+    public StaticObjectAddedToRoom() {
     }
 
-    public StaticObjectRemovedFromRoom(StaticObject staticObject,Room room) {
+    public StaticObjectAddedToRoom(StaticObject staticObject,Room room) {
         this.staticObject = staticObject;
         this.room = room;
     }
 
     @Override
-    public GameEventType getEventType() {
-        return GameEventType.STATIC_OBJECT_REMOVED_FROM_ROOM;
+    public GameEvent.GameEventType getEventType() {
+        return GameEvent.GameEventType.STATIC_OBJECT_ADDED_TO_ROOM;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class StaticObjectRemovedFromRoom extends GameEvent {
 
     @Override
     public String toString() {
-        return "StaticObjectRemovedFromRoom{" + staticObject+", Room: " +room+ '}';
+        return "StaticObjectAddedToRoom{" + staticObject+", Room: " +room+ '}';
     }
 
 }
