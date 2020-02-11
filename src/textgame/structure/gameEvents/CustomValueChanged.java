@@ -29,36 +29,31 @@ public class CustomValueChanged extends GameEvent {
     }
 
     @Override
-    public Class getReturnClass() {
-        return Pair.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{String.class,Integer.class};
     }
 
     @Override
-    public Class getSettingClass() {
-        return Pair.class;
+    public Class[] getSettingClasses() {
+         return new Class[]{String.class,Integer.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
-        Pair p= (Pair)o;
-        if(!(p.first instanceof String))throw new IllegalArgumentException("Got Pair but first is not a String");
-        if(!(p.second instanceof Integer))throw new IllegalArgumentException("Got Pair but second is not a Integer");
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof String))throw new IllegalArgumentException("Expected String got " + o[0].getClass());
+        if(!(o[1] instanceof Integer))throw new IllegalArgumentException("Expected Integer got " + o[1].getClass());
         
-        valueName=(String)p.first;
-        value=(Integer)p.second;
+        valueName=(String)o[0];
+        value=(Integer)o[1];
     }
 
     @Override
-    public Object getValue() {
-        return new Pair(valueName,value);
+    public Object[] getValues() {
+        return new Object[] {valueName,value};
     }
 
     @Override
     public String toString() {
         return "CustomValueChanged{" + valueName + ", value=" + value + '}';
     }
-
-    
-    
 }

@@ -28,24 +28,24 @@ public class ItemRemovedFromInventory extends GameEvent{
     }
 
     @Override
-    public Class getReturnClass() {
-        return Item.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Item.class};
     }
 
     @Override
-    public Class getSettingClass() {
-        return Item.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Item.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(o instanceof Item) item = (Item)o;
-        else throw new IllegalArgumentException("Expected Item got " + o.getClass());
+    public void setValues(Object[] o) {
+        if(o[0] instanceof Item) item = (Item)o[0];
+        else throw new IllegalArgumentException("Expected Item got " + o[0].getClass());
     }
 
     @Override
-    public Object getValue() {
-        return item;
+    public Object[] getValues() {
+        return new Object[]{item};
     }
 
     @Override

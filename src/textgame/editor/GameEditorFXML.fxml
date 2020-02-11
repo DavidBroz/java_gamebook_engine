@@ -102,320 +102,316 @@
    <right>
       <ScrollPane hbarPolicy="NEVER" prefViewportHeight="736.0" prefViewportWidth="350.0" BorderPane.alignment="CENTER_LEFT">
          <content>
-            <AnchorPane maxWidth="300.0" prefHeight="736.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_CENTER">
                <children>
-                  <VBox alignment="TOP_CENTER">
+                  <Label id="headline" alignment="CENTER" text="Inspector" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <StackPane layoutY="65.0" prefHeight="701.0" prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-52.0" AnchorPane.topAnchor="35.0">
+                     <padding>
+                        <Insets left="20.0" right="20.0" />
+                     </padding>
                      <children>
-                        <Label id="headline" alignment="CENTER" text="Inspector" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font name="System Bold" size="24.0" />
-                           </font>
-                        </Label>
-                        <StackPane layoutY="65.0" prefHeight="701.0" prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-52.0" AnchorPane.topAnchor="35.0">
-                           <padding>
-                              <Insets left="20.0" right="20.0" />
-                           </padding>
+                        <VBox fx:id="StaticObjectInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
                            <children>
-                              <VBox fx:id="StaticObjectInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                              <Label text="Static Object">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
                                  <children>
-                                    <Label text="Static Object">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
+                                    <Label text="Static Object id:" underline="true" />
+                                    <Label fx:id="selectedStaticObjectIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
                                     </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Static Object id:" underline="true" />
-                                          <Label fx:id="selectedStaticObjectIdLabel" text="ID">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
-                                       <children>
-                                          <Label text="Name:" underline="true" />
-                                          <TextField fx:id="selectedStaticObjectName" />
-                                       </children>
-                                    </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Description:" underline="true" />
-                                          <TextArea fx:id="selectedStaticObjectDesArea" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Options:" underline="true" />
-                                          <ListView fx:id="selectedStaticObjectOptions" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedStaticObjectName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedStaticObjectDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
                               </VBox>
-                              <VBox fx:id="ItemInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false" StackPane.alignment="TOP_CENTER">
+                              <VBox>
                                  <children>
-                                    <Label text="Item">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Item id:" underline="true" />
-                                          <Label fx:id="selectedItemIdLabel" text="ID">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
-                                       <children>
-                                          <Label text="Name:" underline="true" />
-                                          <TextField fx:id="selectedItemName" />
-                                       </children>
-                                    </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Description:" underline="true" />
-                                          <TextArea fx:id="selectedItemDesArea" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
+                                    <Label text="Options:" underline="true" />
+                                    <ListView fx:id="selectedStaticObjectOptions" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
                                  </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox fx:id="roomInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
-                                 <children>
-                                    <Label text="Room">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Room id:" underline="true" />
-                                          <Label fx:id="selectedRoomIdLabel" text="ID">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
-                                       <children>
-                                          <Label text="Name:" underline="true" />
-                                          <TextField fx:id="selectedRoomName" onAction="#updateInspectedRoomName" />
-                                       </children>
-                                    </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Image" underline="true" />
-                                          <ImageView fx:id="roomImageView" fitHeight="156.0" fitWidth="344.0" onDragDropped="#RoomImageViewOnDragDropped" onDragOver="#RoomImageViewOnDragOver" pickOnBounds="true" preserveRatio="true" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Description:" underline="true" />
-                                          <TextArea fx:id="selectedRoomDesArea" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Items in room:" underline="true" />
-                                          <ListView fx:id="itemsInRoomInspectorListView" onDragDropped="#itemsInRoomListViewOnDragDropped" onDragOver="#itemsInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Paths to rooms:" underline="true" />
-                                          <ListView fx:id="roomInspectorPathsListView" onDragDropped="#roomPathListViewOnDragDropped" onDragOver="#roomPathsListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Static objects in room:" underline="true" />
-                                          <ListView fx:id="roomInspectorStaticObjectListView" onDragDropped="#staticObjectInRoomListViewOnDragDropped" onDragOver="#staticObjectInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Option in room:" underline="true" />
-                                          <ListView fx:id="roomInspectorOptionListView" onDragDropped="#OptionInRoomListViewOnDragDropped" onDragOver="#OptionInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
-                                 <children>
-                                    <Label text="Event Listener">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Event listener id:" underline="true" />
-                                          <Label fx:id="selectedEventListenerIdLabel" text="ID">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Name: " underline="true" />
-                                          <TextField fx:id="selectedEventListenerName" onAction="#updateInspectedEventListenerName" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Enabled: " underline="true" />
-                                          <CheckBox fx:id="eventListenerEnabledCheckBox" mnemonicParsing="false" onAction="#selectedEventListenerEnabledChecked" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Listens for: " underline="true" />
-                                          <ChoiceBox fx:id="selectedEventListenerListensFor" onAction="#selectedEventListenerListensForChoice" prefWidth="150.0" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Expects: " underline="true" />
-                                          <StackPane alignment="TOP_LEFT">
-                                             <children>
-                                                <HBox>
-                                                   <children>
-                                                      <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" />
-                                                      <ChoiceBox fx:id="inspectedEventListenerGreaterLesser_ChoiceBox" prefWidth="150.0" />
-                                                   </children>
-                                                </HBox>
-                                                <ChoiceBox fx:id="inspectedGameEventListenerExpects_ChoiceBox" prefWidth="150.0" visible="false" />
-                                             </children>
-                                          </StackPane>
-                                       </children>
-                                    </HBox>
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <Label text="Actions: " underline="true" />
-                                          <ListView fx:id="selectedEvenListenerActions" prefHeight="200.0" prefWidth="200.0" />
-                                          <Button fx:id="addActionToSelectedEventListener" mnemonicParsing="false" onAction="#addNewActionToSelectedEventListener" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox fx:id="OptionInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
-                                 <children>
-                                    <Label text="Option">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                                       <children>
-                                          <Label text="Option ID:" underline="true" />
-                                          <Label fx:id="inspectedOptionIDLabel" text="ID">
-                                             <padding>
-                                                <Insets left="10.0" />
-                                             </padding>
-                                          </Label>
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Label: " underline="true" />
-                                          <TextField fx:id="inspectedOptionLabel" onAction="#updateInspectedEventListenerName" />
-                                       </children>
-                                    </HBox>
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <Label text="Actions: " underline="true" />
-                                          <ListView fx:id="inspectedOptionActions" prefHeight="200.0" prefWidth="200.0" />
-                                          <Button fx:id="addActionToSelectedEventListener1" mnemonicParsing="false" onAction="#addNewActionToOption" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox fx:id="gameInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
-                                 <children>
-                                    <Label text="Game">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Label text="Name:" />
-                                          <TextField fx:id="gameInspectorName_TextField" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
-                              </VBox>
-                              <VBox fx:id="playerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
-                                 <children>
-                                    <Label text="Player">
-                                       <font>
-                                          <Font size="24.0" />
-                                       </font>
-                                    </Label>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
-                                       <children>
-                                          <Label text="Start room" />
-                                          <ChoiceBox fx:id="startRoom_ChoiceBox" prefWidth="150.0" />
-                                       </children>
-                                    </HBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Options:" underline="true" />
-                                          <ListView fx:id="playerOptionsListView" onDragDropped="#playerOptionsOnDragDrop" onDragOver="#OptionInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Custom values:" underline="true" />
-                                          <ListView fx:id="playerCustomValuesListView" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                          <Button mnemonicParsing="false" onAction="#playerAddNewCustomValue" prefHeight="31.0" prefWidth="775.0" text="+Add new custom value" />
-                                       </children>
-                                    </VBox>
-                                    <VBox>
-                                       <children>
-                                          <Label text="Inventory" underline="true" />
-                                          <ListView fx:id="playerInventoryListView" onDragDropped="#PlayerInventoryOnDragDropped" onDragOver="#itemsInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="20.0" />
-                                 </padding>
                               </VBox>
                            </children>
-                        </StackPane>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="ItemInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false" StackPane.alignment="TOP_CENTER">
+                           <children>
+                              <Label text="Item">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Item id:" underline="true" />
+                                    <Label fx:id="selectedItemIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedItemName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedItemDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="roomInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Room">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Room id:" underline="true" />
+                                    <Label fx:id="selectedRoomIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="BASELINE_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+                                 <children>
+                                    <Label text="Name:" underline="true" />
+                                    <TextField fx:id="selectedRoomName" onAction="#updateInspectedRoomName" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Image" underline="true" />
+                                    <ImageView fx:id="roomImageView" fitHeight="156.0" fitWidth="344.0" onDragDropped="#RoomImageViewOnDragDropped" onDragOver="#RoomImageViewOnDragOver" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Description:" underline="true" />
+                                    <TextArea fx:id="selectedRoomDesArea" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Items in room:" underline="true" />
+                                    <ListView fx:id="itemsInRoomInspectorListView" onDragDropped="#itemsInRoomListViewOnDragDropped" onDragOver="#itemsInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Paths to rooms:" underline="true" />
+                                    <ListView fx:id="roomInspectorPathsListView" onDragDropped="#roomPathListViewOnDragDropped" onDragOver="#roomPathsListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Static objects in room:" underline="true" />
+                                    <ListView fx:id="roomInspectorStaticObjectListView" onDragDropped="#staticObjectInRoomListViewOnDragDropped" onDragOver="#staticObjectInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Option in room:" underline="true" />
+                                    <ListView fx:id="roomInspectorOptionListView" onDragDropped="#OptionInRoomListViewOnDragDropped" onDragOver="#OptionInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Event Listener">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Event listener id:" underline="true" />
+                                    <Label fx:id="selectedEventListenerIdLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Name: " underline="true" />
+                                    <TextField fx:id="selectedEventListenerName" onAction="#updateInspectedEventListenerName" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Enabled: " underline="true" />
+                                    <CheckBox fx:id="eventListenerEnabledCheckBox" mnemonicParsing="false" onAction="#selectedEventListenerEnabledChecked" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Listens for: " underline="true" />
+                                    <ChoiceBox fx:id="selectedEventListenerListensFor" onAction="#selectedEventListenerListensForChoice" prefWidth="150.0" />
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Expects: " underline="true" />
+                                    <StackPane alignment="TOP_LEFT">
+                                       <children>
+                                          <HBox spacing="3.0">
+                                             <children>
+                                                <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" prefWidth="100.0" />
+                                                <ChoiceBox fx:id="inspectedEventListenerGreaterLesser_ChoiceBox" prefWidth="50.0" />
+                                             </children>
+                                          </HBox>
+                                          <ChoiceBox fx:id="inspectedGameEventListenerExpects_ChoiceBox" prefWidth="150.0" visible="false" />
+                                       </children>
+                                    </StackPane>
+                                 </children>
+                              </HBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Actions: " underline="true" />
+                                    <ListView fx:id="selectedEvenListenerActions" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addActionToSelectedEventListener" mnemonicParsing="false" onAction="#addNewActionToSelectedEventListener" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="OptionInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Option">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                                 <children>
+                                    <Label text="Option ID:" underline="true" />
+                                    <Label fx:id="inspectedOptionIDLabel" text="ID">
+                                       <padding>
+                                          <Insets left="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Label: " underline="true" />
+                                    <TextField fx:id="inspectedOptionLabel" onAction="#updateInspectedEventListenerName" />
+                                 </children>
+                              </HBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label text="Actions: " underline="true" />
+                                    <ListView fx:id="inspectedOptionActions" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addActionToSelectedEventListener1" mnemonicParsing="false" onAction="#addNewActionToOption" prefHeight="31.0" prefWidth="350.0" text="+Add action" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="gameInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Game">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Name:" />
+                                    <TextField fx:id="gameInspectorName_TextField" />
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
+                        <VBox fx:id="playerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                           <children>
+                              <Label text="Player">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                 <children>
+                                    <Label text="Start room" />
+                                    <ChoiceBox fx:id="startRoom_ChoiceBox" prefWidth="150.0" />
+                                 </children>
+                              </HBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Options:" underline="true" />
+                                    <ListView fx:id="playerOptionsListView" onDragDropped="#playerOptionsOnDragDrop" onDragOver="#OptionInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Custom values:" underline="true" />
+                                    <ListView fx:id="playerCustomValuesListView" onDragDropped="#OptionInStaticObjectListViewOnDragDropped" onDragOver="#OptionInStaticObjectListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button mnemonicParsing="false" onAction="#playerAddNewCustomValue" prefHeight="31.0" prefWidth="775.0" text="+Add new custom value" />
+                                 </children>
+                              </VBox>
+                              <VBox>
+                                 <children>
+                                    <Label text="Inventory" underline="true" />
+                                    <ListView fx:id="playerInventoryListView" onDragDropped="#PlayerInventoryOnDragDropped" onDragOver="#itemsInRoomListVieOnDragOver" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" />
+                           </padding>
+                        </VBox>
                      </children>
-                     <padding>
-                        <Insets right="10.0" />
-                     </padding>
-                  </VBox>
+                  </StackPane>
                </children>
-            </AnchorPane>
+               <padding>
+                  <Insets right="10.0" />
+               </padding>
+            </VBox>
          </content>
          <padding>
             <Insets right="20.0" />

@@ -29,24 +29,24 @@ public class RoomLostItem extends GameEvent {
     }
 
     @Override
-    public Class getReturnClass() {
-        return Room.class;
+    public Class[] getReturnClasses() {
+        return new Class[] {Room.class};
     }
 
     @Override
-    public Class getSettingClass() {
-        return Room.class;
+    public Class[] getSettingClasses() {
+        return new Class[] {Room.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Room))throw new IllegalArgumentException("Expected Room got " + o.getClass());
-        room = ((Room)o);
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof Room))throw new IllegalArgumentException("Expected Room got " + o[0].getClass());
+        room = ((Room)o[0]);
     }
 
     @Override
-    public Object getValue() {
-        return room;
+    public Object[] getValues() {
+        return new Object[]{room};
     }
 
     @Override

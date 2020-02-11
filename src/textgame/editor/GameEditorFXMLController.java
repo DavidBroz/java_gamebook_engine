@@ -162,8 +162,9 @@ public class GameEditorFXMLController implements Initializable {
     private ChoiceBox<GameEvent.GameEventType> selectedEventListenerListensFor;
 
     @FXML
-    private ChoiceBox inspectedEventListenerGreaterLesser_ChoiceBox,
-            inspectedGameEventListenerExpects_ChoiceBox;
+    private ChoiceBox<String> inspectedEventListenerGreaterLesser_ChoiceBox;
+    @FXML
+    private ChoiceBox         inspectedGameEventListenerExpects_ChoiceBox;
 
     private boolean selectedEventListenenTextFieldIsString;
     //---Option-inspector------------------------------------------------
@@ -343,17 +344,17 @@ public class GameEditorFXMLController implements Initializable {
             }
         });
         
-        inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            if(inspectedObject instanceof GameEventListener){
+        inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+             if(inspectedObject instanceof GameEventListener){
                 GameEventListener ev = (GameEventListener) inspectedObject;
-                Object selected = inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().getSelectedItem();
+                String selected = inspectedEventListenerGreaterLesser_ChoiceBox.getItems().get(newValue.intValue());
                 if(selected.equals("<"))ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
                 else if(selected.equals(">"))ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
                 else if(selected.equals("="))ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
                 else if(selected.equals("*"))ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
                 
                 updateInspector();
-            }
+        }
         });
     }
     //-----------------UPDATE------------------------------------------------------

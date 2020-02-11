@@ -55,24 +55,24 @@ public abstract class GameEvent implements java.io.Serializable {
     
     public abstract GameEventType getEventType();
     
-    public abstract Class getReturnClass();
+    public abstract Class[] getReturnClasses();
     
-    public abstract Class getSettingClass();
+    public abstract Class[] getSettingClasses();
     
-    public abstract void setValue(Object o);
+    public abstract void setValues(Object[] o);
     
-    public abstract Object getValue();
+    public abstract Object[] getValues();
     
     @Override
     public abstract String toString();
     
-    public static Class getReturnClass(GameEventType type){
+    public static Class[] getReturnClass(GameEventType type){
         GameEvent temp;
         try {
             for (Class c : gameEventClasses) {
                     temp =(GameEvent)c.newInstance();
                     if(temp.getEventType().equals(type)){
-                        return temp.getReturnClass();
+                        return temp.getReturnClasses();
                     }
             }
         } catch (InstantiationException | IllegalAccessException ex) {
@@ -81,13 +81,13 @@ public abstract class GameEvent implements java.io.Serializable {
         return null;
     }
     
-    public static Class getSettingClass(GameEventType type) {
+    public static Class[] getSettingClass(GameEventType type) {
         GameEvent temp;
         try {
             for (Class c : gameEventClasses) {
                     temp =(GameEvent)c.newInstance();
                     if(temp.getEventType().equals(type)){
-                        return temp.getSettingClass();
+                        return temp.getSettingClasses();
                     }
             }
         } catch (InstantiationException | IllegalAccessException ex) {

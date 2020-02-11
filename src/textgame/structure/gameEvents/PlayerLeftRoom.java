@@ -37,27 +37,27 @@ public class PlayerLeftRoom extends GameEvent {
     }
     
     @Override
-    public Class getReturnClass() {
-        return Room.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Room.class};
     }
     
     @Override
-    public Object getValue() {
-        return getRoom();
+    public Object[] getValues() {
+        return new Object[]{getRoom()};
     }  
 
     public PlayerLeftRoom() {
     }
     
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Room))throw new IllegalArgumentException("Expected Room got " + o.getClass());
-        setRoom((Room)o);
+    public void setValues(Object o[]) {
+        if(!(o[0] instanceof Room))throw new IllegalArgumentException("Expected Room got " + o[0].getClass());
+        setRoom((Room)o[0]);
     }
 
     @Override
-    public Class getSettingClass() {
-        return Room.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Room.class};
     }
     
 }

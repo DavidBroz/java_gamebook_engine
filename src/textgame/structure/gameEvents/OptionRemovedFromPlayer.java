@@ -29,24 +29,24 @@ public class OptionRemovedFromPlayer extends GameEvent {
     }
 
     @Override
-    public Class getReturnClass() {
-        return Option.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Option.class};
     }
 
     @Override
-    public Class getSettingClass() {
-        return Option.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Option.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Option))throw new IllegalArgumentException("Expected Option got " + o.getClass());
-            option=((Option)o);
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof Option))throw new IllegalArgumentException("Expected Option got " + o[0].getClass());
+            option=((Option)o[0]);
     }
 
     @Override
-    public Object getValue() {
-        return option;
+    public Object[] getValues() {
+        return new Object[]{option};
     }
 
     @Override

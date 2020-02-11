@@ -41,24 +41,24 @@ public class OptionSelected extends GameEvent {
     }
 
     @Override
-    public Class getReturnClass() {
-        return Option.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Option.class};
     }
     
     @Override
-    public Object getValue() {
-        return getOption();
+    public Object[] getValues() {
+        return new Object[]{option};
     }
     
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Option))throw new IllegalArgumentException("Expected Option got " + o.getClass());
-        setOption((Option)o);
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof Option))throw new IllegalArgumentException("Expected Option got " + o[0].getClass());
+        setOption((Option)o[0]);
     }
 
     @Override
-    public Class getSettingClass() {
-        return Option.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Option.class};
     }
     
 }

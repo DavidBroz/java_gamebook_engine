@@ -28,24 +28,24 @@ public class GameEventListenerActed extends GameEvent{
     }
 
     @Override
-    public Class getReturnClass() {
-        return GameEventListener.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{GameEventListener.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof GameEventListener))throw new IllegalArgumentException("Expected GameEventListener got " + o.getClass());
-        listener =((GameEventListener)o);
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof GameEventListener))throw new IllegalArgumentException("Expected GameEventListener got " + o[0].getClass());
+        listener =((GameEventListener)o[0]);
     }
 
     @Override
-    public Object getValue() {
-        return listener;
+    public Object[] getValues() {
+        return new Object[]{listener};
     }
 
     @Override
-    public Class getSettingClass() {
-        return GameEventListener.class;
+    public Class[] getSettingClasses() {
+         return new Class[]{GameEventListener.class};
     }
 
     @Override

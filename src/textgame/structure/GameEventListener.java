@@ -24,7 +24,7 @@ public class GameEventListener implements java.io.Serializable {
     private boolean enabled = true;
     private ArrayList<Action> actions;
     private ArrayList referencedBy;
-    private Object expectedValue;
+    private Object[] expectedValues;
 
     public enum NumberComparasion {
         GREATER_THAN, LESSER_THAN, EQUAL, ANY
@@ -32,7 +32,7 @@ public class GameEventListener implements java.io.Serializable {
     private NumberComparasion numberComparator = NumberComparasion.EQUAL;
     private boolean hasExpectedValue = false;
 
-    public GameEventListener(String name, GameEventType expectedvEventType, String expectedValue, Action... actionsToDo) {
+    public GameEventListener(String name, GameEventType expectedvEventType, Object[] expectedValue, Action... actionsToDo) {
         referencedBy = new ArrayList();
         this.name = name;
         id = Game.getInstance().getGameEventListenerMaxID();
@@ -42,7 +42,7 @@ public class GameEventListener implements java.io.Serializable {
             this.actions.add(a);
         }
         this.expectedEventType = expectedvEventType;
-        this.expectedValue = expectedValue;
+        this.expectedValues = expectedValue;
     }
 
     void listen(GameEvent gameEvent) {
@@ -50,26 +50,26 @@ public class GameEventListener implements java.io.Serializable {
             return;
         }
         hasExpectedValue = false;
-        System.out.println("EVENT-LISTENER: Listening to: Type(" + gameEvent.getEventType().toString() + ") Value(" + gameEvent.getValue() + ")");
-        System.out.println("EVENT-LISTENER: Expecting: Type(" + expectedEventType.toString() + ") Value(" + expectedValue + ")");
-        if (gameEvent.getReturnClass() == Integer.class) {
-            Integer temp_int=(Integer)gameEvent.getValue();
+        System.out.println("EVENT-LISTENER: Listening to: Type(" + gameEvent.getEventType().toString() + ") Values(" + gameEvent.getValues() + ")");
+        System.out.println("EVENT-LISTENER: Expecting: Type(" + expectedEventType.toString() + ") Values(" + expectedValues + ")");
+        if (gameEvent.getReturnClasses()[0] == Integer.class) {
+            Integer temp_int=(Integer)gameEvent.getValues()[0];
             switch (numberComparator) {
                 case ANY:
                     hasExpectedValue = true;
                     break;
                 case EQUAL:
-                    if(temp_int.equals(expectedValue))hasExpectedValue=true;
+                    if(temp_int.equals(expectedValues[0]))hasExpectedValue=true;
                     break;
                 case GREATER_THAN:
-                    if(temp_int > (Integer)expectedValue)hasExpectedValue=true;
+                    if(temp_int > (Integer)expectedValues[0])hasExpectedValue=true;
                     break;
                 case LESSER_THAN:
-                     if(temp_int < (Integer)expectedValue)hasExpectedValue=true;
+                     if(temp_int < (Integer)expectedValues[0])hasExpectedValue=true;
                     break;      
             }
         } else {
-            gameEvent.getValue().equals(expectedValue);
+            hasExpectedValue = gameEvent.getValues().equals(expectedValues);
         }
 
         if (gameEvent.getEventType() == expectedEventType && hasExpectedValue) {
@@ -125,12 +125,12 @@ public class GameEventListener implements java.io.Serializable {
         return actions;
     }
 
-    public Object getExpectedValue() {
-        return expectedValue;
+    public Object[] getExpectedValue() {
+        return expectedValues;
     }
 
-    public void setExpectedValue(Object expectedValue) {
-        this.expectedValue = expectedValue;
+    public void setExpectedValue(Object[] expectedValue) {
+        this.expectedValues = expectedValue;
     }
 
     public void addAction(Action actionToAdd) {

@@ -32,28 +32,27 @@ public class ItemRemovedFromRoom extends GameEvent {
     }
 
     @Override
-    public Class getReturnClass() {
-        return Pair.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Item.class, Room.class};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Pair))throw new IllegalArgumentException("Expected Pair got " + o.getClass());
-        Pair temp = (Pair) o;
-        if(temp.first instanceof Item) throw new IllegalArgumentException("Expected first Item in Pair got " + temp.first.getClass());
-        if(temp.second instanceof Room) throw new IllegalArgumentException("Expected second Room in Pair got " + temp.second.getClass());
-        room = (Room) temp.second;
-        item = (Item) temp.first;
+    public void setValues(Object[] o) {
+
+        if(o[0] instanceof Item) throw new IllegalArgumentException("Expected Item, got " + o[0].getClass());
+        if(o[1] instanceof Room) throw new IllegalArgumentException("Expected Room, got " + o[1].getClass());
+        room = (Room) o[1];
+        item = (Item) o[0];
     }
 
     @Override
-    public Object getValue() {
-        return new Pair<>(item,room);
+    public Object[] getValues() {
+        return new Object[]{item,room};
     }
 
     @Override
-    public Class getSettingClass() {
-        return Pair.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Item.class, Room.class};
     }
 
     @Override

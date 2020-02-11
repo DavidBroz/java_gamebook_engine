@@ -142,7 +142,7 @@ public class Game implements java.io.Serializable{
         return null;
     }
 
-    public GameEventListener addEventListener(String name,GameEvent.GameEventType gameEventType, String expectedValue, Action action) {
+    public GameEventListener addEventListener(String name,GameEvent.GameEventType gameEventType, Object[] expectedValue, Action action) {
         GameEventListener gel = new GameEventListener(name, gameEventType, expectedValue, action);
         allGameEventListeners.add(gel);
         return gel;

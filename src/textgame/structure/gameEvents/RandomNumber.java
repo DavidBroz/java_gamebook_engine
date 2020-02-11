@@ -48,22 +48,22 @@ public class RandomNumber extends GameEvent {
     }
     
     @Override
-    public Class getReturnClass() {
-        return Integer.class;
+    public Class[] getReturnClasses() {
+        return new Class[]{Integer.class};
     }
 
     @Override
-    public Object getValue() {
-        return getNumber();
+    public Object[] getValues() {
+        return new Object[] {getNumber()};
     }
     
     @Override
-    public void setValue(Object o) {
+    public void setValues(Object[] o) {
         throw new UnsupportedOperationException("This function is not implemented.");
     }
 
     @Override
-    public Class getSettingClass() {
-        return null;
+    public Class[] getSettingClasses() {
+        return new Class[]{Integer.class, Integer.class};
     }
 }

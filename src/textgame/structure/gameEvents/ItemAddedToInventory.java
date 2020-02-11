@@ -41,23 +41,23 @@ public class ItemAddedToInventory extends GameEvent {
     } 
 
     @Override
-    public Class getReturnClass() {
-        return Item.class;
+    public Class[] getReturnClasses() {
+         return new Class[]{Item.class};
     }
 
     @Override
-    public Object getValue() {
-        return getItem();
+    public Object[] getValues() {
+        return new Object[]{getItem()};
     }
 
     @Override
-    public void setValue(Object o) {
-        if(!(o instanceof Item))throw new IllegalArgumentException("Expected Item got " + o.getClass());
-        setItem((Item)o);
+    public void setValues(Object[] o) {
+        if(!(o[0] instanceof Item))throw new IllegalArgumentException("Expected Item got " + o[0].getClass());
+        setItem((Item)o[0]);
     }
 
     @Override
-    public Class getSettingClass() {
-        return Item.class;
+    public Class[] getSettingClasses() {
+        return new Class[]{Item.class};
     }
 }

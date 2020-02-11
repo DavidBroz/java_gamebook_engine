@@ -299,7 +299,7 @@ public class AddActionController implements Initializable {
                     addItemToRoom_ChoiceBox_Item_ChoiceBox.getValue());
         }
 
-        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValue());
+        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
         resetLayout();
         currentActionLabel.setText("Add Item to Room");
         addItemToRoom_GridPane.setVisible(true);
@@ -503,7 +503,7 @@ public class AddActionController implements Initializable {
                     removeItemFromRoom_Room_ChoiceBox.getValue());
         }
 
-        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValue());
+        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
         resetLayout();
         currentActionLabel.setText("Remove Item from Room");
         removeItemFromRoom_GridPane.setVisible(true);
@@ -536,7 +536,7 @@ public class AddActionController implements Initializable {
                     removeOptionFromRoom_Room_ChoiceBox.getValue());
         }
 
-        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValue());
+        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
         resetLayout();
         currentActionLabel.setText("Remove Option from Room");
         removeOptionFromRoom_GridPane.setVisible(true);
@@ -567,7 +567,7 @@ public class AddActionController implements Initializable {
                     removePathFromRoom_Where_Room_ChoiceBox.getValue());
         }
 
-        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValue());
+        //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
         resetLayout();
         currentActionLabel.setText("Remove Option from Room");
         removePathFromRoom_GridPane.setVisible(true);
@@ -1026,7 +1026,7 @@ public class AddActionController implements Initializable {
                 }
             } else if (settingClass.equals(String.class)) {
                 ge = (GameEvent) settingClass.newInstance();
-                ge.setValue(throwGameEvent_SingleTextField_TextField.getText());
+                ge.setValues(throwGameEvent_SingleTextField_TextField.getText());
                 isOK = true;
 
             } else if (settingClass.equals(null)) {
@@ -1034,7 +1034,7 @@ public class AddActionController implements Initializable {
                 isOK = true;
             } else if (!throwGameEvent_ChoiceBox.getItems().isEmpty()) {
                 ge = (GameEvent) settingClass.newInstance();
-                ge.setValue(throwGameEvent_ChoiceBox.getValue());
+                ge.setValues(throwGameEvent_ChoiceBox.getValue());
                 isOK = true;
             }
 
