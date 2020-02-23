@@ -47,25 +47,19 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.abego.treelayout.Configuration;
 import textgame.fxgraph.cells.RoomCell;
-import textgame.fxgraph.cells.RectangleCell;
-import textgame.fxgraph.cells.TriangleCell;
-import textgame.fxgraph.edges.CorneredEdge;
-import textgame.fxgraph.edges.DoubleCorneredEdge;
 import textgame.fxgraph.edges.Edge;
 import textgame.fxgraph.graph.Graph;
 import textgame.fxgraph.graph.ICell;
-import textgame.fxgraph.graph.IEdge;
 import textgame.fxgraph.graph.Model;
-import textgame.fxgraph.layout.AbegoTreeLayout;
 import textgame.fxgraph.layout.CustomLayout;
-import textgame.fxgraph.layout.RandomLayout;
 import textgame.utility.ResourceManager;
 import textgame.structure.Game;
 import textgame.structure.gameEvents.GameEvent;
@@ -147,14 +141,24 @@ public class GameEditorFXMLController implements Initializable {
     //---Game-Event-Listner-inspector------------------------------------------------
     @FXML
     private VBox EventListenerInspectorVBox;
+    @FXML
+    private HBox gameEventListener_Expects1_TextHBox,
+            gameEventListener_Expects2_TextHBox,
+            gameEventListener_Expects3_TextHBox;
 
+    @FXML
+    private StackPane gameEventListener_Expects3_StackPane,
+            gameEventListener_Expects2_StackPane,
+            gameEventListener_Expects1_StackPane;
     @FXML
     private CheckBox eventListenerEnabledCheckBox;
     @FXML
     private Label selectedEventListenerIdLabel;
     @FXML
     private TextField selectedEventListenerName,
-            selectedEventListenenExpects;
+            gameEventListener_Expects3_TextField,
+            gameEventListener_Expects2_TextField,
+            gameEventListener_Expects1_TextField;
 
     @FXML
     private ListView selectedEvenListenerActions;
@@ -162,11 +166,13 @@ public class GameEditorFXMLController implements Initializable {
     private ChoiceBox<GameEvent.GameEventType> selectedEventListenerListensFor;
 
     @FXML
-    private ChoiceBox<String> inspectedEventListenerGreaterLesser_ChoiceBox;
+    private ChoiceBox<String> gameEventListener_Expects3_ChoiceBox_Comparasion,
+            gameEventListener_Expects2_ChoiceBox_Comparasion,
+            gameEventListener_Expects1_ChoiceBox_Comparasion;
     @FXML
-    private ChoiceBox         inspectedGameEventListenerExpects_ChoiceBox;
-
-    private boolean selectedEventListenenTextFieldIsString;
+    private ChoiceBox gameEventListener_Expects3_ChoiceBox,
+            gameEventListener_Expects2_ChoiceBox,
+            gameEventListener_Expects1_ChoiceBox;
     //---Option-inspector------------------------------------------------
     @FXML
     private VBox OptionInspectorVBox;
@@ -220,7 +226,10 @@ public class GameEditorFXMLController implements Initializable {
         setListViewOnClickEventHandler(allEventListenerListView);
         setListViewOnClickEventHandler(allOptionsListView);
 
-        inspectedEventListenerGreaterLesser_ChoiceBox.getItems().addAll("<", ">", "=", "*");
+        gameEventListener_Expects1_ChoiceBox_Comparasion.getItems().addAll("<", ">", "=", "*");
+        gameEventListener_Expects2_ChoiceBox_Comparasion.getItems().addAll("<", ">", "=", "*");
+        gameEventListener_Expects3_ChoiceBox_Comparasion.getItems().addAll("<", ">", "=", "*");
+
         setDiagram();
         setInstantUpdates();
         setDefaultGame();
@@ -316,24 +325,146 @@ public class GameEditorFXMLController implements Initializable {
                 updateListVeiws(false);
             }
         });
-        selectedEventListenenExpects.textProperty().addListener(new ChangeListener<String>() {
+
+        //-----GAME-EVENT-LISTENERS-EXPECTS-------------------------------------
+        gameEventListener_Expects1_TextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable,
                     String oldValue, String newValue) {
                 GameEventListener i = (GameEventListener) inspectedObject;
-                if (selectedEventListenenTextFieldIsString) {
-                    i.setExpectedValue(new String(newValue));
+                Object[] o = i.getExpectedValues();
+                if (o[0] instanceof String) {
+                    o[0] = new String(newValue);
+                    i.setExpectedValues(o);
                 } else {
                     if (!newValue.matches("\\d*")) {
-                        selectedEventListenenExpects.setText(newValue.replaceAll("[^\\d]", ""));
+                        gameEventListener_Expects1_TextField.setText(newValue.replaceAll("[^\\d]", ""));
                     } else if (!newValue.isEmpty()) {
-                        i.setExpectedValue(new Integer(Integer.parseInt(newValue)));
+                        o[0] = new Integer(Integer.parseInt(newValue));
+                        i.setExpectedValues(o);
+                        i.setExpectedValues(o);
                     }
 
                 }
-                updateListVeiws(false);
+                updateInspector();
             }
         });
+        gameEventListener_Expects3_TextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                GameEventListener i = (GameEventListener) inspectedObject;
+                Object[] o = i.getExpectedValues();
+                if (o[2] instanceof String) {
+                    o[2] = new String(newValue);
+                    i.setExpectedValues(o);
+                } else {
+                    if (!newValue.matches("\\d*")) {
+                        gameEventListener_Expects3_TextField.setText(newValue.replaceAll("[^\\d]", ""));
+                    } else if (!newValue.isEmpty()) {
+                        o[2] = new Integer(Integer.parseInt(newValue));
+                        i.setExpectedValues(o);
+                        i.setExpectedValues(o);
+                    }
+
+                }
+                updateInspector();
+            }
+        });
+        gameEventListener_Expects2_TextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                    String oldValue, String newValue) {
+                GameEventListener i = (GameEventListener) inspectedObject;
+                Object[] o = i.getExpectedValues();
+                if (o[1] instanceof String) {
+                    o[1] = new String(newValue);
+                    i.setExpectedValues(o);
+                } else {
+                    if (!newValue.matches("\\d*")) {
+                        gameEventListener_Expects2_TextField.setText(newValue.replaceAll("[^\\d]", ""));
+                    } else if (!newValue.isEmpty()) {
+                        o[1] = new Integer(Integer.parseInt(newValue));
+                        i.setExpectedValues(o);
+                        i.setExpectedValues(o);
+                    }
+
+                }
+                updateInspector();
+            }
+        });
+        //---Choice-Boxes---
+        gameEventListener_Expects1_ChoiceBox.selectionModelProperty().addListener((observable) -> {
+            GameEventListener i = (GameEventListener) inspectedObject;
+            Object[] o = i.getExpectedValues();
+            o[0] = gameEventListener_Expects1_ChoiceBox.getSelectionModel().getSelectedItem();
+            i.setExpectedValues(o);
+        });
+        gameEventListener_Expects2_ChoiceBox.selectionModelProperty().addListener((observable) -> {
+            GameEventListener i = (GameEventListener) inspectedObject;
+            Object[] o = i.getExpectedValues();
+            o[1] = gameEventListener_Expects2_ChoiceBox.getSelectionModel().getSelectedItem();
+            i.setExpectedValues(o);
+        });
+        gameEventListener_Expects3_ChoiceBox.selectionModelProperty().addListener((observable) -> {
+            GameEventListener i = (GameEventListener) inspectedObject;
+            Object[] o = i.getExpectedValues();
+            o[2] = gameEventListener_Expects3_ChoiceBox.getSelectionModel().getSelectedItem();
+            i.setExpectedValues(o);
+        });
+
+        gameEventListener_Expects1_ChoiceBox_Comparasion.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (inspectedObject instanceof GameEventListener) {
+                GameEventListener ev = (GameEventListener) inspectedObject;
+                String selected = gameEventListener_Expects1_ChoiceBox_Comparasion.getItems().get(newValue.intValue());
+                if (selected.equals("<")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
+                } else if (selected.equals(">")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
+                } else if (selected.equals("=")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
+                } else if (selected.equals("*")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
+                }
+
+                updateInspector();
+            }
+        });
+        gameEventListener_Expects2_ChoiceBox_Comparasion.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (inspectedObject instanceof GameEventListener) {
+                GameEventListener ev = (GameEventListener) inspectedObject;
+                String selected = gameEventListener_Expects2_ChoiceBox_Comparasion.getItems().get(newValue.intValue());
+                if (selected.equals("<")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
+                } else if (selected.equals(">")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
+                } else if (selected.equals("=")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
+                } else if (selected.equals("*")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
+                }
+
+                updateInspector();
+            }
+        });
+        gameEventListener_Expects2_ChoiceBox_Comparasion.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (inspectedObject instanceof GameEventListener) {
+                GameEventListener ev = (GameEventListener) inspectedObject;
+                String selected = gameEventListener_Expects2_ChoiceBox_Comparasion.getItems().get(newValue.intValue());
+                if (selected.equals("<")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
+                } else if (selected.equals(">")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
+                } else if (selected.equals("=")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
+                } else if (selected.equals("*")) {
+                    ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
+                }
+
+                updateInspector();
+            }
+        });
+        //----------------------------------------------------------------------
 
         gameInspectorName_TextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -342,19 +473,6 @@ public class GameEditorFXMLController implements Initializable {
                 Game.getInstance().setName(newValue);
                 updateInspector();
             }
-        });
-        
-        inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
-             if(inspectedObject instanceof GameEventListener){
-                GameEventListener ev = (GameEventListener) inspectedObject;
-                String selected = inspectedEventListenerGreaterLesser_ChoiceBox.getItems().get(newValue.intValue());
-                if(selected.equals("<"))ev.setNumberComparator(GameEventListener.NumberComparasion.LESSER_THAN);
-                else if(selected.equals(">"))ev.setNumberComparator(GameEventListener.NumberComparasion.GREATER_THAN);
-                else if(selected.equals("="))ev.setNumberComparator(GameEventListener.NumberComparasion.EQUAL);
-                else if(selected.equals("*"))ev.setNumberComparator(GameEventListener.NumberComparasion.ANY);
-                
-                updateInspector();
-        }
         });
     }
     //-----------------UPDATE------------------------------------------------------
@@ -476,51 +594,57 @@ public class GameEditorFXMLController implements Initializable {
     }
 
     private void updateGameEventListenerInspector(GameEventListener ev) {
-        Class requiredClass = GameEvent.getReturnClass(ev.getExpectedEventType());
-        selectedEventListenenExpects.setVisible(false);
-        inspectedGameEventListenerExpects_ChoiceBox.setVisible(false);
-        inspectedEventListenerGreaterLesser_ChoiceBox.setVisible(false);
+        Class[] requiredClasses = GameEvent.getReturnClasses(ev.getExpectedEventType());
+        Object[] expectedValues = ev.getExpectedValues();
 
-        if (requiredClass.equals(Integer.class)) {
-            selectedEventListenenTextFieldIsString = false;
-            selectedEventListenenExpects.setVisible(true);
-            selectedEventListenenExpects.setText(ev.getExpectedValue().toString());
-            System.out.println("Request for Integer");
-            inspectedEventListenerGreaterLesser_ChoiceBox.setVisible(true);
-            switch (ev.getNumberComparator()) {
-                case ANY:
-                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("*");
-                    break;
-                case EQUAL:
-                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("=");
-                    break;
-                case GREATER_THAN:
-                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select(">");
-                    break;
-                case LESSER_THAN:
-                    inspectedEventListenerGreaterLesser_ChoiceBox.getSelectionModel().select("<");
-                    break;
+        gameEventListener_Expects3_StackPane.setVisible(false);
+        gameEventListener_Expects2_StackPane.setVisible(false);
+        gameEventListener_Expects1_StackPane.setVisible(false);
 
-            }
-        } else if (requiredClass.equals(String.class)) {
-            selectedEventListenenTextFieldIsString = true;
-            selectedEventListenenExpects.setVisible(true);
-            selectedEventListenenExpects.setText(ev.getExpectedValue().toString());
-            System.out.println("Request for String");
-        } else {
-            inspectedGameEventListenerExpects_ChoiceBox.setVisible(true);
-            inspectedGameEventListenerExpects_ChoiceBox.getItems().clear();
-            inspectedGameEventListenerExpects_ChoiceBox.getItems().addAll(Game.getInstance().getAllIntancesOf(requiredClass));
-            if (!inspectedGameEventListenerExpects_ChoiceBox.getItems().isEmpty()) {
-                inspectedGameEventListenerExpects_ChoiceBox.getSelectionModel().select(0);
-            }
+        switch (requiredClasses.length) {
+            case 3:
+                if (expectedValues.length < 3) {
+                    ev.setExpectedValues(new Object[3]);
+                    expectedValues = ev.getExpectedValues();
+                    System.out.println("--GameEditorFXMLController--: updateGameEventListenerInspector expectedValues.length = " + expectedValues.length);
+                }
+                setExpectedValueInspector(requiredClasses[2], 2,
+                        gameEventListener_Expects3_TextHBox,
+                        gameEventListener_Expects3_ChoiceBox_Comparasion,
+                        gameEventListener_Expects3_ChoiceBox,
+                        gameEventListener_Expects3_StackPane,
+                        gameEventListener_Expects3_TextField);
+            case 2:
+                if (expectedValues.length < 2) {
+                    ev.setExpectedValues(new Object[2]);
+                    expectedValues = ev.getExpectedValues();
+                    System.out.println("--GameEditorFXMLController--: updateGameEventListenerInspector expectedValues.length = " + expectedValues.length);
+                }
+                setExpectedValueInspector(requiredClasses[1], 1,
+                        gameEventListener_Expects2_TextHBox,
+                        gameEventListener_Expects2_ChoiceBox_Comparasion,
+                        gameEventListener_Expects2_ChoiceBox,
+                        gameEventListener_Expects2_StackPane,
+                        gameEventListener_Expects2_TextField);
+            case 1:
+                if (expectedValues.length < 1) {
+                    ev.setExpectedValues(new Object[1]);
+                    expectedValues = ev.getExpectedValues();
+                    System.out.println("--GameEditorFXMLController--: updateGameEventListenerInspector expectedValues.length = " + expectedValues.length);
+                }
+                setExpectedValueInspector(requiredClasses[0], 0,
+                        gameEventListener_Expects1_TextHBox,
+                        gameEventListener_Expects1_ChoiceBox_Comparasion,
+                        gameEventListener_Expects1_ChoiceBox,
+                        gameEventListener_Expects1_StackPane,
+                        gameEventListener_Expects1_TextField);
+            default:
+                break;
         }
-
         EventListenerInspectorVBox.setVisible(true);
         eventListenerEnabledCheckBox.setSelected(ev.isEnabled());
         selectedEventListenerIdLabel.setText("" + ev.getId());
         selectedEventListenerName.setText(ev.getName());
-        selectedEventListenenExpects.setText(ev.getExpectedValue().toString());
 
         selectedEventListenerListensFor.setValue(ev.getExpectedEventType());
         selectedEvenListenerActions.getItems().clear();
@@ -676,7 +800,7 @@ public class GameEditorFXMLController implements Initializable {
     @FXML
     private void addNewEventListener() {
         Game.getInstance().addEventListener("Unnamed_listener",
-                GameEvent.GameEventType.RANDOM_NUMBER, "Listen me.",
+                GameEvent.GameEventType.RANDOM_NUMBER, new Object[]{"Listen me."},
                 new ThrowGameEvent(new RandomNumber(10, 0)));
         update();
     }
@@ -844,7 +968,7 @@ public class GameEditorFXMLController implements Initializable {
         String str = event.getDragboard().getString();
         roomInspectorOptionListView.getItems().add(game.getOptionWithToSting(str));
         Room r = (Room) inspectedObject;
-        r.addOption(game.getOptionWithToSting(str),false);
+        r.addOption(game.getOptionWithToSting(str), false);
         update();
     }
 
@@ -874,7 +998,7 @@ public class GameEditorFXMLController implements Initializable {
         String str = event.getDragboard().getString();
         itemsInRoomInspectorListView.getItems().add(game.getItemWithToSting(str));
         Room r = (Room) inspectedObject;
-        r.addItemToRoom(game.getItemWithToSting(str),false);
+        r.addItemToRoom(game.getItemWithToSting(str), false);
         update();
     }
 
@@ -895,16 +1019,6 @@ public class GameEditorFXMLController implements Initializable {
         if (inspectedObject instanceof GameEventListener) {
             GameEventListener gel = (GameEventListener) inspectedObject;
             gel.setName(selectedEventListenerName.getText());
-            update();
-        }
-    }
-
-    @FXML
-    private void updateInspectedEventListenerExpects() {
-
-        if (inspectedObject instanceof GameEventListener) {
-            GameEventListener gel = (GameEventListener) inspectedObject;
-            gel.setExpectedValue(selectedEventListenenExpects.getText());
             update();
         }
     }
@@ -1252,8 +1366,8 @@ public class GameEditorFXMLController implements Initializable {
         rs.get(1).addPath(rs.get(2));
         rs.get(2).addPath(rs.get(1));
 
-        rs.get(1).addItemToRoom(is.get(0),false);
-        rs.get(1).addOption(os.get(2),false);
+        rs.get(1).addItemToRoom(is.get(0), false);
+        rs.get(1).addOption(os.get(2), false);
 
         os.get(1).addAction(new RemoveOptionFromRoom(os.get(1), rs.get(1)));
         os.get(1).addAction(new AddPathFromRoom(rs.get(1), rs.get(0)));
@@ -1276,5 +1390,67 @@ public class GameEditorFXMLController implements Initializable {
 
         g.getPlayer().setCurrentRoom(rs.get(0));
 
+    }
+
+    private void setComparatorChoiceBox(GameEventListener.NumberComparasion numberComparator, ChoiceBox choiceBox) {
+        switch (numberComparator) {
+            case ANY:
+                choiceBox.getSelectionModel().select("*");
+                break;
+            case EQUAL:
+                choiceBox.getSelectionModel().select("=");
+                break;
+            case GREATER_THAN:
+                choiceBox.getSelectionModel().select(">");
+                break;
+            case LESSER_THAN:
+                choiceBox.getSelectionModel().select("<");
+                break;
+        }
+    }
+
+    private void setExpectedValueInspector(Class requiredClass, int expectedValueIndex,
+            HBox hbox,
+            ChoiceBox comparation_choiceBox,
+            ChoiceBox choiceBox,
+            StackPane stackPane,
+            TextField textField) {
+        System.out.println("--GameEditorFXMLController--: setExpectedValueInspector expectedValueIndex = " + expectedValueIndex);
+        GameEventListener ev = (GameEventListener) inspectedObject;
+        Object[] expectedValues = ev.getExpectedValues();
+        System.out.println("--GameEditorFXMLController--: setExpectedValueInspector expectedValues = " + expectedValues);
+        stackPane.setVisible(true);
+        if (requiredClass.equals(String.class) || requiredClass.equals(Integer.class)) {
+            hbox.setVisible(true);
+            choiceBox.setVisible(false);
+            if (requiredClass.equals(Integer.class)) {
+                comparation_choiceBox.setVisible(true);
+                setComparatorChoiceBox(ev.getNumberComparator(), comparation_choiceBox);
+            } else {
+                comparation_choiceBox.setVisible(false);
+            }
+
+            if (expectedValues[expectedValueIndex]!=null && expectedValues[expectedValueIndex].getClass().equals(requiredClass)) {
+                textField.setText(expectedValues[expectedValueIndex].toString());
+            } else {
+                Object[] o = expectedValues;
+                System.out.println("--GameEditorFXMLController--: setExpectedValueInspector o.length = " + o.length);
+                if (requiredClass.equals(String.class)) {
+                    o[expectedValueIndex] = new String("Value");
+                } else {
+                    o[expectedValueIndex] = new Integer(0);
+                }
+                ev.setExpectedValues(o);
+            }
+        } else {
+            hbox.setVisible(false);
+            choiceBox.setVisible(true);
+            if (choiceBox.getItems().isEmpty()
+                    || !choiceBox.getItems().get(0).getClass().equals(requiredClass)) {
+                choiceBox.getItems().clear();
+                choiceBox.getItems().addAll(Game.getInstance().getAllIntancesOf(requiredClass));
+                choiceBox.getSelectionModel().select(0);
+            }
+        }
     }
 }

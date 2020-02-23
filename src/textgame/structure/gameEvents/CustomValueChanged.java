@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 package textgame.structure.gameEvents;
-
-import textgame.utility.Pair;
-
 /**
  *
  * @author David Brož

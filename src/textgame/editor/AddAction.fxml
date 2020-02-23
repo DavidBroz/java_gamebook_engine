@@ -684,7 +684,7 @@
                         </VBox>
                     </children>
                 </GridPane>
-            <GridPane fx:id="throwGameEvent_GridPane" visible="false">
+            <GridPane fx:id="throwGameEvent_GridPane">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -695,36 +695,64 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <StackPane GridPane.rowIndex="1">
                      <children>
-                        <HBox fx:id="throwGameEvent_ChoiceBox_HBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0" GridPane.rowIndex="1">
                            <children>
-                              <Label fx:id="throwGameEvent_ChoiceBox_Label" text="Message" />
-                              <ChoiceBox fx:id="throwGameEvent_ChoiceBox" prefWidth="150.0" />
-                           </children>
-                        </HBox>
-                        <HBox fx:id="throwGameEvent_SingleTextField_HBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                           <children>
-                              <Label fx:id="throwGameEvent_SingleTextField_Label" text="Message" />
-                              <TextField fx:id="throwGameEvent_SingleTextField_TextField" />
-                           </children>
-                        </HBox>
-                        <HBox fx:id="throwGameEvent_DoubleTextField_HBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
-                           <children>
-                              <Label text="Min" />
-                              <TextField fx:id="throwGameEvent_DoubleTextField_TextField_1" prefWidth="75.0" />
-                              <Label text="Max" />
-                              <TextField fx:id="throwGameEvent_DoubleTextField_TextField_2" prefWidth="75.0" />
+                              <Label text="Game event" />
+                              <ChoiceBox fx:id="throwGameEvent_ChoiceBox_GameEvent" prefWidth="150.0" />
                            </children>
                         </HBox>
                      </children>
                   </StackPane>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0" GridPane.rowIndex="1">
+                  <StackPane fx:id="throwGameEvent_StackPane1" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                        <Label text="Game event" />
-                        <ChoiceBox fx:id="throwGameEvent_ChoiceBox_GameEvent" prefWidth="150.0" />
+                        <HBox fx:id="throwGameEvent_StackPane1_HBox1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_ChoiceBox1_Label" text="Label 1" />
+                              <ChoiceBox fx:id="throwGameEvent_ChoiceBox1" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="throwGameEvent_StackPane1_HBox2" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_TextField1_Label" text="Label 1" />
+                              <TextField fx:id="throwGameEvent_TextField1" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </StackPane>
+                  <StackPane fx:id="throwGameEvent_StackPane2" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <HBox fx:id="throwGameEvent_StackPane2_HBox1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_ChoiceBox2_Label" text="Label 1" />
+                              <ChoiceBox fx:id="throwGameEvent_ChoiceBox2" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="throwGameEvent_StackPane2_HBox2" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_TextField2_Label" text="Label 1" />
+                              <TextField fx:id="throwGameEvent_TextField2" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
+                  <StackPane fx:id="throwGameEvent_StackPane3" prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <HBox fx:id="throwGameEvent_StackPane3_HBox1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_ChoiceBox3_Label" text="Label 1" />
+                              <ChoiceBox fx:id="throwGameEvent_ChoiceBox3" prefWidth="150.0" />
+                           </children>
+                        </HBox>
+                        <HBox fx:id="throwGameEvent_StackPane3_HBox2" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="2.0">
+                           <children>
+                              <Label fx:id="throwGameEvent_TextField3_Label" text="Label 1" />
+                              <TextField fx:id="throwGameEvent_TextField3" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </StackPane>
                </children>
             </GridPane>
             <GridPane fx:id="customValue_GridPane" visible="false">
@@ -752,7 +780,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
             </GridPane>
-            <GridPane fx:id="changeCurrentImage_GridPane">
+            <GridPane fx:id="changeCurrentImage_GridPane" visible="false">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

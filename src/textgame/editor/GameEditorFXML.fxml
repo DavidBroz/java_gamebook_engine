@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import java.net.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgame.editor.GameEditorFXMLController">
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgame.editor.GameEditorFXMLController">
     <stylesheets>
         <URL value="@/CSS/editorStyle.css" />
     </stylesheets>
@@ -252,9 +264,9 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0">
                            <children>
-                              <Label text="Event Listener">
+                              <Label text="Game Event Listener">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
@@ -290,17 +302,43 @@
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
                                     <Label text="Expects: " underline="true" />
-                                    <StackPane alignment="TOP_LEFT">
+                                    <VBox>
                                        <children>
-                                          <HBox spacing="3.0">
+                                          <StackPane fx:id="gameEventListener_Expects1_StackPane" alignment="TOP_LEFT">
                                              <children>
-                                                <TextField fx:id="selectedEventListenenExpects" onAction="#updateInspectedEventListenerExpects" prefWidth="100.0" />
-                                                <ChoiceBox fx:id="inspectedEventListenerGreaterLesser_ChoiceBox" prefWidth="50.0" />
+                                                <HBox fx:id="gameEventListener_Expects1_TextHBox" spacing="3.0">
+                                                   <children>
+                                                      <TextField fx:id="gameEventListener_Expects1_TextField" prefWidth="100.0" />
+                                                      <ChoiceBox fx:id="gameEventListener_Expects1_ChoiceBox_Comparasion" prefWidth="50.0" />
+                                                   </children>
+                                                </HBox>
+                                                <ChoiceBox fx:id="gameEventListener_Expects1_ChoiceBox" prefWidth="150.0" visible="false" />
                                              </children>
-                                          </HBox>
-                                          <ChoiceBox fx:id="inspectedGameEventListenerExpects_ChoiceBox" prefWidth="150.0" visible="false" />
+                                          </StackPane>
+                                          <StackPane fx:id="gameEventListener_Expects2_StackPane" alignment="TOP_LEFT">
+                                             <children>
+                                                <HBox fx:id="gameEventListener_Expects2_TextHBox" spacing="3.0">
+                                                   <children>
+                                                      <TextField fx:id="gameEventListener_Expects2_TextField" prefWidth="100.0" />
+                                                      <ChoiceBox fx:id="gameEventListener_Expects2_ChoiceBox_Comparasion" prefWidth="50.0" />
+                                                   </children>
+                                                </HBox>
+                                                <ChoiceBox fx:id="gameEventListener_Expects2_ChoiceBox" prefWidth="150.0" visible="false" />
+                                             </children>
+                                          </StackPane>
+                                          <StackPane fx:id="gameEventListener_Expects3_StackPane" alignment="TOP_LEFT">
+                                             <children>
+                                                <HBox fx:id="gameEventListener_Expects3_TextHBox" spacing="3.0">
+                                                   <children>
+                                                      <TextField fx:id="gameEventListener_Expects3_TextField" prefWidth="100.0" />
+                                                      <ChoiceBox fx:id="gameEventListener_Expects3_ChoiceBox_Comparasion" prefWidth="50.0" />
+                                                   </children>
+                                                </HBox>
+                                                <ChoiceBox fx:id="gameEventListener_Expects3_ChoiceBox" prefWidth="150.0" visible="false" />
+                                             </children>
+                                          </StackPane>
                                        </children>
-                                    </StackPane>
+                                    </VBox>
                                  </children>
                               </HBox>
                               <VBox prefHeight="200.0" prefWidth="100.0">

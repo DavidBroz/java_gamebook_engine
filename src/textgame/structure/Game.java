@@ -298,10 +298,10 @@ public class Game implements java.io.Serializable{
         if(requiredClass.equals(StaticObject.class)){
             return allStaticObjects;
         }
-        if(requiredClass.equals(EventListener.class)){
+        if(requiredClass.equals(GameEventListener.class)){
             return allGameEventListeners;
         }
-        System.out.println("getAllIntancesOf- no match found for: "+requiredClass);
+        System.out.println("--GAME--: getAllIntancesOf- no match found for: "+requiredClass);
         return new ArrayList();
     }
 

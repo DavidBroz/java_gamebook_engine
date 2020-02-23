@@ -125,11 +125,11 @@ public class GameEventListener implements java.io.Serializable {
         return actions;
     }
 
-    public Object[] getExpectedValue() {
+    public Object[] getExpectedValues() {
         return expectedValues;
     }
 
-    public void setExpectedValue(Object[] expectedValue) {
+    public void setExpectedValues(Object[] expectedValue) {
         this.expectedValues = expectedValue;
     }
 

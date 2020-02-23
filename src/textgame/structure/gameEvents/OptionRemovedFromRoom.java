@@ -7,7 +7,7 @@ package textgame.structure.gameEvents;
 
 import textgame.structure.Option;
 import textgame.structure.Room;
-import textgame.utility.Pair;
+
 
 /**
  *

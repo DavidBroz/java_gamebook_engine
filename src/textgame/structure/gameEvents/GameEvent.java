@@ -8,7 +8,6 @@ package textgame.structure.gameEvents;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author David Brož
@@ -30,10 +29,12 @@ public abstract class GameEvent implements java.io.Serializable {
         OptionRemovedFromRoom.class,
         StaticObjectRemovedFromRoom.class,
         OptionAddedToRoom.class,
-        StaticObjectAddedToRoom.class
+        StaticObjectAddedToRoom.class,
+        ItemRemovedFromRoom.class,
+        ItemAddedToRoom.class
     };
-    
-    public enum GameEventType{
+
+    public enum GameEventType {
         ITEM_ADDED_TO_INVENTORY,
         ITEM_REMOVED_FROM_ROOM,
         OPTION_SELECTED,
@@ -49,50 +50,67 @@ public abstract class GameEvent implements java.io.Serializable {
         OPTION_REMOVED_FROM_ROOM,
         STATIC_OBJECT_REMOVED_FROM_ROOM,
         STATIC_OBJECT_ADDED_TO_ROOM,
-        OPTION_ADDED_TO_ROOM, 
+        OPTION_ADDED_TO_ROOM,
         ITEM_ADDED_TO_ROOM
     };
-    
+
     public abstract GameEventType getEventType();
-    
+
     public abstract Class[] getReturnClasses();
-    
+
     public abstract Class[] getSettingClasses();
-    
+
     public abstract void setValues(Object[] o);
-    
+
     public abstract Object[] getValues();
-    
+
     @Override
     public abstract String toString();
-    
-    public static Class[] getReturnClass(GameEventType type){
+
+    public static Class[] getReturnClasses(GameEventType type) {
         GameEvent temp;
         try {
             for (Class c : gameEventClasses) {
-                    temp =(GameEvent)c.newInstance();
-                    if(temp.getEventType().equals(type)){
-                        return temp.getReturnClasses();
-                    }
+                temp = (GameEvent) c.newInstance();
+                if (temp.getEventType().equals(type)) {
+                    return temp.getReturnClasses();
+                }
             }
         } catch (InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("---GAME-EVENT---: getReturnClasses DID NOT FIND "+type.toString());
         return null;
     }
-    
-    public static Class[] getSettingClass(GameEventType type) {
+
+    public static Class[] getSettingClasses(GameEventType type) {
         GameEvent temp;
         try {
             for (Class c : gameEventClasses) {
-                    temp =(GameEvent)c.newInstance();
-                    if(temp.getEventType().equals(type)){
-                        return temp.getSettingClasses();
-                    }
+                temp = (GameEvent) c.newInstance();
+                if (temp.getEventType().equals(type)) {
+                    return temp.getSettingClasses();
+                }
             }
         } catch (InstantiationException | IllegalAccessException ex) {
-                Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("---GAME-EVENT---: getSettingClasses DID NOT FIND "+type.toString());
+        return null;
+    }
+
+    public static GameEvent getInstanceOf(GameEventType type) {
+        GameEvent temp;
+        try {
+            for (Class c : gameEventClasses) {
+                temp = (GameEvent) c.newInstance();
+                if (temp.getEventType().equals(type)) {
+                    return temp;
+                }
             }
+        } catch (InstantiationException | IllegalAccessException ex) {
+            Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 }

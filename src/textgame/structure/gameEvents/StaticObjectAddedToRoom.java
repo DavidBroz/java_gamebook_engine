@@ -8,7 +8,6 @@ package textgame.structure.gameEvents;
 import textgame.structure.Room;
 import textgame.structure.StaticObject;
 import textgame.structure.gameEvents.GameEvent;
-import textgame.utility.Pair;
 
 /**
  *

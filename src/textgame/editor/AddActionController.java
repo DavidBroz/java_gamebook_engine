@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import textgame.structure.Game;
 import textgame.structure.GameEventListener;
@@ -92,11 +93,6 @@ public class AddActionController implements Initializable {
             changeCurrentImage_ImageView;
 
     @FXML
-    private HBox throwGameEvent_ChoiceBox_HBox,
-            throwGameEvent_SingleTextField_HBox,
-            throwGameEvent_DoubleTextField_HBox;
-
-    @FXML
     private TextArea changeItemDescription_TextArea,
             changeRoomDescription_TextArea,
             changeStaticObjectDescription_TextArea,
@@ -106,9 +102,6 @@ public class AddActionController implements Initializable {
     private TextField changeStaticObjectName_TextField,
             changeRoomName_TextField,
             changeItemName_TextField,
-            throwGameEvent_SingleTextField_TextField,
-            throwGameEvent_DoubleTextField_TextField_1,
-            throwGameEvent_DoubleTextField_TextField_2,
             customValue_TextField;
 
     @FXML
@@ -154,8 +147,34 @@ public class AddActionController implements Initializable {
     private ChoiceBox throwGameEvent_ChoiceBox,
             customValue_choiceBox;
 
+    /*THROW GAME EVENT GRID-------------------*/
     @FXML
-    private Label throwGameEvent_ChoiceBox_Label;
+    private ChoiceBox throwGameEvent_ChoiceBox1,
+            throwGameEvent_ChoiceBox2,
+            throwGameEvent_ChoiceBox3;
+    @FXML
+    private HBox throwGameEvent_StackPane1_HBox1,
+            throwGameEvent_StackPane1_HBox2,
+            throwGameEvent_StackPane2_HBox1,
+            throwGameEvent_StackPane2_HBox2,
+            throwGameEvent_StackPane3_HBox1,
+            throwGameEvent_StackPane3_HBox2;
+    @FXML
+    private TextField throwGameEvent_TextField1,
+            throwGameEvent_TextField2,
+            throwGameEvent_TextField3;
+    @FXML
+    private Label throwGameEvent_ChoiceBox1_Label,
+            throwGameEvent_ChoiceBox2_Label,
+            throwGameEvent_ChoiceBox3_Label,
+            throwGameEvent_TextField1_Label,
+            throwGameEvent_TextField2_Label,
+            throwGameEvent_TextField3_Label;
+
+    private boolean throwGameEvent_TextField1_isNumber,
+            throwGameEvent_TextField2_isNumber,
+            throwGameEvent_TextField3_isNumber;
+    //----------------------------------------
 
     @FXML
     private GridPane addItemToPlayer_GridPane,
@@ -747,22 +766,18 @@ public class AddActionController implements Initializable {
     @FXML
     private void choiceThrowGameEvent() {
         isOK = false;
-
-        throwGameEvent_ChoiceBox_HBox.setVisible(true);
-        throwGameEvent_DoubleTextField_HBox.setVisible(false);
-        throwGameEvent_SingleTextField_HBox.setVisible(false);
-
-        GameEvent.GameEventType geType = throwGameEvent_ChoiceBox_GameEvent.getValue();
-
-        ArrayList<Object> objects = new ArrayList();
-        objects.addAll(Game.getInstance().getAllIntancesOf(GameEvent.getReturnClass(geType)));
+        throwGameEvent_StackPane1_HBox1.setVisible(false);
+        throwGameEvent_StackPane1_HBox2.setVisible(false);
+        throwGameEvent_StackPane2_HBox1.setVisible(false);
+        throwGameEvent_StackPane2_HBox2.setVisible(false);
+        throwGameEvent_StackPane3_HBox1.setVisible(false);
+        throwGameEvent_StackPane3_HBox2.setVisible(false);
 
         throwGameEvent_ChoiceBox.getItems().clear();
-        throwGameEvent_ChoiceBox.getItems().addAll(objects);
-        throwGameEvent_ChoiceBox.getSelectionModel().select(0);
+        throwGameEvent_ChoiceBox.getItems().addAll(GameEvent.GameEventType.values());
 
         resetLayout();
-        currentActionLabel.setText("Throw game event: " + throwGameEvent_ChoiceBox_GameEvent.getValue());
+        currentActionLabel.setText("Throw game event: ");
         throwGameEvent_GridPane.setVisible(true);
     }
 
@@ -990,69 +1005,169 @@ public class AddActionController implements Initializable {
     }
 
     private void update_throwGameEvent() {
-        try {
+        throwGameEvent_StackPane1_HBox1.setVisible(false);
+        throwGameEvent_StackPane1_HBox2.setVisible(false);
+        throwGameEvent_StackPane2_HBox1.setVisible(false);
+        throwGameEvent_StackPane2_HBox2.setVisible(false);
+        throwGameEvent_StackPane3_HBox1.setVisible(false);
+        throwGameEvent_StackPane3_HBox2.setVisible(false);
+        isOK = false;
+        currentActionLabel.setText("Throw game event: " + throwGameEvent_ChoiceBox_GameEvent.getValue());
+        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getValue());
 
-            isOK = false;
-            currentActionLabel.setText("Throw game event: " + throwGameEvent_ChoiceBox_GameEvent.getValue());
-            GameEvent ge = null;
-            Class settingClass = GameEvent.getSettingClass(throwGameEvent_ChoiceBox_GameEvent.getValue());
-            throwGameEvent_ChoiceBox_HBox.setVisible(false);
-            throwGameEvent_SingleTextField_HBox.setVisible(false);
-            throwGameEvent_DoubleTextField_HBox.setVisible(false);
-
-            GameEventType geType = throwGameEvent_ChoiceBox_GameEvent.getValue();
-            if (geType.equals(GameEventType.RANDOM_NUMBER)) {
-                throwGameEvent_DoubleTextField_HBox.setVisible(true);
-
-                String maxStr = throwGameEvent_DoubleTextField_TextField_2.getText();
-                String minStr = throwGameEvent_DoubleTextField_TextField_1.getText();
-                if (!maxStr.matches("\\d*")) {
-                    throwGameEvent_DoubleTextField_TextField_2.setText(maxStr.replaceAll("[^\\d]", ""));
-                }
-                if (!minStr.matches("\\d*")) {
-                    throwGameEvent_DoubleTextField_TextField_1.setText(minStr.replaceAll("[^\\d]", ""));
-                }
-
-                boolean tf1isEmpty = throwGameEvent_DoubleTextField_TextField_1.getText().isEmpty();
-                boolean tf2isEmpty = throwGameEvent_DoubleTextField_TextField_2.getText().isEmpty();
-
-                if (!tf1isEmpty && !tf2isEmpty) {
-                    int min = Integer.parseInt(throwGameEvent_DoubleTextField_TextField_1.getText());
-                    int max = Integer.parseInt(throwGameEvent_DoubleTextField_TextField_2.getText());
-                    if (min <= max) {
-                        ge = new RandomNumber(max, min);
-                        isOK = true;
-                    }
-                }
-            } else if (settingClass.equals(String.class)) {
-                ge = (GameEvent) settingClass.newInstance();
-                ge.setValues(throwGameEvent_SingleTextField_TextField.getText());
-                isOK = true;
-
-            } else if (settingClass.equals(null)) {
-                ge = (GameEvent) settingClass.newInstance();
-                isOK = true;
-            } else if (!throwGameEvent_ChoiceBox.getItems().isEmpty()) {
-                ge = (GameEvent) settingClass.newInstance();
-                ge.setValues(throwGameEvent_ChoiceBox.getValue());
-                isOK = true;
+        if (settingClasses.length > 0) {
+            if (settingClasses[0].equals(String.class)) {
+                throwGameEvent_StackPane1_HBox1.setVisible(true);
+                throwGameEvent_TextField1_isNumber = false;
+                throwGameEvent_TextField1_Label.setText("Text:");
             }
-
-            if (ge != null) {
-                result = new ThrowGameEvent(ge);
+            if (settingClasses[0].equals(Integer.class)) {
+                throwGameEvent_StackPane1_HBox1.setVisible(true);
+                throwGameEvent_TextField1_isNumber = true;
+                throwGameEvent_TextField1_Label.setText("Value:");
+            } else {
+                throwGameEvent_StackPane1_HBox1.setVisible(true);
+                throwGameEvent_ChoiceBox1.getItems().clear();
+                throwGameEvent_ChoiceBox1.getItems().addAll(Game.getInstance().getAllIntancesOf(settingClasses[0]));
+                throwGameEvent_ChoiceBox1_Label.setText(getLabelForClass(settingClasses[0]));
             }
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(AddActionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (settingClasses.length > 1) {
+            if (settingClasses[1].equals(String.class)) {
+                throwGameEvent_StackPane2_HBox1.setVisible(true);
+                throwGameEvent_TextField2_isNumber = false;
+                throwGameEvent_TextField2_Label.setText("Text:");
+            }
+            if (settingClasses[1].equals(Integer.class)) {
+                throwGameEvent_StackPane2_HBox1.setVisible(true);
+                throwGameEvent_TextField2_isNumber = true;
+                throwGameEvent_TextField2_Label.setText("Value:");
+            } else {
+                throwGameEvent_StackPane2_HBox1.setVisible(true);
+                throwGameEvent_ChoiceBox2.getItems().clear();
+                throwGameEvent_ChoiceBox2.getItems().addAll(Game.getInstance().getAllIntancesOf(settingClasses[1]));
+                throwGameEvent_ChoiceBox2_Label.setText(getLabelForClass(settingClasses[1]));
+            }
+        }
+        if (settingClasses.length > 2) {
+            if (settingClasses[2].equals(String.class)) {
+                throwGameEvent_StackPane3_HBox1.setVisible(true);
+                throwGameEvent_TextField3_isNumber = false;
+                throwGameEvent_TextField3_Label.setText("Text:");
+            }
+            if (settingClasses[2].equals(Integer.class)) {
+                throwGameEvent_StackPane3_HBox1.setVisible(true);
+                throwGameEvent_TextField3_isNumber = true;
+                throwGameEvent_TextField3_Label.setText("Value:");
+            } else {
+                throwGameEvent_StackPane3_HBox1.setVisible(true);
+                throwGameEvent_ChoiceBox3.getItems().clear();
+                throwGameEvent_ChoiceBox3.getItems().addAll(Game.getInstance().getAllIntancesOf(settingClasses[2]));
+                throwGameEvent_ChoiceBox3_Label.setText(getLabelForClass(settingClasses[2]));
+            }
+        }
+
+    }
+
+    private void update_throwGameEvent_Values() {
+        isOK = true;
+        GameEvent ge = null;
+        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getValue());
+        ge = GameEvent.getInstanceOf(throwGameEvent_ChoiceBox_GameEvent.getValue());
+        Object[] settingObject = new Object[settingClasses.length];
+
+        if (settingClasses.length > 0) {
+            if (settingClasses[0].equals(String.class)) {
+                String s = throwGameEvent_TextField1.getText();
+
+                if (!"".equals(s)) {
+                    settingObject[0] = s;
+                } else {
+                    isOK = false;
+                }
+            }
+            if (settingClasses[0].equals(Integer.class)) {
+                String s = throwGameEvent_TextField1.getText();
+                if (!s.matches("\\d*")) {
+                    throwGameEvent_TextField1.setText(s.replaceAll("[^\\d]", ""));
+                }
+                if (s != "") {
+                    settingObject[0] = new Integer(Integer.parseInt(s));
+                } else {
+                    isOK = false;
+                }
+            } else {
+                Object o =throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem();
+                if(o !=null){
+                     settingObject[0] = o;
+                }
+            }
+        }
+        if (settingClasses.length > 1 ){
+            if (settingClasses[1].equals(String.class)) {
+                String s = throwGameEvent_TextField2.getText();
+
+                if (!"".equals(s)) {
+                    settingObject[1] = s;
+                } else {
+                    isOK = false;
+                }
+            }
+            if (settingClasses[1].equals(Integer.class)) {
+                String s = throwGameEvent_TextField2.getText();
+                if (!s.matches("\\d*")) {
+                    throwGameEvent_TextField2.setText(s.replaceAll("[^\\d]", ""));
+                }
+                if (s != "") {
+                    settingObject[1] = new Integer(Integer.parseInt(s));
+                } else {
+                    isOK = false;
+                }
+            } else {
+                Object o =throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem();
+                if(o !=null){
+                     settingObject[0] = o;
+                }
+            }
+        }if (settingClasses.length > 2) {
+            if (settingClasses[2].equals(String.class)) {
+                String s = throwGameEvent_TextField3.getText();
+
+                if (!"".equals(s)) {
+                    settingObject[2] = s;
+                } else {
+                    isOK = false;
+                }
+            }
+            if (settingClasses[2].equals(Integer.class)) {
+                String s = throwGameEvent_TextField3.getText();
+                if (!s.matches("\\d*")) {
+                    throwGameEvent_TextField3.setText(s.replaceAll("[^\\d]", ""));
+                }
+                if (s != "") {
+                    settingObject[2] = new Integer(Integer.parseInt(s));
+                } else {
+                    isOK = false;
+                }
+            } else {
+                Object o =throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem();
+                if(o !=null){
+                     settingObject[2] = o;
+                }
+            }
+        }
+
+        if (isOK) {
+            result = new ThrowGameEvent(ge);
         }
     }
 
     private void update_changeCurrentImage() {
-        isOK=true;
+        isOK = true;
         result = new ChangeCurrentImage(changeCurrentImage_ImageView.getImage());
         resetLayout();
         changeCurrentImage_GridPane.setVisible(isOK);
-        
-                
+
     }
 
     private void update_customValue() {
@@ -1232,19 +1347,6 @@ public class AddActionController implements Initializable {
         throwGameEvent_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable) -> {
             update_throwGameEvent();
         });
-        throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_throwGameEvent();
-        });
-        throwGameEvent_DoubleTextField_TextField_1.textProperty().addListener((observable) -> {
-            update_throwGameEvent();
-        });
-        throwGameEvent_DoubleTextField_TextField_2.textProperty().addListener((observable) -> {
-            update_throwGameEvent();
-        });
-        throwGameEvent_SingleTextField_TextField.textProperty().addListener((observable) -> {
-            update_throwGameEvent();
-        });
-
         customValue_choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
             update_customValue();
         });
@@ -1293,7 +1395,35 @@ public class AddActionController implements Initializable {
 
             }
         });
+        throwGameEvent_ChoiceBox1.getSelectionModel().selectedItemProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
+        throwGameEvent_ChoiceBox2.getSelectionModel().selectedItemProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
+        throwGameEvent_ChoiceBox3.getSelectionModel().selectedItemProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
 
+        throwGameEvent_TextField1.textProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
+        throwGameEvent_TextField2.textProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
+        throwGameEvent_TextField3.textProperty().addListener((observable) -> {
+            update_throwGameEvent_Values();
+        });
+
+    }
+
+    private String getLabelForClass(Class c) {
+        if(c.equals(Room.class))return "Room: ";
+        if(c.equals(StaticObject.class))return "StaticObject: ";
+        if(c.equals(Option.class))return "Option: ";
+        if(c.equals(Item.class))return "Item: ";
+        if(c.equals(GameEventListener.class))return "GameEventListener: ";
+        return "Unknown value: ";
     }
 
 }
