@@ -132,7 +132,7 @@ public class RoomCell extends AbstractCell {
     }
 
     private void addStaticObjectToRoom(StaticObject temp_sc) {
-        room.addStaticObjectToRoom(temp_sc);
+        room.addStaticObjectToRoom(temp_sc,false);
     }
 
     private void addOptionToRoom(Option temp_o) {
@@ -140,7 +140,7 @@ public class RoomCell extends AbstractCell {
     }
 
     private void addItemToRoom(Item temp_i) {
-        room.addItemToRoom(temp_i,false);
+        room.addItem(temp_i,false);
     }
 
     public Room getRoom() {

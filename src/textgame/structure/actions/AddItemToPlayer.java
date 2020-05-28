@@ -29,7 +29,7 @@ public class AddItemToPlayer implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        Game.getInstance().getPlayer().addItemToInvenotory(whatToAdd, true);
+        Game.getInstance().getPlayer().addItem(whatToAdd, true);
     }
 
     public AddItemToPlayer(Item whatToAdd) {

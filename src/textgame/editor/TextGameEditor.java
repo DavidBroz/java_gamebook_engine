@@ -21,7 +21,6 @@ public class TextGameEditor extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("GameEditorFXML.fxml"));
         Scene scene = new Scene(root);
-        
         //scene.getStylesheets().add("/CSS/editorStyle.css");
         stage.setScene(scene);
         stage.show();

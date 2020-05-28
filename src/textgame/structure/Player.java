@@ -31,18 +31,18 @@ public class Player implements java.io.Serializable {
         playerOptions = new ArrayList();
     }
     
-    public void MovePlayer(Room where){
+    public void move(Room where){
         Game.getInstance().throwGameEvent(new PlayerLeftRoom(currentRoom));
         currentRoom = where;
         Game.getInstance().throwGameEvent(new PlayerEnteredRoom(where));  
         Game.getInstance().setCurrentImage(currentRoom.getImage());
     }
     
-    public void addItemToInvenotory(Item item_to_add,boolean throwEvent){
+    public void addItem(Item item_to_add,boolean throwEvent){
         if(throwEvent)Game.getInstance().throwGameEvent(new ItemAddedToInventory(item_to_add));
         inventory.add(item_to_add);
     }
-    public void RemoveItem(Item itemToRemove, boolean throwEvent){
+    public void removeItem(Item itemToRemove, boolean throwEvent){
         if(inventory.contains(itemToRemove)){
             inventory.remove(itemToRemove);
             if(throwEvent)Game.getInstance().throwGameEvent(new ItemRemovedFromInventory(itemToRemove));
@@ -72,8 +72,10 @@ public class Player implements java.io.Serializable {
         this.currentRoom = currentRoom;
     }
 
-    public void PickUpItem(Item item) {
+    public void PickUpItem(Item item, boolean throwEvent) {
+        
         inventory.add(item);
+        if(!throwEvent)return;
         Game.getInstance().removeItemFromRooms(item);
         Game.getInstance().throwGameEvent(new ItemAddedToInventory(item));
     }

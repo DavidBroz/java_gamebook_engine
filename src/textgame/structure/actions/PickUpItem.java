@@ -22,7 +22,7 @@ public class PickUpItem implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        Game.getInstance().getPlayer().PickUpItem(whatToPickUp);
+        Game.getInstance().getPlayer().PickUpItem(whatToPickUp,true);
     }
 
     @Override

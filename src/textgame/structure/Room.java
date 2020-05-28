@@ -22,6 +22,7 @@ import textgame.structure.gameEvents.ItemAddedToRoom;
 import textgame.structure.gameEvents.ItemRemovedFromRoom;
 import textgame.structure.gameEvents.OptionAddedToRoom;
 import textgame.structure.gameEvents.RoomLostItem;
+import textgame.structure.gameEvents.StaticObjectAddedToRoom;
 
 /**
  *
@@ -36,14 +37,13 @@ public class Room implements java.io.Serializable {
     private ArrayList<StaticObject> staticObjects;
     private ArrayList<Item> items;
     private ArrayList<Room> rooms;
-    private ArrayList<Action> actions;
     private ArrayList<Option> options;
     private transient Image image;
     
     private ArrayList isReferencedBy;
     
-    private double location_x = 0;
-    private double location_y = 0;
+    private double graph_location_x = 0;
+    private double graph_location_y = 0;
     
     public Room(int roomId, String roomName, String roomDesc) {
         isReferencedBy = new ArrayList();
@@ -89,7 +89,7 @@ public class Room implements java.io.Serializable {
         items.remove(to_remove);
     }
     
-    public void addItemToRoom(Item item_to_add, boolean throwEvent) {
+    public void addItem(Item item_to_add, boolean throwEvent) {
         if(throwEvent)Game.getInstance().throwGameEvent(new ItemAddedToRoom(item_to_add, this));
         item_to_add.addReferencedBy(this);
         items.add(item_to_add);
@@ -101,10 +101,10 @@ public class Room implements java.io.Serializable {
         rooms.add(room_to_add);
     }
     
-    public ArrayList<Option> GenerateOptions() {
+    public ArrayList<Option> generateOptions() {
         ArrayList<Option> result = new ArrayList<>();
         Option tempOption;
-        System.out.println("--Generating options--");
+        System.out.println("-ROOM-:Generating options.");
         result.clear();
         for (Room room : rooms) {
             tempOption = new Option("Go to " + room.name);
@@ -123,10 +123,12 @@ public class Room implements java.io.Serializable {
             }
         });
         
-        for(Option o : options){
-            result.addAll(options);
+        for (Option o : options) {
+            System.out.println("-ROOM-:Generating otions, adding to result: "+o.toString());
+            result.add(o);
         }
-            
+        //result.addAll(options);
+               
         tempOption = new Option("Show inventory");
         tempOption.addAction(new ShowPlayerInventory());
         result.add(tempOption);
@@ -142,18 +144,12 @@ public class Room implements java.io.Serializable {
         this.id = id;
     }
     
-    public void addStaticObjectToRoom(StaticObject staticObject_to_add) {
-        
-        System.out.println("ROOM: Started to add static object");
-        if (game.getStaticObjectWithID(staticObject_to_add.getId()) == null) {
-            game.getAllStaticObjects().add(staticObject_to_add);
-        } else if (game.getStaticObjectWithID(staticObject_to_add.getId()) != staticObject_to_add) {
-            System.out.println("ROOM ERROR");
-            throw new IllegalArgumentException("An staticObject with this ID already exists. Collision of IDs");
-        }
-        
+    public void addStaticObjectToRoom(StaticObject staticObject_to_add, boolean throwGameEvent) {
         staticObject_to_add.addIsReferencedBy(this);
         staticObjects.add(staticObject_to_add);
+        if(throwGameEvent){
+            Game.getInstance().throwGameEvent(new StaticObjectAddedToRoom(staticObject_to_add, this));
+        }
         System.out.println("ROOM: StaticObject added. ");
     }
     
@@ -247,10 +243,6 @@ public class Room implements java.io.Serializable {
         return rooms;
     }
     
-    public ArrayList<Action> getActions() {
-        return actions;
-    }
-    
     public ArrayList<Option> getOptions() {
         return options;
     }
@@ -284,19 +276,19 @@ public class Room implements java.io.Serializable {
     }
     
     public double getLocation_x() {
-        return location_x;
+        return graph_location_x;
     }
     
     public void setLocation_x(double location_x) {
-        this.location_x = location_x;
+        this.graph_location_x = location_x;
     }
     
     public double getLocation_y() {
-        return location_y;
+        return graph_location_y;
     }
     
     public void setLocation_y(double location_y) {
-        this.location_y = location_y;
+        this.graph_location_y = location_y;
     }
     
     public boolean hasItem(Item item) {

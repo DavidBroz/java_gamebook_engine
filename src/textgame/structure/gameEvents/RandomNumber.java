@@ -15,6 +15,7 @@ public class RandomNumber extends GameEvent {
     
     private static Random rand = new Random();
     private int min,max;
+    private Integer number;
     
     public RandomNumber(int number) {
         max = number;
@@ -28,10 +29,6 @@ public class RandomNumber extends GameEvent {
     public RandomNumber() {
     }
     
-    public int getNumber() {
-        return new Integer(rand.nextInt((max - min) + 1) + min);
-    }
-
     public void setMinMax(int min, int max) {
         this.min = min;
         this.max = max;
@@ -54,12 +51,14 @@ public class RandomNumber extends GameEvent {
 
     @Override
     public Object[] getValues() {
-        return new Object[] {getNumber()};
+        if(number==null) number= new Integer(rand.nextInt((max - min) + 1) + min);
+        return new Object[] {number};
     }
     
     @Override
     public void setValues(Object[] o) {
-        throw new UnsupportedOperationException("This function is not implemented.");
+        min = (Integer) o[0];
+        max = (Integer) o[1];
     }
 
     @Override

@@ -9,27 +9,32 @@ import textgame.utility.ResourceManager;
 import textgame.structure.Option;
 import textgame.structure.actions.Action;
 import textgame.structure.Game;
-import textgame.structure.Item;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderImage;
-import javafx.scene.layout.BorderRepeat;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 /**
@@ -42,13 +47,14 @@ public class GamePlayerController implements Initializable {
     @FXML
     private Label room_label;
     @FXML
-    private Label describtion_text;
+    private Label description_text;
 
     @FXML
     private Label info_line;
 
     @FXML
-    private VBox optionBox;
+    private VBox optionBox,
+            middleScrollPane_VBox;
 
     @FXML
     private MenuItem load_button;
@@ -61,14 +67,17 @@ public class GamePlayerController implements Initializable {
     @FXML
     private ImageView imageView;
     @FXML
+    private Pane imageViewPane;
+    @FXML
     private StackPane optionBarStackPane;
-
+    @FXML
+    private ScrollPane middleScrollPane;
     /*@FXML
     private List option_list;*/
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //optionBox.setPrefWidth();
-
+        imageView.fitHeightProperty().bind(imageViewPane.heightProperty());
+        optionBox.setPrefWidth(200);
     }
 
     //--FXML--------------------------------------------------------------------
@@ -87,6 +96,9 @@ public class GamePlayerController implements Initializable {
             System.out.println(e.getMessage());
             System.out.println(e.fillInStackTrace());
         }
+        setGUI();
+
+        System.out.println("--GAME-PLAYER-CONTROLLER--: Stats first update");
         update();
     }
 
@@ -112,9 +124,10 @@ public class GamePlayerController implements Initializable {
 
     //--------------------------------------------------------------------------
     private void populateOptionBar() {
+        setGUI();
         optionBox.getChildren().clear();
-        System.out.println("POPULATE OPTION: Bar cleared");
-        for (Option opt : Game.getInstance().getPlayer().getCurrentRoom().GenerateOptions()) {
+        ArrayList<Option> options = Game.getInstance().getPlayer().getCurrentRoom().generateOptions();
+        for (Option opt : options) {
             System.out.println(opt);
             Button tempButton = new Button(opt.getOptionLabel());
             tempButton.setPrefWidth(optionBox.getPrefWidth());
@@ -129,7 +142,10 @@ public class GamePlayerController implements Initializable {
                     update();
                 }
             });
+            tempButton.setMinWidth(optionBox.getPrefWidth());
+            tempButton.setStyle("-fx-font: "+Game.getInstance().getFontButton()+";");
         }
+
         for (Option opt : Game.getInstance().getPlayer().getOptions()) {
             Button tempButton = new Button(opt.getOptionLabel());
             tempButton.setPrefWidth(optionBox.getPrefWidth());
@@ -144,27 +160,48 @@ public class GamePlayerController implements Initializable {
                     update();
                 }
             });
+            tempButton.setMinWidth(optionBox.getPrefWidth());
+            tempButton.setStyle("-fx-font: "+Game.getInstance().getFontButton()+";");
         }
 
     }
 
     private void update() {
-        BorderImage bdrimg = new BorderImage(Game.getInstance().getCurrentImage(), new BorderWidths(100,10,10,10), new Insets(30), new BorderWidths(2,2,2,2), false, BorderRepeat.ROUND, BorderRepeat.ROUND);
-        Border brd =new Border(bdrimg);
+
+        //BorderImage bdrimg = new BorderImage(Game.getInstance().getCurrentImage(), new BorderWidths(100,10,10,10), new Insets(30), new BorderWidths(2,2,2,2), false, BorderRepeat.ROUND, BorderRepeat.ROUND);
+        //Border brd =new Border(bdrimg);
         System.out.println("---GAME UPDATED---");
-        System.out.println("ROOM: "+Game.getInstance());
+        System.out.println("ROOM: " + Game.getInstance());
         room_label.setText(Game.getInstance().getPlayer().getCurrentRoom().getName());
         info_line.setText(Game.getInstance().getInfo_line());
-        describtion_text.setText(Game.getInstance().getPlayer().getCurrentRoom().getDescription());
+        description_text.setText(Game.getInstance().getPlayer().getCurrentRoom().getDescription());
         System.out.println("DO: PopulateObtionBar");
         populateOptionBar();
-        optionBarStackPane.setBorder(brd);
+        //optionBarStackPane.setBorder(brd);
         System.out.println("DONE: Polulate option bar");
         imageView.setImage(Game.getInstance().getCurrentImage());
-        HBox parent = (HBox) imageView.getParent();
-        imageView.fitWidthProperty().bind(parent.widthProperty());
-        imageView.fitHeightProperty().bind(parent.heightProperty());
+        setGUI();
 
+    }
+
+    private void setGUI() {
+        description_text.setStyle("-fx-font: "+Game.getInstance().getFontDescription()+";");
+        info_line.setStyle("-fx-font: "+Game.getInstance().getFontInfoLine()+";");
+        room_label.setStyle("-fx-font: "+Game.getInstance().getFontRoomName()+";");
+        
+        
+        if (Game.getInstance().getGUI("optionBarBg")!=null) {
+            BackgroundImage optionBarBI = new BackgroundImage(Game.getInstance().getGUI("optionBarBg"),
+                    BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                    BackgroundSize.DEFAULT);
+            optionBox.setBackground(new Background(optionBarBI));
+        }
+        if (Game.getInstance().getGUI("textAreaBg")!=null) {
+        BackgroundImage textPaneBarBI = new BackgroundImage(Game.getInstance().getGUI("textAreaBg"),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        middleScrollPane_VBox.setBackground(new Background(textPaneBarBI));
+        }
     }
 
 }

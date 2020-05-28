@@ -19,7 +19,7 @@ public class AddItemToRoom implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        whereToAdd.addItemToRoom(whatToAdd,true);
+        whereToAdd.addItem(whatToAdd,true);
     }
 
     public AddItemToRoom(Room whereToAdd, Item whatToAdd) {

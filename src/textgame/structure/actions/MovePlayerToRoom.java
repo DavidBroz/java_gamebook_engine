@@ -22,7 +22,7 @@ public class MovePlayerToRoom implements Action, java.io.Serializable {
     public void act() {
         Game.getInstance().throwGameEvent(new PlayerEnteredRoom(whereToMove));
         Game.getInstance().throwGameEvent(new PlayerLeftRoom(Game.getInstance().getPlayer().getCurrentRoom()));
-        Game.getInstance().getPlayer().MovePlayer(whereToMove);
+        Game.getInstance().getPlayer().move(whereToMove);
     }
 
     public MovePlayerToRoom(Room whereToMove) {

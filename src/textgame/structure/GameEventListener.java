@@ -9,7 +9,6 @@ import textgame.structure.gameEvents.GameEvent;
 import java.util.ArrayList;
 import textgame.structure.actions.Action;
 import textgame.structure.gameEvents.GameEvent.GameEventType;
-import textgame.structure.actions.ThrowGameEvent;
 import textgame.structure.gameEvents.GameEventListenerActed;
 
 /**
@@ -46,37 +45,65 @@ public class GameEventListener implements java.io.Serializable {
     }
 
     void listen(GameEvent gameEvent) {
-        if (!enabled) {
+        
+        hasExpectedValue = true;
+        System.out.println("-GAME-EVENT-LISTENER-: Expects GameEvent: "+expectedEventType);
+        System.out.println("-GAME-EVENT-LISTENER-: Got GameEvent: "+gameEvent.getEventType());
+        if (!enabled ||gameEvent.getEventType()!= expectedEventType) {
             return;
         }
-        hasExpectedValue = false;
-        System.out.println("EVENT-LISTENER: Listening to: Type(" + gameEvent.getEventType().toString() + ") Values(" + gameEvent.getValues() + ")");
-        System.out.println("EVENT-LISTENER: Expecting: Type(" + expectedEventType.toString() + ") Values(" + expectedValues + ")");
-        if (gameEvent.getReturnClasses()[0] == Integer.class) {
-            Integer temp_int=(Integer)gameEvent.getValues()[0];
-            switch (numberComparator) {
-                case ANY:
-                    hasExpectedValue = true;
-                    break;
-                case EQUAL:
-                    if(temp_int.equals(expectedValues[0]))hasExpectedValue=true;
-                    break;
-                case GREATER_THAN:
-                    if(temp_int > (Integer)expectedValues[0])hasExpectedValue=true;
-                    break;
-                case LESSER_THAN:
-                     if(temp_int < (Integer)expectedValues[0])hasExpectedValue=true;
-                    break;      
-            }
-        } else {
-            hasExpectedValue = gameEvent.getValues().equals(expectedValues);
+        System.out.print("Expected values values: ");
+        for (int i = 0; i < expectedValues.length; i++) {
+            System.out.print(expectedValues[i]+": " +expectedValues[i].getClass().toGenericString()+", ");
         }
-
-        if (gameEvent.getEventType() == expectedEventType && hasExpectedValue) {
-            System.out.println("EVENT-LISTENER: Game event match found.");
+        System.out.println("");
+        System.out.print("Got values values: ");
+        for (int i = 0; i < gameEvent.getValues().length; i++) {
+            System.out.print(gameEvent.getValues()[i]+": " +gameEvent.getValues()[i].getClass().toGenericString()+", ");
+        }
+        System.out.println("");
+        
+        for (int i = 0; i < expectedValues.length; i++) {
+            if (i >= gameEvent.getValues().length) {
+                break;
+            }
+            if (gameEvent.getValues()[i] instanceof Integer && expectedValues[i] instanceof Integer ) {
+               hasExpectedValue= comparatorTest((Integer) gameEvent.getValues()[i], (Integer)expectedValues[i]);
+               if(!hasExpectedValue)break;
+            }
+            if (!expectedValues[i].equals(gameEvent.getValues()[i])) {
+                hasExpectedValue = false;
+                break;
+            }
+        }
+        if (hasExpectedValue) {
+            System.out.println("EVENT-LISTENER: Acting.");
             act();
         }
+    }
 
+    private boolean comparatorTest(Integer tempInt, Integer expectedValue) {
+        switch (numberComparator) {
+            case ANY:
+                return true;
+                
+            case EQUAL:
+                if (tempInt == expectedValue) {
+                    return true;
+                }
+                break;
+            case GREATER_THAN:
+                if (tempInt > expectedValue) {
+                    return true;
+                }
+                break;
+            case LESSER_THAN:
+                if (tempInt < expectedValue) {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     public void enable() {

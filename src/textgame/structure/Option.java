@@ -27,7 +27,7 @@ public class Option implements java.io.Serializable{
         this.actionList = new ArrayList();
     }
     
-    public void runOption(){
+    public void runActions(){
         Game.getInstance().throwGameEvent(new OptionSelected(this));
         for(Action a: actionList){
             a.act();

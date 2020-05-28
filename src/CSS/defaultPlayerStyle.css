@@ -3,3 +3,33 @@
     -fx-background-color: #383838;
     -fx-font-size: 11pt;
 }
+
+.button{
+    -fx-pref-tile-height: 50;
+    -fx-pref-tile-width: 100;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent, white;
+    -fx-font-family:"Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 1em; /* 12 */
+    -fx-text-fill: black;
+}
+
+.button:focused {
+    -fx-background-color: #D8D8D8;
+}
+
+.button:pressed {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.vbox{
+    -fx-background-color: transparent;
+}
+
+.anchor-pane{
+    -fx-background-color: transparent;
+    
+}

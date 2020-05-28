@@ -10,16 +10,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -30,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import textgame.structure.Game;
 import textgame.structure.GameEventListener;
@@ -55,7 +51,7 @@ import textgame.structure.actions.ChangeStaticObjectDescription;
 import textgame.structure.actions.ChangeStaticObjectName;
 import textgame.structure.actions.DescribeStaticObject;
 import textgame.structure.actions.DisableGameEventListener;
-import textgame.structure.actions.EnableGameEventListner;
+import textgame.structure.actions.EnableGameEventListener;
 import textgame.structure.actions.LoseGame;
 import textgame.structure.actions.MovePlayerToRoom;
 import textgame.structure.actions.PickUpItem;
@@ -90,7 +86,8 @@ public class AddActionController implements Initializable {
 
     @FXML
     private ImageView changeRoomImage_ImageView,
-            changeCurrentImage_ImageView;
+            changeCurrentImage_ImageView
+            ;
 
     @FXML
     private TextArea changeItemDescription_TextArea,
@@ -144,8 +141,7 @@ public class AddActionController implements Initializable {
     private ChoiceBox<GameEvent.GameEventType> throwGameEvent_ChoiceBox_GameEvent;
 
     @FXML
-    private ChoiceBox throwGameEvent_ChoiceBox,
-            customValue_choiceBox;
+    private ChoiceBox<String> customValue_choiceBox;
 
     /*THROW GAME EVENT GRID-------------------*/
     @FXML
@@ -266,7 +262,7 @@ public class AddActionController implements Initializable {
         if (!items.isEmpty()) {
             addItemToPlayer_ChoiceBox.getItems().addAll(items);
             addItemToPlayer_ChoiceBox.setValue(addItemToPlayer_ChoiceBox.getItems().get(0));
-            result = new AddItemToPlayer(addItemToPlayer_ChoiceBox.getValue());
+            result = new AddItemToPlayer(addItemToPlayer_ChoiceBox.getSelectionModel().getSelectedItem());
         } else {
             isOK = false;
         }
@@ -284,7 +280,7 @@ public class AddActionController implements Initializable {
         if (!items.isEmpty()) {
             pickUpItem_ChoiceBox.getItems().addAll(items);
             pickUpItem_ChoiceBox.getSelectionModel().select(0);
-            result = new PickUpItem(pickUpItem_ChoiceBox.getValue());
+            result = new PickUpItem(pickUpItem_ChoiceBox.getSelectionModel().getSelectedItem());
         } else {
             isOK = false;
         }
@@ -314,8 +310,8 @@ public class AddActionController implements Initializable {
             isOK = false;
         }
         if (isOK) {
-            result = new AddItemToRoom(addItemToRoom_ChoiceBox_Room_ChoiceBox.getValue(),
-                    addItemToRoom_ChoiceBox_Item_ChoiceBox.getValue());
+            result = new AddItemToRoom(addItemToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    addItemToRoom_ChoiceBox_Item_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
@@ -346,8 +342,8 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new AddOptionToRoom(addOptionToRoom_ChoiceBox_Option_ChoiceBox.getValue(),
-                    addOptionToRoom_ChoiceBox_Room_ChoiceBox.getValue());
+            result = new AddOptionToRoom(addOptionToRoom_ChoiceBox_Option_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    addOptionToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -370,8 +366,8 @@ public class AddActionController implements Initializable {
             isOK = false;
         }
         if (isOK) {
-            result = new AddPathFromRoom(addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getValue(),
-                    addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getValue());
+            result = new AddPathFromRoom(addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -402,8 +398,8 @@ public class AddActionController implements Initializable {
 
         if (isOK) {
             result = new AddStaticObjectToRoom(
-                    addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getValue(),
-                    addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getValue());
+                    addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -424,7 +420,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new DescribeStaticObject(describeStaticObject_StaticObject_ChoiceBox.getValue());
+            result = new DescribeStaticObject(describeStaticObject_StaticObject_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -445,7 +441,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new EnableGameEventListner(enableGameEventListener_ChoiceBox.getValue());
+            result = new EnableGameEventListener(enableGameEventListener_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -466,7 +462,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new DisableGameEventListener(disableGameEventListener_ChoiceBox.getValue());
+            result = new DisableGameEventListener(disableGameEventListener_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -487,7 +483,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new MovePlayerToRoom(movePlayerToRoom_ChoiceBox.getValue());
+            result = new MovePlayerToRoom(movePlayerToRoom_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -518,8 +514,8 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new RemoveItemFromRoom(removeItemFromRoom_Item_ChoiceBox.getValue(),
-                    removeItemFromRoom_Room_ChoiceBox.getValue());
+            result = new RemoveItemFromRoom(removeItemFromRoom_Item_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    removeItemFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
@@ -551,8 +547,8 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new RemoveOptionFromRoom(removeOptionFromRoom_Option_ChoiceBox.getValue(),
-                    removeOptionFromRoom_Room_ChoiceBox.getValue());
+            result = new RemoveOptionFromRoom(removeOptionFromRoom_Option_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    removeOptionFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
@@ -582,8 +578,8 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new RemovePathFromRoom(removePathFromRoom_From_Room_ChoiceBox.getValue(),
-                    removePathFromRoom_Where_Room_ChoiceBox.getValue());
+            result = new RemovePathFromRoom(removePathFromRoom_From_Room_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    removePathFromRoom_Where_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         //result = new AddItemToRoom(,addItemToPlayer_ChoiceBox.getValues());
@@ -614,8 +610,8 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new RemoveStaticObjectFromRoom(removeStaticObjectFromRoom_StaticObject_ChoiceBox.getValue(),
-                    removeStaticObjectFromRoom_Room_ChoiceBox.getValue());
+            result = new RemoveStaticObjectFromRoom(removeStaticObjectFromRoom_StaticObject_ChoiceBox.getSelectionModel().getSelectedItem(),
+                    removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         }
 
         resetLayout();
@@ -636,7 +632,7 @@ public class AddActionController implements Initializable {
         }
         resetLayout();
         if (isOK) {
-            result = new ChangeItemDescription(changeItemDescription_ChoiceBox.getValue(),
+            result = new ChangeItemDescription(changeItemDescription_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeItemDescription_TextArea.getText());
         }
         currentActionLabel.setText("Change Item description");
@@ -655,7 +651,7 @@ public class AddActionController implements Initializable {
             isOK = false;
         }
         if (isOK) {
-            result = new ChangeRoomDescription(changeRoomDescription_ChoiceBox.getValue(),
+            result = new ChangeRoomDescription(changeRoomDescription_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeRoomDescription_TextArea.getText());
         }
         resetLayout();
@@ -675,7 +671,7 @@ public class AddActionController implements Initializable {
             isOK = false;
         }
         if (isOK) {
-            result = new ChangeStaticObjectDescription(changeStaticObjectDescription_ChoiceBox.getValue(),
+            result = new ChangeStaticObjectDescription(changeStaticObjectDescription_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeStaticObjectDescription_TextArea.getText());
         }
         resetLayout();
@@ -698,7 +694,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new ChangeStaticObjectName(changeStaticObjectName_ChoiceBox.getValue(),
+            result = new ChangeStaticObjectName(changeStaticObjectName_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeStaticObjectName_TextField.getText());
         }
         resetLayout();
@@ -721,7 +717,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new ChangeRoomName(changeRoomName_ChoiceBox.getValue(),
+            result = new ChangeRoomName(changeRoomName_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeRoomName_TextField.getText());
         }
         resetLayout();
@@ -744,7 +740,7 @@ public class AddActionController implements Initializable {
         }
 
         if (isOK) {
-            result = new ChangeItemName(changeItemName_ChoiceBox.getValue(),
+            result = new ChangeItemName(changeItemName_ChoiceBox.getSelectionModel().getSelectedItem(),
                     changeItemName_TextField.getText());
         }
         resetLayout();
@@ -773,8 +769,8 @@ public class AddActionController implements Initializable {
         throwGameEvent_StackPane3_HBox1.setVisible(false);
         throwGameEvent_StackPane3_HBox2.setVisible(false);
 
-        throwGameEvent_ChoiceBox.getItems().clear();
-        throwGameEvent_ChoiceBox.getItems().addAll(GameEvent.GameEventType.values());
+        throwGameEvent_ChoiceBox_GameEvent.getItems().clear();
+        throwGameEvent_ChoiceBox_GameEvent.getItems().addAll(GameEvent.GameEventType.values());
 
         resetLayout();
         currentActionLabel.setText("Throw game event: ");
@@ -804,14 +800,22 @@ public class AddActionController implements Initializable {
             customValue_choiceBox.getSelectionModel().select(0);
         }
         customValue_TextField.setText("0");
-        if (isOK) {
-            if (isSetting) {
+
+        if (isSetting) {
+            if (isOK) {
                 result = new SetCustomValue((String) customValue_choiceBox.getSelectionModel().getSelectedItem(), 0);
-                currentActionLabel.setText("Set Custom value");
             } else {
-                result = new AddToCustomValue((String) customValue_choiceBox.getSelectionModel().getSelectedItem(), 0);
-                currentActionLabel.setText("Add to Custom value");
+                result = new SetCustomValue("Default", 1);
             }
+            currentActionLabel.setText("Set Custom value");
+        } else {
+            if (isOK) {
+                okButton.setDisable(!isOK);
+                result = new AddToCustomValue((String) customValue_choiceBox.getSelectionModel().getSelectedItem(), 0);
+            } else {
+                result = new AddToCustomValue("Default", 1);
+            }
+            currentActionLabel.setText("Add to Custom value");
         }
 
     }
@@ -842,169 +846,172 @@ public class AddActionController implements Initializable {
     }
 
     //------ChoiceBox_onAction--------------------------------------------------
-    private void update_addItemToPlayer() {
+    private void update_addItemToPlayer(Item item) {
         if (result instanceof AddItemToPlayer) {
             AddItemToPlayer temp = (AddItemToPlayer) result;
-            temp.setWhatToAdd(addItemToPlayer_ChoiceBox.getValue());
+            temp.setWhatToAdd(item);
         }
     }
 
     private void update_pickUpItem() {
         if (result instanceof PickUpItem) {
             PickUpItem temp = (PickUpItem) result;
-            temp.setWhatToPickUp(pickUpItem_ChoiceBox.getValue());
+            temp.setWhatToPickUp(pickUpItem_ChoiceBox.getSelectionModel().getSelectedItem());
         }
     }
 
-    private void update_addItemToRoom() {
+    private void update_addItemToRoom(Item item, Room room) {
         if (result instanceof AddItemToRoom) {
             AddItemToRoom temp = (AddItemToRoom) result;
-            temp.setWhatToAdd(addItemToRoom_ChoiceBox_Item_ChoiceBox.getValue());
-            temp.setWhereToAdd(addItemToRoom_ChoiceBox_Room_ChoiceBox.getValue());
+            temp.setWhatToAdd(item);
+            temp.setWhereToAdd(room);
         }
     }
 
-    private void update_addPathToRoom() {
+    private void update_addPathToRoom(Room from, Room where) {
         if (result instanceof AddPathFromRoom) {
             AddPathFromRoom temp = (AddPathFromRoom) result;
-            temp.setFromWhere(addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getValue());
-            temp.setToWhere(addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getValue());
+            temp.setFromWhere(from);
+            temp.setToWhere(where);
         }
     }
 
-    private void update_addOptionToRoom() {
+    private void update_addOptionToRoom(Option option, Room room) {
         if (result instanceof AddOptionToRoom) {
             AddOptionToRoom temp = (AddOptionToRoom) result;
-            temp.setWhatToAdd(addOptionToRoom_ChoiceBox_Option_ChoiceBox.getValue());
-            temp.setWhereToAdd(addOptionToRoom_ChoiceBox_Room_ChoiceBox.getValue());
+            temp.setWhatToAdd(option);
+            temp.setWhereToAdd(room);
         }
     }
 
-    private void update_addStaticObjectToRoom() {
+    private void update_addStaticObjectToRoom(StaticObject so, Room room) {
         if (result instanceof AddStaticObjectToRoom) {
             AddStaticObjectToRoom temp = (AddStaticObjectToRoom) result;
-            temp.setWhatToAdd(addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getValue());
-            temp.setWhereToAdd(addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getValue());
+            temp.setWhatToAdd(so);
+            temp.setWhereToAdd(room);
         }
     }
 
-    private void update_describeStaticObject() {
+    private void update_describeStaticObject(StaticObject so) {
         if (result instanceof DescribeStaticObject) {
             DescribeStaticObject temp = (DescribeStaticObject) result;
-            temp.setWhatToDescribe(describeStaticObject_StaticObject_ChoiceBox.getValue());
+            temp.setWhatToDescribe(so);
         }
     }
 
-    private void update_disableGameEventListener() {
+    private void update_disableGameEventListener(GameEventListener gel) {
         if (result instanceof DisableGameEventListener) {
             DisableGameEventListener temp = (DisableGameEventListener) result;
-            temp.setWhatToDisable(disableGameEventListener_ChoiceBox.getValue());
+            temp.setWhatToDisable(gel);
         }
     }
 
-    private void update_enableGameEventListener() {
-        if (result instanceof EnableGameEventListner) {
-            EnableGameEventListner temp = (EnableGameEventListner) result;
-            temp.setWhatToEnable(enableGameEventListener_ChoiceBox.getValue());
+    private void update_enableGameEventListener(GameEventListener gel) {
+        if (result instanceof EnableGameEventListener) {
+            EnableGameEventListener temp = (EnableGameEventListener) result;
+            temp.setWhatToEnable(gel);
         }
     }
 
-    private void update_movePlayerToRoom() {
+    private void update_movePlayerToRoom(Room room) {
         if (result instanceof MovePlayerToRoom) {
             MovePlayerToRoom temp = (MovePlayerToRoom) result;
-            temp.setWhereToMove(movePlayerToRoom_ChoiceBox.getValue());
+            temp.setWhereToMove(room);
         }
     }
 
-    private void update_removeItemFromRoom() {
+    private void update_removeItemFromRoom(Item item, Room room) {
         if (result instanceof RemoveItemFromRoom) {
             RemoveItemFromRoom temp = (RemoveItemFromRoom) result;
-            temp.setWhatToRemove(removeItemFromRoom_Item_ChoiceBox.getValue());
-            temp.setWhereToRemove(removeItemFromRoom_Room_ChoiceBox.getValue());
+            temp.setWhatToRemove(item);
+            temp.setWhereToRemove(room);
         }
     }
 
-    private void update_removeOptionFromRoom() {
+    private void update_removeOptionFromRoom(Option option, Room room) {
         if (result instanceof RemoveOptionFromRoom) {
             RemoveOptionFromRoom temp = (RemoveOptionFromRoom) result;
-            temp.setWhatToRemove(removeOptionFromRoom_Option_ChoiceBox.getValue());
-            temp.setWhereToRemove(removeOptionFromRoom_Room_ChoiceBox.getValue());
+            temp.setWhatToRemove(option);
+            temp.setWhereToRemove(room);
         }
     }
 
-    private void update_removePathFromRoom() {
+    private void update_removePathFromRoom(Room from, Room where) {
 
         if (result instanceof RemovePathFromRoom) {
             RemovePathFromRoom temp = (RemovePathFromRoom) result;
-            temp.setFromWhere(removePathFromRoom_From_Room_ChoiceBox.getValue());
-            temp.setToWhere(removePathFromRoom_Where_Room_ChoiceBox.getValue());
+            temp.setFromWhere(from);
+            temp.setToWhere(where);
         }
     }
 
-    private void update_removeStaticObjectFromRoom() {
+    private void update_removeStaticObjectFromRoom(StaticObject so, Room room) {
         if (result instanceof RemoveStaticObjectFromRoom) {
             RemoveStaticObjectFromRoom temp = (RemoveStaticObjectFromRoom) result;
-            temp.setWhatToRemove(removeStaticObjectFromRoom_StaticObject_ChoiceBox.getValue());
-            temp.setWhereToRemove(removeStaticObjectFromRoom_Room_ChoiceBox.getValue());
+            temp.setWhatToRemove(so);
+            temp.setWhereToRemove(room);
         }
     }
 
-    private void update_changeItemDescription() {
+    private void update_changeItemDescription(Item item, String text) {
         if (result instanceof ChangeItemDescription) {
             ChangeItemDescription temp = (ChangeItemDescription) result;
-            temp.setWhatToChange(changeItemDescription_ChoiceBox.getValue());
-            temp.setNewDescription(changeItemDescription_TextArea.getText());
+            temp.setWhatToChange(item);
+            temp.setNewDescription(text);
         }
     }
 
-    private void update_changeRoomDescription() {
+    private void update_changeRoomDescription(Room room, String text) {
         if (result instanceof ChangeRoomDescription) {
             ChangeRoomDescription temp = (ChangeRoomDescription) result;
-            temp.setWhatToChange(changeRoomDescription_ChoiceBox.getValue());
-            temp.setNewDesctiption(changeRoomDescription_TextArea.getText());
+            temp.setWhatToChange(room);
+            temp.setNewDesctiption(text);
         }
     }
 
-    private void update_changeStaticObjectDescription() {
+    private void update_changeStaticObjectDescription(StaticObject so, String text) {
         if (result instanceof ChangeStaticObjectDescription) {
             ChangeStaticObjectDescription temp = (ChangeStaticObjectDescription) result;
-            temp.setNewDescription(changeStaticObjectDescription_TextArea.getText());
-            temp.setWhatToChange(changeStaticObjectDescription_ChoiceBox.getValue());
+            temp.setNewDescription(text);
+            temp.setWhatToChange(so);
         }
     }
 
-    private void update_changeStaticObjectName() {
+    private void update_changeStaticObjectName(StaticObject so, String text) {
         if (result instanceof ChangeStaticObjectName) {
             ChangeStaticObjectName temp = (ChangeStaticObjectName) result;
-            temp.setNewName(changeStaticObjectName_TextField.getText());
-            temp.setWhatToChange(changeStaticObjectName_ChoiceBox.getValue());
+            temp.setNewName(text);
+            temp.setWhatToChange(so);
         }
     }
 
-    private void update_changeRoomName() {
+    private void update_changeRoomName(Room room, String text) {
         if (result instanceof ChangeRoomName) {
             ChangeRoomName temp = (ChangeRoomName) result;
-            temp.setNewName(changeRoomName_TextField.getText());
-            temp.setWhatToChange(changeRoomName_ChoiceBox.getValue());
+            temp.setNewName(text);
+            temp.setWhatToChange(room);
         }
     }
 
-    private void update_changeItemName() {
+    private void update_changeItemName(Item item, String text) {
         if (result instanceof ChangeItemName) {
             ChangeItemName temp = (ChangeItemName) result;
-            temp.setNewName(changeItemName_TextField.getText());
-            temp.setWhatToChange(changeItemName_ChoiceBox.getValue());
+            temp.setNewName(text);
+            temp.setWhatToChange(item);
         }
     }
 
-    private void update_pushMessage() {
+    private void update_pushMessage(String text) {
         if (result instanceof PushMessage) {
             PushMessage temp = (PushMessage) result;
-            temp.setMessage(pushMessage_TextArea.getText());
+            temp.setMessage(text);
         }
     }
 
-    private void update_throwGameEvent() {
+    private void update_throwGameEvent(GameEventType newValue) {
+        if (newValue == null) {
+            return;
+        }
         throwGameEvent_StackPane1_HBox1.setVisible(false);
         throwGameEvent_StackPane1_HBox2.setVisible(false);
         throwGameEvent_StackPane2_HBox1.setVisible(false);
@@ -1012,19 +1019,26 @@ public class AddActionController implements Initializable {
         throwGameEvent_StackPane3_HBox1.setVisible(false);
         throwGameEvent_StackPane3_HBox2.setVisible(false);
         isOK = false;
-        currentActionLabel.setText("Throw game event: " + throwGameEvent_ChoiceBox_GameEvent.getValue());
-        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getValue());
-
+        //System.out.println("-ADD-ACTION-CONTROLLER-: throwGameEvent_ChoiceBox_GameEvent.getValue() ="+throwGameEvent_ChoiceBox_GameEvent.getValue());
+        currentActionLabel.setText("Throw game event: " + newValue);
+        System.out.println("-ADD-ACTION-CONTROLLER-:update_throwGameEvent:GameEventType = " + newValue);
+        Class[] settingClasses = GameEvent.getSettingClasses(newValue);
+        for (Class c : settingClasses) {
+            System.out.println(c.toGenericString());
+            System.out.println("== String.class? " + c.equals(Integer.class));
+        }
         if (settingClasses.length > 0) {
             if (settingClasses[0].equals(String.class)) {
-                throwGameEvent_StackPane1_HBox1.setVisible(true);
+                throwGameEvent_StackPane1_HBox2.setVisible(true);
                 throwGameEvent_TextField1_isNumber = false;
                 throwGameEvent_TextField1_Label.setText("Text:");
-            }
-            if (settingClasses[0].equals(Integer.class)) {
-                throwGameEvent_StackPane1_HBox1.setVisible(true);
+            } else if (settingClasses[0].equals(Integer.class)) {
+                throwGameEvent_StackPane1_HBox2.setVisible(true);
                 throwGameEvent_TextField1_isNumber = true;
                 throwGameEvent_TextField1_Label.setText("Value:");
+                if (newValue == GameEventType.RANDOM_NUMBER) {
+                    throwGameEvent_TextField1_Label.setText("Min: ");
+                }
             } else {
                 throwGameEvent_StackPane1_HBox1.setVisible(true);
                 throwGameEvent_ChoiceBox1.getItems().clear();
@@ -1034,14 +1048,16 @@ public class AddActionController implements Initializable {
         }
         if (settingClasses.length > 1) {
             if (settingClasses[1].equals(String.class)) {
-                throwGameEvent_StackPane2_HBox1.setVisible(true);
+                throwGameEvent_StackPane2_HBox2.setVisible(true);
                 throwGameEvent_TextField2_isNumber = false;
                 throwGameEvent_TextField2_Label.setText("Text:");
-            }
-            if (settingClasses[1].equals(Integer.class)) {
-                throwGameEvent_StackPane2_HBox1.setVisible(true);
+            } else if (settingClasses[1].equals(Integer.class)) {
+                throwGameEvent_StackPane2_HBox2.setVisible(true);
                 throwGameEvent_TextField2_isNumber = true;
                 throwGameEvent_TextField2_Label.setText("Value:");
+                if (newValue == GameEventType.RANDOM_NUMBER) {
+                    throwGameEvent_TextField2_Label.setText("Max: ");
+                }
             } else {
                 throwGameEvent_StackPane2_HBox1.setVisible(true);
                 throwGameEvent_ChoiceBox2.getItems().clear();
@@ -1051,16 +1067,15 @@ public class AddActionController implements Initializable {
         }
         if (settingClasses.length > 2) {
             if (settingClasses[2].equals(String.class)) {
-                throwGameEvent_StackPane3_HBox1.setVisible(true);
+                throwGameEvent_StackPane3_HBox2.setVisible(true);
                 throwGameEvent_TextField3_isNumber = false;
                 throwGameEvent_TextField3_Label.setText("Text:");
-            }
-            if (settingClasses[2].equals(Integer.class)) {
+            } else if (settingClasses[2].equals(Integer.class)) {
                 throwGameEvent_StackPane3_HBox1.setVisible(true);
                 throwGameEvent_TextField3_isNumber = true;
                 throwGameEvent_TextField3_Label.setText("Value:");
             } else {
-                throwGameEvent_StackPane3_HBox1.setVisible(true);
+                throwGameEvent_StackPane3_HBox2.setVisible(true);
                 throwGameEvent_ChoiceBox3.getItems().clear();
                 throwGameEvent_ChoiceBox3.getItems().addAll(Game.getInstance().getAllIntancesOf(settingClasses[2]));
                 throwGameEvent_ChoiceBox3_Label.setText(getLabelForClass(settingClasses[2]));
@@ -1069,97 +1084,41 @@ public class AddActionController implements Initializable {
 
     }
 
-    private void update_throwGameEvent_Values() {
+    private void update_throwGameEvent_Values(Object newValue, Object value, Object value1, String text, String text1, String text2) {
         isOK = true;
         GameEvent ge = null;
-        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getValue());
-        ge = GameEvent.getInstanceOf(throwGameEvent_ChoiceBox_GameEvent.getValue());
+        System.out.println("-ADD-ACTION-CONTROLLER-: Game event: " + throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
+        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
+        ge = GameEvent.getInstanceOf(throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
+        System.out.println("GE IS INSTANCE OF " + throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
         Object[] settingObject = new Object[settingClasses.length];
 
-        if (settingClasses.length > 0) {
-            if (settingClasses[0].equals(String.class)) {
-                String s = throwGameEvent_TextField1.getText();
+        switch (settingClasses.length) {
+            case 3:
+                settingObject[2] = set_values_shortcut(throwGameEvent_TextField3, throwGameEvent_ChoiceBox3, settingClasses[2]);
 
-                if (!"".equals(s)) {
-                    settingObject[0] = s;
-                } else {
-                    isOK = false;
-                }
-            }
-            if (settingClasses[0].equals(Integer.class)) {
-                String s = throwGameEvent_TextField1.getText();
-                if (!s.matches("\\d*")) {
-                    throwGameEvent_TextField1.setText(s.replaceAll("[^\\d]", ""));
-                }
-                if (s != "") {
-                    settingObject[0] = new Integer(Integer.parseInt(s));
-                } else {
-                    isOK = false;
-                }
-            } else {
-                Object o =throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem();
-                if(o !=null){
-                     settingObject[0] = o;
-                }
-            }
-        }
-        if (settingClasses.length > 1 ){
-            if (settingClasses[1].equals(String.class)) {
-                String s = throwGameEvent_TextField2.getText();
+            case 2:
+                settingObject[1] = set_values_shortcut(throwGameEvent_TextField2, throwGameEvent_ChoiceBox2, settingClasses[1]);
 
-                if (!"".equals(s)) {
-                    settingObject[1] = s;
-                } else {
-                    isOK = false;
-                }
-            }
-            if (settingClasses[1].equals(Integer.class)) {
-                String s = throwGameEvent_TextField2.getText();
-                if (!s.matches("\\d*")) {
-                    throwGameEvent_TextField2.setText(s.replaceAll("[^\\d]", ""));
-                }
-                if (s != "") {
-                    settingObject[1] = new Integer(Integer.parseInt(s));
-                } else {
-                    isOK = false;
-                }
-            } else {
-                Object o =throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem();
-                if(o !=null){
-                     settingObject[0] = o;
-                }
-            }
-        }if (settingClasses.length > 2) {
-            if (settingClasses[2].equals(String.class)) {
-                String s = throwGameEvent_TextField3.getText();
-
-                if (!"".equals(s)) {
-                    settingObject[2] = s;
-                } else {
-                    isOK = false;
-                }
-            }
-            if (settingClasses[2].equals(Integer.class)) {
-                String s = throwGameEvent_TextField3.getText();
-                if (!s.matches("\\d*")) {
-                    throwGameEvent_TextField3.setText(s.replaceAll("[^\\d]", ""));
-                }
-                if (s != "") {
-                    settingObject[2] = new Integer(Integer.parseInt(s));
-                } else {
-                    isOK = false;
-                }
-            } else {
-                Object o =throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem();
-                if(o !=null){
-                     settingObject[2] = o;
-                }
-            }
+            case 1:
+                settingObject[0] = set_values_shortcut(throwGameEvent_TextField1, throwGameEvent_ChoiceBox1, settingClasses[0]);
+            default:
+                break;
         }
 
+        for (int i = 0; i < settingClasses.length; i++) {
+            if (settingObject[i] == null) {
+                isOK = false;
+                System.out.println("SETTING OBJECT IS FALSE BECAUSE settingObject[" + i + "] IS null");
+                break;
+            }
+        }
         if (isOK) {
+            System.out.println("NEW ACTION CRETED");
+            ge.setValues(settingObject);
             result = new ThrowGameEvent(ge);
         }
+        okButton.setDisable(!isOK);
     }
 
     private void update_changeCurrentImage() {
@@ -1170,32 +1129,49 @@ public class AddActionController implements Initializable {
 
     }
 
-    private void update_customValue() {
-        if (!customValue_TextField.getText().matches("\\d*")) {
-            customValue_TextField.setText(customValue_TextField.getText().replaceAll("[^\\d]", ""));
+    private void update_customValue(String key, String value) {
+        isOK = true;
+        if (!value.matches("\\d*")) {
+            customValue_TextField.setText(value.replaceAll("[^\\d]", ""));
+            value = value.replaceAll("[^\\d]", "");
         }
+
         if (result instanceof AddToCustomValue) {
             AddToCustomValue temp = (AddToCustomValue) result;
-            if (customValue_TextField.getText().equals("")) {
+            if (value.equals("")) {
                 temp.setValue(0);
+            } else {
+                temp.setValue(Integer.parseInt(value));
             }
-            temp.setValue(Integer.parseInt(customValue_TextField.getText()));
-            temp.setValueName(customValue_choiceBox.getSelectionModel().getSelectedItem().toString());
+            if (key!= null) {
+                temp.setValueName(key);
+            } else {
+                //System.out.println("-ADD-ACTION-CONTROLLER-:update_customValue, customValue_choiceBox.getValue() is NULL");
+                isOK = false;
+            }
         } else if (result instanceof SetCustomValue) {
-            AddToCustomValue temp = (AddToCustomValue) result;
-            if (customValue_TextField.getText().equals("")) {
+            SetCustomValue temp = (SetCustomValue) result;
+            if (value.equals("")) {
                 temp.setValue(0);
+            } else {
+                temp.setValue(Integer.parseInt(value));
             }
-            temp.setValue(Integer.parseInt(customValue_TextField.getText()));
-            temp.setValueName(customValue_choiceBox.getSelectionModel().getSelectedItem().toString());
+            if (key != null) {
+                temp.setValueName(key);
+            } else {
+                isOK = false;
+            }
+        } else {
+            isOK = false;
         }
+        okButton.setDisable(!isOK);
     }
 
-    private void update_changeRoomImage() {
+    private void update_changeRoomImage(Room room) {
         isOK = false;
-        if (!changeRoomImage_ChoiceBox.getItems().isEmpty() && changeRoomImage_ImageView.getImage() != null) {
+        if (room!=null && changeRoomImage_ImageView.getImage() != null) {
             isOK = true;
-            result = new ChangeRoomImage(changeRoomImage_ImageView.getImage(), changeRoomImage_ChoiceBox.getValue());
+            result = new ChangeRoomImage(changeRoomImage_ImageView.getImage(), room);
         }
         resetLayout();
         changeRoomImage_GridPane.setVisible(true);
@@ -1238,151 +1214,190 @@ public class AddActionController implements Initializable {
     }
 
     private void setListeners() {
-        removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeStaticObjectFromRoom();
+        addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room temp = addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_addStaticObjectToRoom(addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getSelectionModel().getSelectedItem(),temp);
         });
-        addOptionToRoom_ChoiceBox_Option_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addOptionToRoom();
+        addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            StaticObject temp = addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getItems().get((Integer)newValue);
+            update_addStaticObjectToRoom(temp,addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        removeOptionFromRoom_Option_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addOptionToRoom();
+        //------------------------------------------------------------------------
+        removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room temp = removeStaticObjectFromRoom_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeStaticObjectFromRoom(removeStaticObjectFromRoom_StaticObject_ChoiceBox.getSelectionModel().getSelectedItem(), temp);
         });
-        addItemToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addItemToRoom();
+        removeStaticObjectFromRoom_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            StaticObject temp = removeStaticObjectFromRoom_StaticObject_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeStaticObjectFromRoom(temp, removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        addOptionToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addOptionToRoom();
+        //------------------------------------------------------------------------
+        addOptionToRoom_ChoiceBox_Option_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Option option = addOptionToRoom_ChoiceBox_Option_ChoiceBox.getItems().get((Integer)newValue);
+            update_addOptionToRoom(option, addOptionToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addPathToRoom();
+        addOptionToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = addOptionToRoom_ChoiceBox_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_addOptionToRoom(addOptionToRoom_ChoiceBox_Option_ChoiceBox.getSelectionModel().getSelectedItem(), room);
         });
-        addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addPathToRoom();
+        //------------------------------------------------------------------------
+        removeOptionFromRoom_Option_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Option option = removeOptionFromRoom_Option_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeOptionFromRoom(option, removeOptionFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        addStaticObjectToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addStaticObjectToRoom();
+        removeOptionFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = removeOptionFromRoom_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeOptionFromRoom(removeOptionFromRoom_Option_ChoiceBox.getSelectionModel().getSelectedItem(), room);
         });
-        movePlayerToRoom_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_movePlayerToRoom();
+        //------------------------------------------------------------------------
+        addItemToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = addItemToRoom_ChoiceBox_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_addItemToRoom(addItemToRoom_ChoiceBox_Item_ChoiceBox.getSelectionModel().getSelectedItem(),room);
         });
-        removeItemFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeItemFromRoom();
+        addItemToRoom_ChoiceBox_Item_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Item item = addItemToRoom_ChoiceBox_Item_ChoiceBox.getItems().get((Integer)newValue);
+            update_addItemToRoom(item,addItemToRoom_ChoiceBox_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        removeOptionFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeOptionFromRoom();
+        //------------------------------------------------------------------------
+        removeItemFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = removeItemFromRoom_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeItemFromRoom(removeItemFromRoom_Item_ChoiceBox.getSelectionModel().getSelectedItem(),room);
         });
-        removePathFromRoom_From_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removePathFromRoom();
+        removeItemFromRoom_Item_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Item item = removeItemFromRoom_Item_ChoiceBox.getItems().get((Integer)newValue);
+            update_removeItemFromRoom(item,removeItemFromRoom_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        removePathFromRoom_Where_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removePathFromRoom();
+        //------------------------------------------------------------------------
+        addItemToPlayer_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Item item = addItemToPlayer_ChoiceBox.getItems().get((Integer)newValue);
+            update_addItemToPlayer(item);
         });
-        removeStaticObjectFromRoom_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeStaticObjectFromRoom();
+         //------------------------------------------------------------------------
+        addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+             Room room = addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_addPathToRoom(addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getSelectionModel().getSelectedItem(),room);
         });
-        addStaticObjectToRoom_ChoiceBox_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addStaticObjectToRoom();
+        addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = addPathToRoom_ChoiceBox_From_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_addPathToRoom(addPathToRoom_ChoiceBox_Where_Room_ChoiceBox.getSelectionModel().getSelectedItem(),room);
         });
-        describeStaticObject_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_describeStaticObject();
+        //------------------------------------------------------------------------
+        movePlayerToRoom_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+             Room room = movePlayerToRoom_ChoiceBox.getItems().get((Integer)newValue);
+            update_movePlayerToRoom(room);
         });
-        removeStaticObjectFromRoom_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeStaticObjectFromRoom();
+        //------------------------------------------------------------------------
+        removePathFromRoom_From_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = removePathFromRoom_From_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_removePathFromRoom(room, removePathFromRoom_From_Room_ChoiceBox.getSelectionModel().getSelectedItem());
         });
-        disableGameEventListener_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_disableGameEventListener();
+        removePathFromRoom_Where_Room_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = removePathFromRoom_Where_Room_ChoiceBox.getItems().get((Integer)newValue);
+            update_removePathFromRoom(removePathFromRoom_From_Room_ChoiceBox.getSelectionModel().getSelectedItem(),room);
         });
-        enableGameEventListener_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_enableGameEventListener();
+        //------------------------------------------------------------------------
+        describeStaticObject_StaticObject_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            StaticObject so = describeStaticObject_StaticObject_ChoiceBox.getItems().get((Integer)newValue);
+            update_describeStaticObject(so);
         });
-        addItemToPlayer_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addItemToPlayer();
+        //------------------------------------------------------------------------
+        disableGameEventListener_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            GameEventListener gel = disableGameEventListener_ChoiceBox.getItems().get((Integer)newValue);
+            update_disableGameEventListener(gel);
         });
-        addItemToRoom_ChoiceBox_Item_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_addItemToRoom();
+        enableGameEventListener_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            GameEventListener gel = enableGameEventListener_ChoiceBox.getItems().get((Integer)newValue);
+            update_enableGameEventListener(gel);
         });
-        removeItemFromRoom_Item_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_removeItemFromRoom();
+        //------------------------------------------------------------------------
+        
+        changeItemDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Item item = changeItemDescription_ChoiceBox.getItems().get((Integer)newValue);
+            update_changeItemDescription(item,changeItemDescription_TextArea.getText());
         });
-        changeItemDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_changeItemDescription();
+        changeItemDescription_TextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeItemDescription(changeItemDescription_ChoiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        changeItemDescription_TextArea.textProperty().addListener((observable) -> {
-            update_changeItemDescription();
+        //------------------------------------------------------------------------
+        changeRoomDescription_TextArea.textProperty().addListener((observable, oldValue, newValue) -> {  
+            update_changeRoomDescription(changeRoomDescription_ChoiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        changeRoomDescription_TextArea.textProperty().addListener((observable) -> {
-            update_changeRoomDescription();
+        
+        changeRoomDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = changeRoomDescription_ChoiceBox.getItems().get((Integer)newValue);
+            update_changeRoomDescription(room,changeRoomDescription_TextArea.getText());
         });
-        changeRoomDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_changeRoomDescription();
+        //------------------------------------------------------------------------
+        changeStaticObjectDescription_TextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeStaticObjectDescription(changeStaticObjectDescription_ChoiceBox.getSelectionModel().getSelectedItem(), newValue);
         });
-        changeStaticObjectDescription_TextArea.textProperty().addListener((observable) -> {
-            update_changeStaticObjectDescription();
+        changeStaticObjectDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            StaticObject so = changeStaticObjectDescription_ChoiceBox.getItems().get((Integer)newValue);
+            update_changeStaticObjectDescription(so,changeStaticObjectDescription_TextArea.getText());
         });
-        changeStaticObjectDescription_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_changeStaticObjectDescription();
+        //------------------------------------------------------------------------
+        changeStaticObjectName_TextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeStaticObjectName(changeStaticObjectName_ChoiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        changeStaticObjectName_TextField.textProperty().addListener((observable) -> {
-            update_changeStaticObjectName();
+        
+        changeStaticObjectName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            StaticObject so = newValue;
+            update_changeStaticObjectName(so, changeStaticObjectName_TextField.getText());
         });
-        changeStaticObjectName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_changeStaticObjectName();
+        //------------------------------------------------------------------------
+        changeRoomName_TextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeRoomName(changeRoomName_ChoiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        changeRoomName_TextField.textProperty().addListener((observable) -> {
-            update_changeRoomName();
+        changeRoomName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeRoomName(newValue,changeRoomName_TextField.getText());
         });
-        changeRoomName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_changeRoomName();
+        //------------------------------------------------------------------------
+        changeItemName_TextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeItemName(changeItemName_ChoiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        changeItemName_TextField.textProperty().addListener((observable) -> {
-            update_changeItemName();
+        changeItemName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            update_changeItemName(newValue, changeItemName_TextField.getText());
         });
-        changeItemName_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_changeItemName();
+        //------------------------------------------------------------------------
+        pushMessage_TextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_pushMessage(newValue);
         });
-        pushMessage_TextArea.textProperty().addListener((observable) -> {
-            update_pushMessage();
+        //------------------------------------------------------------------------
+        customValue_choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            String s = customValue_choiceBox.getItems().get((Integer)newValue);
+            update_customValue(s,customValue_TextField.getText());
         });
-
-        throwGameEvent_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_throwGameEvent();
+        customValue_TextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_customValue(customValue_choiceBox.getSelectionModel().getSelectedItem(),newValue);
         });
-        customValue_choiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_customValue();
+        //------------------------------------------------------------------------
+        changeRoomImage_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            Room room = changeRoomImage_ChoiceBox.getItems().get((Integer)newValue);
+            update_changeRoomImage(room);
         });
-        customValue_TextField.textProperty().addListener((observable) -> {
-            update_customValue();
-        });
-
-        changeRoomImage_ChoiceBox.getSelectionModel().selectedIndexProperty().addListener((observable) -> {
-            update_changeRoomImage();
-        });
-
         changeRoomImage_ImageView.setOnDragOver((event) -> {
             if (event.getDragboard().hasFiles()) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
         });
-
         changeRoomImage_ImageView.setOnDragDropped((event) -> {
             try {
                 List<File> files = event.getDragboard().getFiles();
                 Image img = new Image(new FileInputStream(files.get(0)));
                 changeRoomImage_ImageView.setImage(img);
-                update_changeRoomImage();
+                update_changeRoomImage(changeRoomImage_ChoiceBox.getSelectionModel().getSelectedItem());
             } catch (FileNotFoundException ex) {
                 System.out.println("File not found");
                 Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
 
             }
         });
-
+        //------------------------------------------------------------------------
         changeCurrentImage_ImageView.setOnDragOver((event) -> {
             if (event.getDragboard().hasFiles()) {
                 event.acceptTransferModes(TransferMode.ANY);
             }
         });
-
         changeCurrentImage_ImageView.setOnDragDropped((event) -> {
             try {
                 List<File> files = event.getDragboard().getFiles();
@@ -1395,35 +1410,119 @@ public class AddActionController implements Initializable {
 
             }
         });
-        throwGameEvent_ChoiceBox1.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
-        });
-        throwGameEvent_ChoiceBox2.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
-        });
-        throwGameEvent_ChoiceBox3.getSelectionModel().selectedItemProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
-        });
-
-        throwGameEvent_TextField1.textProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
-        });
-        throwGameEvent_TextField2.textProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
-        });
-        throwGameEvent_TextField3.textProperty().addListener((observable) -> {
-            update_throwGameEvent_Values();
+        //------------------------------------------------------------------------
+        throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("--ADD-ACTION-CONTROLLER-:throwGameEvent_ChoiceBox_GameEvent value " + throwGameEvent_ChoiceBox_GameEvent);
+            System.out.println("--ADD-ACTION-CONTROLLER-:observable value " + observable);
+            System.out.println("Old value:" + oldValue);
+            System.out.println("New value:" + newValue);
+            update_throwGameEvent(newValue);
         });
 
+        throwGameEvent_ChoiceBox1.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(
+                    newValue,
+                    throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_TextField1.getText(),
+                    throwGameEvent_TextField2.getText(),
+                    throwGameEvent_TextField3.getText());
+        });
+        throwGameEvent_ChoiceBox2.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem(),
+                    newValue,
+                    throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_TextField1.getText(),
+                    throwGameEvent_TextField2.getText(),
+                    throwGameEvent_TextField3.getText());
+        });
+        throwGameEvent_ChoiceBox3.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem(),
+                    newValue,
+                    throwGameEvent_TextField1.getText(),
+                    throwGameEvent_TextField2.getText(),
+                    throwGameEvent_TextField3.getText());
+        });
+
+        throwGameEvent_TextField1.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem(),
+                    newValue,
+                    throwGameEvent_TextField2.getText(),
+                    throwGameEvent_TextField3.getText());
+        });
+        throwGameEvent_TextField2.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_TextField1.getText(),
+                    newValue,
+                    throwGameEvent_TextField3.getText());
+        });
+        throwGameEvent_TextField3.textProperty().addListener((observable, oldValue, newValue) -> {
+            update_throwGameEvent_Values(throwGameEvent_ChoiceBox1.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox2.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_ChoiceBox3.getSelectionModel().getSelectedItem(),
+                    throwGameEvent_TextField1.getText(),
+                    throwGameEvent_TextField2.getText(),
+                    newValue);
+        });
+        //------------------------------------------------------------------------
     }
 
     private String getLabelForClass(Class c) {
-        if(c.equals(Room.class))return "Room: ";
-        if(c.equals(StaticObject.class))return "StaticObject: ";
-        if(c.equals(Option.class))return "Option: ";
-        if(c.equals(Item.class))return "Item: ";
-        if(c.equals(GameEventListener.class))return "GameEventListener: ";
+        if (c.equals(Room.class)) {
+            return "Room: ";
+        }
+        if (c.equals(StaticObject.class)) {
+            return "StaticObject: ";
+        }
+        if (c.equals(Option.class)) {
+            return "Option: ";
+        }
+        if (c.equals(Item.class)) {
+            return "Item: ";
+        }
+        if (c.equals(GameEventListener.class)) {
+            return "GameEventListener: ";
+        }
         return "Unknown value: ";
     }
 
+    private Object set_values_shortcut(TextField textField, ChoiceBox choiceBox, Class settingClass) {
+        if (settingClass.equals(String.class)) {
+            String s = textField.getText();
+
+            if (!"".equals(s)) {
+                return new String(s);
+            } else {
+                isOK = false;
+                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false because string is empty");
+            }
+        }
+        if (settingClass.equals(Integer.class)) {
+            String s = textField.getText();
+            if (!s.matches("\\d*")) {
+                textField.setText(s.replaceAll("[^\\d]", ""));
+            }
+            if (s != "") {
+                return new Integer(Integer.parseInt(s));
+            } else {
+                isOK = false;
+                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false because string is empty");
+            }
+        } else {
+            Object o = choiceBox.getSelectionModel().getSelectedItem();
+            if (o != null) {
+                return o;
+            } else {
+                isOK = false;
+                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false because choiceBox.getValue is empty");
+            }
+        }
+        System.out.println("--ADD-ACTION-CONTROLLER-: set_values_shortcut RETURNS NULL");
+        return null;
+    }
 }

@@ -18,9 +18,11 @@ public class Item implements java.io.Serializable{
     private String name;
     private String description;
     private ArrayList referencedBy;
+    private ArrayList<Option> options;
 
     public Item(String name, String description) {
         referencedBy = new ArrayList();
+        options = new ArrayList();
         this.id = Game.getInstance().getItemMaxID();;
         Game.getInstance().incItemMaxID();
         this.name = name;
@@ -62,7 +64,7 @@ public class Item implements java.io.Serializable{
                 r.removeItem(this, false);
             } else if (o instanceof Player) {
                 Player pl = (Player) o;                
-                pl.RemoveItem(this,false);
+                pl.removeItem(this,false);
             }if(o instanceof Action){
                 Action a = (Action)o;
                 a.setValidity(false);

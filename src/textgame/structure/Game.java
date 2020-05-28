@@ -5,12 +5,19 @@
  */
 package textgame.structure;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import textgame.structure.gameEvents.GameEvent;
 import textgame.structure.actions.Action;
 import java.util.ArrayList;
-import java.util.EventListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import textgame.structure.actions.ChangeRoomImage;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -26,6 +33,15 @@ public class Game implements java.io.Serializable{
     private static Game instance = new Game();
     private Player player;
     private transient Image currentImage;
+    private String fontRoomName;
+    private String fontDescription;
+    private String fontInfoLine;
+    private String fontButton;
+
+    
+    private transient HashMap<String,Image> gui = new HashMap<>();
+    private ArrayList<String> guiKeySet;
+    
     private ArrayList<Room> allRooms;
     private ArrayList<Item> allItems;
     private ArrayList<StaticObject> allStaticObjects;
@@ -49,6 +65,8 @@ public class Game implements java.io.Serializable{
         allRooms = new ArrayList<>();;
         allOptions = new ArrayList();
         allGameEventListeners = new ArrayList<>();
+        guiKeySet = new ArrayList<>();
+        gui = new HashMap<>();
     }
 
     public void addNewOption(Option optionToAdd){
@@ -142,7 +160,7 @@ public class Game implements java.io.Serializable{
         return null;
     }
 
-    public GameEventListener addEventListener(String name,GameEvent.GameEventType gameEventType, Object[] expectedValue, Action action) {
+    public GameEventListener addGameEventListener(String name,GameEvent.GameEventType gameEventType, Object[] expectedValue, Action action) {
         GameEventListener gel = new GameEventListener(name, gameEventType, expectedValue, action);
         allGameEventListeners.add(gel);
         return gel;
@@ -328,9 +346,91 @@ public class Game implements java.io.Serializable{
         return currentImage;
     }
 
-    public void setCurrentImage(Image currentImage) {
-        this.currentImage = currentImage;
+    public void setCurrentImage(Image img) {
+        this.currentImage = img;
+    }
+
+    public void setGUI(Image img, String key) {
+        if(gui == null) gui = new HashMap<>();
+        if(gui.containsKey(key)){
+            gui.replace(key, img);
+        }else gui.put(key, img);
+        if(guiKeySet==null){
+            guiKeySet=new ArrayList<>();
+        }
+        if(!guiKeySet.contains(key)){
+            guiKeySet.add(key);
+        }
+    }
+
+    public void writeImage(ObjectOutputStream s, String imageKey) throws IOException {
+        ImageIO.write(SwingFXUtils.fromFXImage(gui.get(imageKey), null), "png", s);
+    }
+    public void readAndSetImage(ObjectInputStream s, String imageKey) throws IOException, ClassNotFoundException {
+        Image i = SwingFXUtils.toFXImage(ImageIO.read(s), null);
+        System.out.println("--GAME--: readAndSetImage is image null: "+ (i==null));
+        setGUI(i, imageKey);
+    }
+
+    public Set<String> getGUIKeys(){
+        return gui.keySet();
     }
     
+    public Map<String, Image> getGUI() {
+        return gui;
+    }
 
+    public Image getGUI(String key) {
+        if(gui==null)return null;
+        return gui.get(key);
+    }
+    
+    public List<String> getGUIKeySet(){
+        return guiKeySet;
+    }
+
+    public String getFontRoomName() {
+        return fontRoomName;
+    }
+
+    public void setFontRoomName(String fontRoomName) {
+        this.fontRoomName = fontRoomName;
+    }
+
+    public String getFontDescription() {
+        return fontDescription;
+    }
+
+    public void setFontDescription(String fontDescription) {
+        this.fontDescription = fontDescription;
+    }
+
+    public String getFontInfoLine() {
+        return fontInfoLine;
+    }
+
+    public void setFontInfoLine(String fontInfoLine) {
+        this.fontInfoLine = fontInfoLine;
+    }
+
+    public String getFontButton() {
+        return fontButton;
+    }
+
+    public void setFontButton(String fontButton) {
+        this.fontButton = fontButton;
+    }
+
+    public Option addNewOption() {
+        Option temp = new Option("Unnamed option");
+        allOptions.add(temp);
+        return temp;
+    }
+
+    public GameEventListener addNewEventListener() {
+        GameEventListener temp = new GameEventListener("Unnamed game event listener", GameEvent.GameEventType.OPTION_SELECTED, new Object[0], new Action[0]);
+        allGameEventListeners.add(temp);
+        return temp;
+    }
+    
 }

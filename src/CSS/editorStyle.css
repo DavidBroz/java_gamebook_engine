@@ -19,10 +19,17 @@ BROWN   {#A16946}
 .root{
     -fx-background-color: #383838;
     -fx-font-size: 11pt;
+    -fx-text-fill: #F8F8F8;
 }
 
 .label{
-    /*-fx-background-color: #f0f8ff;*/
+    -fx-text-fill: #F8F8F8;
+}
+.text{
+    -fx-text-fill: #F8F8F8;
+}
+
+.text-flow{
     -fx-text-fill: #F8F8F8;
 }
 

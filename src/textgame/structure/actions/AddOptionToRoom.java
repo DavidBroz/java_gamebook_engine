@@ -28,7 +28,7 @@ public class AddOptionToRoom implements Action, java.io.Serializable{
 
     @Override
     public String toString() {
-        return "AddOptionToRoom{" +whatToAdd.toString() + ", Option: " + whereToAdd.toString() + '}';
+        return "AddOptionToRoom{" +whereToAdd.toString() + ", Option: " + whatToAdd.toString() + '}';
     }
 
     public Option getWhatToAdd() {

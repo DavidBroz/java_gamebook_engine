@@ -19,7 +19,7 @@ public class AddStaticObjectToRoom implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        whereToAdd.addStaticObjectToRoom(whatToAdd);
+        whereToAdd.addStaticObjectToRoom(whatToAdd,true);
     }
 
     public AddStaticObjectToRoom(StaticObject whatToAdd, Room whereToAdd) {

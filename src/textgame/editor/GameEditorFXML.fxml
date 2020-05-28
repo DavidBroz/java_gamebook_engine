@@ -22,6 +22,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgame.editor.GameEditorFXMLController">
     <stylesheets>
@@ -37,6 +39,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#saveButtonClick" text="Save game" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Template">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#TemplateIndianJohn_OnAction" text="Indian John" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Settings">
             <items>
               <MenuItem mnemonicParsing="false" text="About" />
@@ -112,21 +119,18 @@
       </Accordion>
    </left>
    <right>
-      <ScrollPane hbarPolicy="NEVER" prefViewportHeight="736.0" prefViewportWidth="350.0" BorderPane.alignment="CENTER_LEFT">
+      <ScrollPane hbarPolicy="NEVER" nodeOrientation="LEFT_TO_RIGHT" pannable="true" prefViewportHeight="736.0" prefViewportWidth="400.0" prefWidth="400.0" BorderPane.alignment="TOP_CENTER">
          <content>
-            <VBox alignment="TOP_CENTER">
+            <VBox alignment="TOP_CENTER" maxWidth="350.0" prefWidth="300.0">
                <children>
                   <Label id="headline" alignment="CENTER" text="Inspector" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
                   </Label>
-                  <StackPane layoutY="65.0" prefHeight="701.0" prefWidth="350.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-52.0" AnchorPane.topAnchor="35.0">
-                     <padding>
-                        <Insets left="20.0" right="20.0" />
-                     </padding>
+                  <StackPane alignment="TOP_LEFT" layoutY="65.0" prefHeight="701.0" prefWidth="330.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-52.0" AnchorPane.topAnchor="35.0">
                      <children>
-                        <VBox fx:id="StaticObjectInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="StaticObjectInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Static Object">
                                  <font>
@@ -166,7 +170,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="ItemInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false" StackPane.alignment="TOP_CENTER">
+                        <VBox fx:id="ItemInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Item">
                                  <font>
@@ -200,7 +204,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="roomInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="roomInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Room">
                                  <font>
@@ -264,7 +268,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0">
+                        <VBox fx:id="EventListenerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Game Event Listener">
                                  <font>
@@ -353,7 +357,7 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="OptionInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="OptionInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Option">
                                  <font>
@@ -388,35 +392,78 @@
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="gameInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="gameInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0" visible="false">
                            <children>
                               <Label text="Game">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <VBox>
                                  <children>
-                                    <Label text="Name:" />
-                                    <TextField fx:id="gameInspectorName_TextField" />
+                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                                       <children>
+                                          <Label text="Name:" underline="true" />
+                                          <TextField fx:id="gameInspectorName_TextField" />
+                                       </children>
+                                    </HBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Option bar background:" underline="true" />
+                                          <ImageView fx:id="game_optionBarBg_ImageView" fitHeight="150.0" fitWidth="200.0" onDragDropped="#game_optionBarBg_ImageView_OnDragDropped" onDragOver="#game_optionBarBg_ImageView_OnDragOver" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Text Area Background" underline="true" />
+                                          <ImageView fx:id="game_textAreaBg_ImageView" fitHeight="150.0" fitWidth="200.0" onDragDropped="#game_textAreaBg_ImageView_OnDragDropped" onDragOver="#game_textAreaBg_ImageView_OnDragOver" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                       <children>
+                                          <Label text="Font" />
+                                          <ListView fx:id="game_font_ListView" prefHeight="200.0" prefWidth="200.0" />
+                                          <Button mnemonicParsing="false" text="+ Add cutom font" />
+                                          <Label text="Test:" />
+                                          <VBox prefHeight="200.0" prefWidth="100.0">
+                                             <children>
+                                                <Label fx:id="game_RoomNameFontExample_Label" text="Room name" />
+                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <Text fx:id="game_DescriptionFontExample_Text" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a very long text that is here to represent a description of the room so you have a better idea how the font looks when it is a long text like this one." />
+                                                   </children>
+                                                </TextFlow>
+                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <Text fx:id="game_InfoLineFontExample_Text" strokeType="OUTSIDE" strokeWidth="0.0" text="Info line:">
+                                                         <font>
+                                                            <Font name="System Italic" size="12.0" />
+                                                         </font>
+                                                      </Text>
+                                                   </children></TextFlow>
+                                                <Button fx:id="game_ButtonFontExample_Button" mnemonicParsing="false" text="Example button" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
                                  </children>
-                              </HBox>
+                              </VBox>
                            </children>
                            <padding>
                               <Insets bottom="20.0" />
                            </padding>
                         </VBox>
-                        <VBox fx:id="playerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" prefHeight="600.0" visible="false">
+                        <VBox fx:id="playerInspectorVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="350.0" prefHeight="600.0" prefWidth="350.0">
                            <children>
                               <Label text="Player">
                                  <font>
                                     <Font size="24.0" />
                                  </font>
                               </Label>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
+                              <HBox fx:id="startRoom_HBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                  <children>
-                                    <Label text="Start room" />
-                                    <ChoiceBox fx:id="startRoom_ChoiceBox" prefWidth="150.0" />
+                                    <Label text="Start room" underline="true" />
+                                    <Label text="Unnamed_room" />
                                  </children>
                               </HBox>
                               <VBox>
@@ -444,16 +491,16 @@
                            </padding>
                         </VBox>
                      </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
                   </StackPane>
                </children>
-               <padding>
-                  <Insets right="10.0" />
-               </padding>
             </VBox>
          </content>
-         <padding>
-            <Insets right="20.0" />
-         </padding>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
       </ScrollPane>
    </right>
    <center>
