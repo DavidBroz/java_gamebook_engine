@@ -68,6 +68,7 @@ public abstract class GameEvent implements java.io.Serializable {
     public abstract String toString();
 
     public static Class[] getReturnClasses(GameEventType type) {
+        if(type==null)System.out.println("---GAME-EVENT---: ERROR GETRETURNCLASSES - GAME EVENT TYPE NULL");
         GameEvent temp;
         try {
             for (Class c : gameEventClasses) {
@@ -95,7 +96,7 @@ public abstract class GameEvent implements java.io.Serializable {
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(GameEvent.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("---GAME-EVENT---: getSettingClasses DID NOT FIND "+type.toString());
+        System.out.println("---GAME-EVENT---: getSettingClasses DID NOT FIND "+type);
         return null;
     }
 
