@@ -66,8 +66,6 @@ import textgame.structure.actions.ThrowGameEvent;
 import textgame.structure.actions.WinGame;
 import textgame.structure.gameEvents.GameEvent;
 import textgame.structure.gameEvents.GameEvent.GameEventType;
-import textgame.structure.gameEvents.RandomNumber;
-
 /**
  * FXML Controller class
  *
@@ -1008,8 +1006,8 @@ public class AddActionController implements Initializable {
         }
     }
 
-    private void update_throwGameEvent(GameEventType newValue) {
-        if (newValue == null) {
+    private void update_throwGameEvent(GameEventType gameEventType) {
+        if (gameEventType == null) {
             return;
         }
         throwGameEvent_StackPane1_HBox1.setVisible(false);
@@ -1020,9 +1018,9 @@ public class AddActionController implements Initializable {
         throwGameEvent_StackPane3_HBox2.setVisible(false);
         isOK = false;
         //System.out.println("-ADD-ACTION-CONTROLLER-: throwGameEvent_ChoiceBox_GameEvent.getValue() ="+throwGameEvent_ChoiceBox_GameEvent.getValue());
-        currentActionLabel.setText("Throw game event: " + newValue);
-        System.out.println("-ADD-ACTION-CONTROLLER-:update_throwGameEvent:GameEventType = " + newValue);
-        Class[] settingClasses = GameEvent.getSettingClasses(newValue);
+        currentActionLabel.setText("Throw game event: " + gameEventType);
+        System.out.println("-ADD-ACTION-CONTROLLER-:update_throwGameEvent:GameEventType = " + gameEventType);
+        Class[] settingClasses = GameEvent.getValueClassesOf(gameEventType);
         for (Class c : settingClasses) {
             System.out.println(c.toGenericString());
             System.out.println("== String.class? " + c.equals(Integer.class));
@@ -1036,7 +1034,7 @@ public class AddActionController implements Initializable {
                 throwGameEvent_StackPane1_HBox2.setVisible(true);
                 throwGameEvent_TextField1_isNumber = true;
                 throwGameEvent_TextField1_Label.setText("Value:");
-                if (newValue == GameEventType.RANDOM_NUMBER) {
+                if (gameEventType == GameEventType.RANDOM_NUMBER) {
                     throwGameEvent_TextField1_Label.setText("Min: ");
                 }
             } else {
@@ -1055,7 +1053,7 @@ public class AddActionController implements Initializable {
                 throwGameEvent_StackPane2_HBox2.setVisible(true);
                 throwGameEvent_TextField2_isNumber = true;
                 throwGameEvent_TextField2_Label.setText("Value:");
-                if (newValue == GameEventType.RANDOM_NUMBER) {
+                if (gameEventType == GameEventType.RANDOM_NUMBER) {
                     throwGameEvent_TextField2_Label.setText("Max: ");
                 }
             } else {
@@ -1088,8 +1086,9 @@ public class AddActionController implements Initializable {
         isOK = true;
         GameEvent ge = null;
         System.out.println("-ADD-ACTION-CONTROLLER-: Game event: " + throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
-        Class[] settingClasses = GameEvent.getSettingClasses(throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
-        ge = GameEvent.getInstanceOf(throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
+        Class[] settingClasses = GameEvent.getValueClassesOf(throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
+        GameEventType get = throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem();
+        ge = new GameEvent(null,get);
         System.out.println("GE IS INSTANCE OF " + throwGameEvent_ChoiceBox_GameEvent.getSelectionModel().getSelectedItem());
         Object[] settingObject = new Object[settingClasses.length];
 
@@ -1511,7 +1510,7 @@ public class AddActionController implements Initializable {
                 return new Integer(Integer.parseInt(s));
             } else {
                 isOK = false;
-                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false because string is empty");
+                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false; because string is empty");
             }
         } else {
             Object o = choiceBox.getSelectionModel().getSelectedItem();
@@ -1519,10 +1518,10 @@ public class AddActionController implements Initializable {
                 return o;
             } else {
                 isOK = false;
-                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false because choiceBox.getValue is empty");
+                System.out.println("--ADD-ACTION-CONTROLLER-: isOK = false; because choiceBox.getValue is empty");
             }
         }
-        System.out.println("--ADD-ACTION-CONTROLLER-: set_values_shortcut RETURNS NULL");
+        System.out.println("--ADD-ACTION-CONTROLLER-: set_values_shortcut RETURNS NULL;");
         return null;
     }
 }

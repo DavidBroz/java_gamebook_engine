@@ -36,6 +36,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -55,9 +57,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import textgame.fxgraph.cells.RoomCell;
 import textgame.fxgraph.edges.Edge;
 import textgame.fxgraph.graph.Graph;
@@ -79,7 +81,6 @@ import textgame.structure.actions.AddPathFromRoom;
 import textgame.structure.actions.RemoveOptionFromRoom;
 import textgame.structure.actions.RemovePathFromRoom;
 import textgame.structure.actions.ThrowGameEvent;
-import textgame.structure.gameEvents.RandomNumber;
 
 /**
  * FXML Controller class
@@ -177,7 +178,7 @@ public class GameEditorFXMLController implements Initializable {
     private ChoiceBox gameEventListener_Expects3_ChoiceBox,
             gameEventListener_Expects2_ChoiceBox,
             gameEventListener_Expects1_ChoiceBox;
-    //---Option-inspector------------------------------------------------
+    //---Option-inspector-----------------------------------------------
     @FXML
     private VBox OptionInspectorVBox;
 
@@ -190,6 +191,8 @@ public class GameEditorFXMLController implements Initializable {
     //---Player----------------------------------------------------------------
     @FXML
     private VBox playerInspectorVBox;
+    @FXML
+    private Label playerCurrentRoomLabel;
     @FXML
     private ListView playerOptionsListView,
             playerCustomValuesListView,
@@ -207,7 +210,7 @@ public class GameEditorFXMLController implements Initializable {
     @FXML
     private ListView game_font_ListView;
     @FXML
-    private Text game_DescriptionFontExample_Text,
+    private Label game_DescriptionFontExample_Text,
             game_InfoLineFontExample_Text;
     @FXML
     private Label game_RoomNameFontExample_Label;
@@ -422,10 +425,10 @@ public class GameEditorFXMLController implements Initializable {
         //---Choice-Boxes---
         System.out.println("UpdatesChecked");
         gameEventListener_Expects1_ChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("GAME-EDITOR-CONTROLLER: Setting Expects1 Choicebox to: " + newValue);   
+            System.out.println("GAME-EDITOR-CONTROLLER: Setting Expects1 Choicebox to: " + newValue);
             GameEventListener i = (GameEventListener) inspectedObject;
             Object[] o = i.getExpectedValues();
-            System.out.println("GAME-EDITOR-CONTROLLER: GameEventListener has: " + o[0]+ " before change");
+            System.out.println("GAME-EDITOR-CONTROLLER: GameEventListener has: " + o[0] + " before change");
             o[0] = newValue;
             i.setExpectedValues(o);
         });
@@ -442,7 +445,6 @@ public class GameEditorFXMLController implements Initializable {
             i.setExpectedValues(o);
         });
 
-        
         gameEventListener_Expects1_ChoiceBox_Comparasion.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (inspectedObject instanceof GameEventListener) {
                 GameEventListener ev = (GameEventListener) inspectedObject;
@@ -602,9 +604,8 @@ public class GameEditorFXMLController implements Initializable {
             itemsInRoomInspectorListView.getItems().add(i);
         }
         roomInspectorPathsListView.getItems().clear();
-        for (Room p : r.getAllPaths()) {
-            roomInspectorPathsListView.getItems().add(p);
-        }
+        roomInspectorPathsListView.getItems().addAll(r.pathsToString());
+       
         roomInspectorStaticObjectListView.getItems().clear();
         for (StaticObject so : r.getAllStaticObjects()) {
             roomInspectorStaticObjectListView.getItems().add(so);
@@ -624,13 +625,13 @@ public class GameEditorFXMLController implements Initializable {
     }
 
     private void updateGameEventListenerInspector(GameEventListener gevl) {
-        Class[] requiredClasses = GameEvent.getReturnClasses(gevl.getExpectedEventType());
+        Class[] requiredClasses = GameEvent.getValueClassesOf(gevl.getExpectedEventType());
         Object[] expectedValues = gevl.getExpectedValues();
 
         gameEventListener_Expects3_StackPane.setVisible(false);
         gameEventListener_Expects2_StackPane.setVisible(false);
         gameEventListener_Expects1_StackPane.setVisible(false);
-
+        
         switch (requiredClasses.length) {
             case 3:
                 if (expectedValues.length < 3) {
@@ -698,6 +699,7 @@ public class GameEditorFXMLController implements Initializable {
 
     private void updatePlayerInspector(Player player) {
         playerInspectorVBox.setVisible(true);
+        playerCurrentRoomLabel.setText(player.getCurrentRoom().toString());
         playerOptionsListView.getItems().clear();
         playerOptionsListView.getItems().addAll(player.getOptions());
 
@@ -708,7 +710,6 @@ public class GameEditorFXMLController implements Initializable {
 
         playerInventoryListView.getItems().clear();
         playerInventoryListView.getItems().addAll(player.getInventory());
-        
 
     }
 
@@ -716,15 +717,15 @@ public class GameEditorFXMLController implements Initializable {
         gameInspectorVBox.setVisible(true);
         gameInspectorName_TextField.setText(Game.getInstance().getName());
         game_optionBarBg_ImageView.setImage(Game.getInstance().getGUI("optionBarBg"));
-        game_textAreaBg_ImageView.setImage(Game.getInstance().getGUI("textAreaBg"));      
-         
+        game_textAreaBg_ImageView.setImage(Game.getInstance().getGUI("textAreaBg"));
+
         game_RoomNameFontExample_Label.setFont(Font.font(Game.getInstance().getFontRoomName(), FontPosture.REGULAR, USE_PREF_SIZE));
         game_DescriptionFontExample_Text.setFont(Font.font(Game.getInstance().getFontDescription(), FontPosture.REGULAR, USE_PREF_SIZE));
         game_InfoLineFontExample_Text.setFont(Font.font(Game.getInstance().getFontInfoLine(), FontPosture.REGULAR, USE_PREF_SIZE));
         game_ButtonFontExample_Button.setFont(Font.font(Game.getInstance().getFontButton(), FontPosture.REGULAR, USE_PREF_SIZE));
-        
-        game_ButtonFontExample_Button.setStyle("-fx-font: "+Game.getInstance().getFontButton()+";");
-        game_RoomNameFontExample_Label.setStyle("-fx-font: "+Game.getInstance().getFontRoomName()+";");
+
+        game_ButtonFontExample_Button.setStyle("-fx-font: " + Game.getInstance().getFontButton() + ";");
+        game_RoomNameFontExample_Label.setStyle("-fx-font: " + Game.getInstance().getFontRoomName() + ";");
     }
 
     private void updateOptionInspector(Option o) {
@@ -740,11 +741,11 @@ public class GameEditorFXMLController implements Initializable {
 
     //---------BUTTONS----------------------------------------------------------
     @FXML
-    private void TemplateIndianJohn_OnAction(ActionEvent event){
+    private void TemplateIndianJohn_OnAction(ActionEvent event) {
         Game.setInstance(TestGameFactory.create_IndianJohn());
         update();
     }
-    
+
     @FXML
     private void loadButtonClick(ActionEvent event) {
         Game.setInstance(ResourceManager.loadGameDialog());
@@ -765,6 +766,7 @@ public class GameEditorFXMLController implements Initializable {
         } catch (Exception e) {
             System.out.println("Something went wrong with saving the game");
             System.out.println(e.toString());
+            e.printStackTrace();
         }
 
     }
@@ -830,8 +832,8 @@ public class GameEditorFXMLController implements Initializable {
     @FXML
     private void addNewEventListener() {
         Game.getInstance().addGameEventListener("Unnamed_listener",
-                GameEvent.GameEventType.RANDOM_NUMBER, new Object[]{"Listen me."},
-                new ThrowGameEvent(new RandomNumber(10, 0)));
+                GameEvent.GameEventType.CUSTOM_EVENT, new Object[]{"Listen me."},
+                new ThrowGameEvent(new GameEvent(new Object[]{"Custom message"}, GameEvent.GameEventType.CUSTOM_EVENT)));
         update();
     }
 
@@ -900,7 +902,6 @@ public class GameEditorFXMLController implements Initializable {
         db.setContent(cb);
         event.consume();
     }
-    
 
     //--------------ON-DRAG-OVER------------------------------------------------
     @FXML
@@ -960,9 +961,9 @@ public class GameEditorFXMLController implements Initializable {
     private void OptionInStaticObjectListVieOnDragOver(DragEvent event) {
         OptionInRoomListVieOnDragOver(event);
     }
-    
+
     @FXML
-    private void startRoomHBoxOnDragOver(DragEvent event){
+    private void playerStartRoomOnDragOver(DragEvent event) {
         if (event.getDragboard().hasString() && Game.getInstance().getRoomWithToSting(event.getDragboard().getString()) != null) {
             event.acceptTransferModes(TransferMode.ANY);
             event.consume();
@@ -971,12 +972,13 @@ public class GameEditorFXMLController implements Initializable {
 
     //-------------ON-DRAG-DROPPED----------------------------------------------
     @FXML
-    private void startRoomHBoxOnDragDropped(DragEvent event){
+    private void playerStartRoomOnDragDropped(DragEvent event) {
         Game game = Game.getInstance();
         String str = event.getDragboard().getString();
         game.getPlayer().setCurrentRoom(game.getRoomWithToSting(str));
-        update();
+        updateInspector();
     }
+
     @FXML
     private void PlayerInventoryOnDragDropped(DragEvent event) {
         Game game = Game.getInstance();
@@ -1140,15 +1142,27 @@ public class GameEditorFXMLController implements Initializable {
 
         ContextMenu roomPathsContextMenu = new ContextMenu();
         MenuItem deleteRP = new MenuItem("Delete");
+        MenuItem renameRP = new MenuItem("Rename path");
         deleteRP.setOnAction((event) -> {
             Object item = roomInspectorPathsListView.getSelectionModel().getSelectedItem();
-            if (inspectedObject instanceof Room && item instanceof Room) {
+            if (inspectedObject instanceof Room && item instanceof String) {
                 Room temp = (Room) inspectedObject;
-                temp.removePathToRoom((Room) item);
+                temp.removePath(temp.getPathKeyWithToString((String)item));
                 update();
             }
         });
+        renameRP.setOnAction((event) -> {
+            Object item = roomInspectorPathsListView.getSelectionModel().getSelectedItem();
+            if (inspectedObject instanceof Room && item instanceof String) {
+                Room temp = (Room) inspectedObject;
+                String oldKey = temp.getPathKeyWithToString((String)item);
+                temp.renamePath(oldKey, renamePathDialogue(oldKey,temp));
+                update();
+            }
+        });
+
         roomPathsContextMenu.getItems().add(deleteRP);
+        roomPathsContextMenu.getItems().add(renameRP);
         roomInspectorPathsListView.setContextMenu(roomPathsContextMenu);
 
         ContextMenu eventListnerActionsContextMenu = new ContextMenu();
@@ -1278,53 +1292,51 @@ public class GameEditorFXMLController implements Initializable {
 
         roomItemContextMenu.getItems().add(deleteRI);
         itemsInRoomInspectorListView.setContextMenu(roomItemContextMenu);
-        
+
         ContextMenu game_FontListViewContextMenu = new ContextMenu();
         MenuItem setRoomNameFont = new MenuItem("Set to Room name");
         setRoomNameFont.setOnAction((event) -> {
             Object item = game_font_ListView.getSelectionModel().getSelectedItem();
-                Game.getInstance().setFontRoomName((String)item);
-                updateInspector();
+            Game.getInstance().setFontRoomName((String) item);
+            updateInspector();
         });
         game_FontListViewContextMenu.getItems().add(setRoomNameFont);
         MenuItem setDescriptionFont = new MenuItem("Set to description");
         setDescriptionFont.setOnAction((event) -> {
             Object item = game_font_ListView.getSelectionModel().getSelectedItem();
-            
-                Game.getInstance().setFontDescription((String)item);
-                updateInspector();
-            
+            Game.getInstance().setFontDescription((String) item);
+            updateInspector();
+
         });
         game_FontListViewContextMenu.getItems().add(setDescriptionFont);
         MenuItem setInfoLineFont = new MenuItem("Set to Info line");
         setInfoLineFont.setOnAction((event) -> {
             Object item = game_font_ListView.getSelectionModel().getSelectedItem();
 
-                Game.getInstance().setFontInfoLine((String)item);
-                updateInspector();
+            Game.getInstance().setFontInfoLine((String) item);
+            updateInspector();
         });
         game_FontListViewContextMenu.getItems().add(setInfoLineFont);
         MenuItem setButtonFont = new MenuItem("Set to option");
         setButtonFont.setOnAction((event) -> {
             Object item = game_font_ListView.getSelectionModel().getSelectedItem();
-                Game.getInstance().setFontButton((String)item);
-                updateInspector();
+            Game.getInstance().setFontButton((String) item);
+            updateInspector();
         });
         game_FontListViewContextMenu.getItems().add(setButtonFont);
         MenuItem setAllFont = new MenuItem("Set to all");
         setAllFont.setOnAction((event) -> {
             Object item = game_font_ListView.getSelectionModel().getSelectedItem();
-                Game.getInstance().setFontButton((String)item);
-                Game.getInstance().setFontDescription((String)item);
-                Game.getInstance().setFontInfoLine((String)item);
-                Game.getInstance().setFontRoomName((String)item);
-                updateInspector();
+            Game.getInstance().setFontButton((String) item);
+            Game.getInstance().setFontDescription((String) item);
+            Game.getInstance().setFontInfoLine((String) item);
+            Game.getInstance().setFontRoomName((String) item);
+            updateInspector();
         });
         game_FontListViewContextMenu.getItems().add(setAllFont);
-        
+
         game_font_ListView.setContextMenu(game_FontListViewContextMenu);
-        
-        
+
     }
 
     private Action addNewActionDialog() {
@@ -1343,6 +1355,29 @@ public class GameEditorFXMLController implements Initializable {
 
             addActionStage.showAndWait();
             return AddActionController.result;
+        } catch (IOException ex) {
+            Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    private String renamePathDialogue(String originalKey, Room r) {;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ChangePathName.fxml"));
+            Parent renamePathRoot = (Parent) fxmlLoader.load();
+            Stage renamePathStage = new Stage();
+            ChangePathNameController controller = fxmlLoader.<ChangePathNameController>getController();
+            ChangePathNameController.stage = renamePathStage;
+            renamePathStage.initModality(Modality.APPLICATION_MODAL);
+            renamePathStage.setTitle("Rename path");
+
+            Scene scene = new Scene(renamePathRoot);
+            //scene.getStylesheets().add("/CSS/editorStyle.css");
+
+            renamePathStage.setScene(scene);
+            controller.setVariables(r, r.getAllPaths().get(originalKey), originalKey);
+            renamePathStage.showAndWait();
+            return ChangePathNameController.getResult();
         } catch (IOException ex) {
             Logger.getLogger(GameEditorFXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1494,10 +1529,19 @@ public class GameEditorFXMLController implements Initializable {
         ArrayList<Item> is = g.getAllItems();
         ArrayList<Option> os = g.getAllOptions();
 
+        rs.get(0).setName("Start room");
+        rs.get(2).setName("End room");
+        rs.get(1).setName("Mid room");
+        
         rs.get(0).addPath(rs.get(1));
         rs.get(1).addPath(rs.get(0));
         rs.get(1).addPath(rs.get(2));
         rs.get(2).addPath(rs.get(1));
+        
+        rs.get(0).setDescription("This is a Start room");
+        rs.get(1).setDescription("This prolly is Mid room");
+        rs.get(2).setDescription("Mayhaps the End room");
+
 
         rs.get(1).addItem(is.get(0), false);
         rs.get(1).addOption(os.get(2), false);
@@ -1509,14 +1553,6 @@ public class GameEditorFXMLController implements Initializable {
         os.get(2).addAction(new RemoveOptionFromRoom(os.get(2), rs.get(1)));
         os.get(2).addAction(new RemovePathFromRoom(rs.get(1), rs.get(0)));
         os.get(2).addAction(new AddOptionToRoom(os.get(1), rs.get(1)));
-
-        rs.get(0).setName("Start room");
-        rs.get(2).setName("End room");
-        rs.get(1).setName("Mid room");
-
-        rs.get(0).setDescription("This is a Start room");
-        rs.get(1).setDescription("This prolly is Mid room");
-        rs.get(2).setDescription("Mayhaps the End room");
 
         is.get(0).setName("Banana");
         is.get(0).setDescription("Potentially dangersou fruit, rich source of potasium.");
@@ -1541,7 +1577,6 @@ public class GameEditorFXMLController implements Initializable {
                 break;
         }
     }
-    
 
     private void setExpectedValueInspector(Class requiredClass, int expectedValueIndex,
             HBox hbox,
@@ -1584,6 +1619,10 @@ public class GameEditorFXMLController implements Initializable {
                 choiceBox.getItems().clear();
                 choiceBox.getItems().addAll(Game.getInstance().getAllIntancesOf(requiredClass));
                 choiceBox.getSelectionModel().select(0);
+            }
+            if(choiceBox.getItems().contains(expectedValues[expectedValueIndex])){
+                    System.out.println("It has expected value of:" + expectedValues[expectedValueIndex].toString());
+                    choiceBox.getSelectionModel().select(expectedValues[expectedValueIndex]);
             }
         }
     }

@@ -7,8 +7,6 @@ package textgame.structure.actions;
 
 import textgame.structure.Game;
 import textgame.structure.Room;
-import textgame.structure.gameEvents.PlayerEnteredRoom;
-import textgame.structure.gameEvents.PlayerLeftRoom;
 
 /**
  *
@@ -20,8 +18,8 @@ public class MovePlayerToRoom implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        Game.getInstance().throwGameEvent(new PlayerEnteredRoom(whereToMove));
-        Game.getInstance().throwGameEvent(new PlayerLeftRoom(Game.getInstance().getPlayer().getCurrentRoom()));
+        //Game.getInstance().throwGameEvent(new GameEvent(new Object[]{whereToMove},GameEvent.GameEventType.PLAYER_ENTERED_ROOM));
+        //Game.getInstance().throwGameEvent(new GameEvent(new Object[]{Game.getInstance().getPlayer().getCurrentRoom()},GameEvent.GameEventType.PLAYER_LEFT_ROOM));
         Game.getInstance().getPlayer().move(whereToMove);
     }
 

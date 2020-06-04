@@ -7,7 +7,7 @@ package textgame.structure;
 
 import textgame.structure.actions.Action;
 import java.util.ArrayList;
-import textgame.structure.gameEvents.OptionSelected;
+import textgame.structure.gameEvents.GameEvent;
 
 /**
  *
@@ -28,7 +28,8 @@ public class Option implements java.io.Serializable{
     }
     
     public void runActions(){
-        Game.getInstance().throwGameEvent(new OptionSelected(this));
+        Game.getInstance().throwGameEvent(new GameEvent(new Object[]{this},GameEvent.GameEventType.OPTION_SELECTED));
+        System.out.println("-OPTION-:THREW EVENT ACTED");
         for(Action a: actionList){
             a.act();
         }

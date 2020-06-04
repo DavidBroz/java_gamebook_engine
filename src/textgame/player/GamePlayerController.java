@@ -17,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -29,12 +28,8 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 
 /**
@@ -136,9 +131,7 @@ public class GamePlayerController implements Initializable {
             tempButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event2) {
-                    for (Action a : opt.getActionList()) {
-                        a.act();
-                    }
+                    opt.runActions();
                     update();
                 }
             });
@@ -175,6 +168,10 @@ public class GamePlayerController implements Initializable {
         room_label.setText(Game.getInstance().getPlayer().getCurrentRoom().getName());
         info_line.setText(Game.getInstance().getInfo_line());
         description_text.setText(Game.getInstance().getPlayer().getCurrentRoom().getDescription());
+        description_text.setWrapText(true);
+        description_text.setPrefWidth(300);
+        info_line.setWrapText(true);
+        info_line.setPrefWidth(300);
         System.out.println("DO: PopulateObtionBar");
         populateOptionBar();
         //optionBarStackPane.setBorder(brd);

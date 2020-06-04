@@ -126,6 +126,7 @@ public class Game implements java.io.Serializable{
     }
 
     public void throwGameEvent(GameEvent gameEvent) {
+        System.out.println("--GAME--: THROWING EVENT:" + gameEvent.getGameEventType()+"  "+gameEvent.getValues()[0].toString() );
         for (GameEventListener eListener : allGameEventListeners) {
             eListener.listen(gameEvent);
         }
@@ -146,7 +147,7 @@ public class Game implements java.io.Serializable{
     }
     
     public Room addNewRoom(){
-        Room r = new Room("Unamed room","No desctition.");
+        Room r = new Room("Unnamed room","");
         allRooms.add(r);        
         return r; 
     }
@@ -180,7 +181,7 @@ public class Game implements java.io.Serializable{
     }
 
     public Item addNewItem() {
-        Item i = new Item("Unamed item","No desctition.");
+        Item i = new Item("Unnamed item","");
         allItems.add(i);        
         return i; 
     }
@@ -373,6 +374,8 @@ public class Game implements java.io.Serializable{
     }
 
     public Set<String> getGUIKeys(){
+        if(gui==null)return null;
+        if(gui.isEmpty())return null;
         return gui.keySet();
     }
     

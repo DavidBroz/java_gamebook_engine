@@ -13,7 +13,7 @@ import textgame.utility.ResourceManager;
  *
  * @author david
  */
-public class LoadGame implements Action {
+public class LoadGame implements Action, java.io.Serializable {
 
     private boolean isValid = true;
     public LoadGame() {

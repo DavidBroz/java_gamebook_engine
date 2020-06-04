@@ -22,7 +22,7 @@ public class RemovePathFromRoom implements Action, java.io.Serializable{
 
     @Override
     public void act() {
-        fromWhere.removePathToRoom(toWhere);
+        fromWhere.removePathsToRoom(toWhere);
     }
 
     @Override

@@ -18,7 +18,7 @@ public class DescribeStaticObject implements Action, java.io.Serializable {
 
     @Override
     public void act() {
-        Game.getInstance().setInfo_line(whatToDescribe.getName());
+        Game.getInstance().setInfo_line(whatToDescribe.getDesctiption());
     }
 
     public DescribeStaticObject(StaticObject whatToDescribe) {

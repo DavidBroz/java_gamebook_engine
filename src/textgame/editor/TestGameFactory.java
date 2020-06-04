@@ -35,7 +35,7 @@ import textgame.structure.gameEvents.GameEvent;
 public class TestGameFactory {
     public static Game create_IndianJohn(){
         Game result = Game.getInstance(true);
-        
+        result.setName("Test game - Indian John");
         Room velkaHala = result.addNewRoom();
         Room poklad = result.addNewRoom();
         Room arena = result.addNewRoom();
@@ -43,6 +43,7 @@ public class TestGameFactory {
         Room predRuinami = result.addNewRoom();
         Room boj = result.addNewRoom();
         Room gameOverRoom = result.addNewRoom();
+        result.getPlayer().setCurrentRoom(predRuinami);
         
         Player p = result.getPlayer();
         p.addCustomValue("pocet_sosek_na_podstavci", 0);
@@ -89,7 +90,7 @@ public class TestGameFactory {
         prohledejBrasnu.addAction(new RemoveStaticObjectFromRoom(brasna, predRuinami));
         
         StaticObject zaval = result.addNewStaticObject();
-        zaval.setName("Zával");
+        zaval.setName("Zaval");
         zaval.setDesctiption("Vchod do ruin je zavalaný. Se správným nářadím by se to možná dalo křekonat.");
         predRuinami.addStaticObjectToRoom(zaval, false);
         
@@ -108,7 +109,6 @@ public class TestGameFactory {
         prehodLano.addAction(new RemoveOptionFromRoom(prehodLano, predRuinami));
         prehodLano.addAction(new RemoveOptionFromRoom(prokopejZaval, predRuinami));
         
-        
         prokopejZaval.setLabel("Prokopej zával");
         prokopejZaval.addAction(new AddPathFromRoom(predRuinami, velkaHala));
         prokopejZaval.addAction(new PushMessage("Prokopal jsi se skrz zával a nyní lze projít."
@@ -116,6 +116,7 @@ public class TestGameFactory {
         prokopejZaval.addAction(new RemoveItemFromInventory(lopata));
         prokopejZaval.addAction(new RemoveOptionFromRoom(prokopejZaval, predRuinami));
         prokopejZaval.addAction(new RemoveOptionFromRoom(prehodLano, predRuinami));
+        onLopataPickUp.addAction(new AddOptionToRoom(prokopejZaval, predRuinami));
         //---VELKA-HALA---------------------------------------------------------
         velkaHala.setName("Velká hala");
         velkaHala.setDescription("Velká hala zdobéná starodávnými bohy. Jsou tu velké dveře a dva podstavce.");
@@ -137,9 +138,9 @@ public class TestGameFactory {
         
         GameEventListener onPoznamkovyBlockPickUp = result.addNewEventListener();
         onPoznamkovyBlockPickUp.setName("On poznamkovy blok pick up");
-        onLopataPickUp.setExpectedvEventType(GameEvent.GameEventType.ITEM_ADDED_TO_INVENTORY);
-        onLopataPickUp.setExpectedValues(new Object[]{poznamkovyBlok});
-        onLopataPickUp.addAction(new ChangeStaticObjectDescription(velkeDvere,""
+        onPoznamkovyBlockPickUp.setExpectedvEventType(GameEvent.GameEventType.ITEM_ADDED_TO_INVENTORY);
+        onPoznamkovyBlockPickUp.setExpectedValues(new Object[]{poznamkovyBlok});
+        onPoznamkovyBlockPickUp.addAction(new ChangeStaticObjectDescription(velkeDvere,""
                 + "Velké dveře popsané starodávným jazykem."
                 + "Díky poznámkovému bloku jsi byl schopen přeložit nápis:\n\n"
                 + "\"Pouze moudří a silní smí vstoupit.\""));
@@ -199,11 +200,13 @@ public class TestGameFactory {
        Option vezmiMec = result.addNewOption();
        vezmiMec.setLabel("Vezmi meč.");
        vezmiMec.addAction(new MovePlayerToRoom(boj));
+       arena.addOption(vezmiMec, false);
        
        Option bang = result.addNewOption();
-       vezmiMec.setLabel("Bang!");
-       vezmiMec.addAction(new SetCustomValue("bojovnik_zraneni", 3));
-       vezmiMec.addAction(new PushMessage("Vytáhl jsi svůj revolver a dříve než bojovník stihl jednat jsi vystřelil. Bojovník se kácí k zemi."));
+       bang.setLabel("bang");
+       bang.setLabel("Bang!");
+       bang.addAction(new SetCustomValue("bojovnik_zraneni", 3));
+       bang.addAction(new PushMessage("Vytáhl jsi svůj revolver a dříve než bojovník stihl jednat jsi vystřelil. Bojovník se kácí k zemi."));
        
        
        GameEventListener onRevolverPickUP = result.addNewEventListener();
@@ -217,8 +220,11 @@ public class TestGameFactory {
        boj.addStaticObjectToRoom(bojovnik, false);
        
        Option utok = result.addNewOption();
+       utok.setLabel("Utok");
        Option obrana = result.addNewOption();
+       obrana.setLabel("Obrana");
        Option kop = result.addNewOption();
+       kop.setLabel("Kop");
        
        GameEventListener bojovnikKopUtok = result.addNewEventListener();
        GameEventListener bojovnikKopObrana = result.addNewEventListener();
@@ -409,6 +415,8 @@ public class TestGameFactory {
        hanojskeVeze.setDescription("Jsi v místonsti a pře tebou stojí tři velké "
                + "pilíře a na prvním z nich jsou navléknuté 3 kamené obruče různých velikostí. Největší ve spod a nejmenší navrchu."
                + " Všiml jsi, že ty větší levitují ty menší.");
+       hanojskeVeze.addPath(velkaHala);
+       hanojskeVeze.addItem(soskaSovy, false);
        return result;
     }
 }

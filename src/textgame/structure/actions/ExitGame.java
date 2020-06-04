@@ -12,7 +12,7 @@ import textgame.structure.actions.Action;
  *
  * @author david
  */
-public class ExitGame implements Action {
+public class ExitGame implements Action, java.io.Serializable {
 
     private boolean isValid = true;
     public ExitGame() {

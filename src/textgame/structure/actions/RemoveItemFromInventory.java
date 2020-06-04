@@ -13,7 +13,7 @@ import textgame.structure.actions.Action;
  *
  * @author david
  */
-public class RemoveItemFromInventory implements Action {
+public class RemoveItemFromInventory implements Action, java.io.Serializable {
     private Item itemToRemove;
     private boolean isValid;
     

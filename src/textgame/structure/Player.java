@@ -5,16 +5,11 @@
  */
 package textgame.structure;
 
-import textgame.structure.gameEvents.OptionRemovedFromPlayer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import textgame.structure.gameEvents.CustomValueChanged;
-import textgame.structure.gameEvents.ItemAddedToInventory;
-import textgame.structure.gameEvents.ItemRemovedFromInventory;
-import textgame.structure.gameEvents.OptionAddedToPlayer;
-import textgame.structure.gameEvents.PlayerEnteredRoom;
-import textgame.structure.gameEvents.PlayerLeftRoom;
+import textgame.structure.gameEvents.GameEvent;
+
 /**
  *
  * @author David Brož
@@ -32,20 +27,20 @@ public class Player implements java.io.Serializable {
     }
     
     public void move(Room where){
-        Game.getInstance().throwGameEvent(new PlayerLeftRoom(currentRoom));
+        Game.getInstance().throwGameEvent(new GameEvent(new Object[]{currentRoom},GameEvent.GameEventType.PLAYER_LEFT_ROOM));
         currentRoom = where;
-        Game.getInstance().throwGameEvent(new PlayerEnteredRoom(where));  
+        Game.getInstance().throwGameEvent(new GameEvent(new Object[]{currentRoom},GameEvent.GameEventType.PLAYER_ENTERED_ROOM));  
         Game.getInstance().setCurrentImage(currentRoom.getImage());
     }
     
-    public void addItem(Item item_to_add,boolean throwEvent){
-        if(throwEvent)Game.getInstance().throwGameEvent(new ItemAddedToInventory(item_to_add));
-        inventory.add(item_to_add);
+    public void addItem(Item item,boolean throwEvent){
+        if(throwEvent)Game.getInstance().throwGameEvent(new GameEvent(new Object[]{item},GameEvent.GameEventType.ITEM_ADDED_TO_INVENTORY));
+        inventory.add(item);
     }
-    public void removeItem(Item itemToRemove, boolean throwEvent){
-        if(inventory.contains(itemToRemove)){
-            inventory.remove(itemToRemove);
-            if(throwEvent)Game.getInstance().throwGameEvent(new ItemRemovedFromInventory(itemToRemove));
+    public void removeItem(Item item, boolean throwEvent){
+        if(inventory.contains(item)){
+            inventory.remove(item);
+            if(throwEvent)Game.getInstance().throwGameEvent(new GameEvent(new Object[]{item},GameEvent.GameEventType.ITEM_REMOVED_FROM_INVENTORY));
         }
     }
     public boolean hasItem(Item item){
@@ -77,7 +72,7 @@ public class Player implements java.io.Serializable {
         inventory.add(item);
         if(!throwEvent)return;
         Game.getInstance().removeItemFromRooms(item);
-        Game.getInstance().throwGameEvent(new ItemAddedToInventory(item));
+        Game.getInstance().throwGameEvent(new GameEvent(new Object[]{item},GameEvent.GameEventType.ITEM_ADDED_TO_INVENTORY));
     }
     public Integer getCtustomValue(String key){
         return customValues.get(key);
@@ -101,7 +96,10 @@ public class Player implements java.io.Serializable {
     
     public void setCustomValue(String valueName, Integer value, boolean throwEvent) {
         if (throwEvent) {
-            Game.getInstance().throwGameEvent(new CustomValueChanged(valueName,value));
+            Object[] temp = new Object [2];
+            temp[0]=valueName;
+            temp[1]=value;
+            Game.getInstance().throwGameEvent(new GameEvent(temp,GameEvent.GameEventType.CUSTOM_VALUE_CHANGED));
         }
         customValues.replace(valueName, value);
     }
@@ -116,14 +114,14 @@ public class Player implements java.io.Serializable {
     }
 
     public void addOption(Option option, boolean throwEvent) {
-        if(throwEvent)Game.getInstance().throwGameEvent(new OptionAddedToPlayer(option));
+        if(throwEvent)Game.getInstance().throwGameEvent(new GameEvent(new Object[]{option},GameEvent.GameEventType.OPTION_ADDED_TO_PLAYER));
         option.addReferencedBy(this);
         playerOptions.add(option);
     }
 
     public void removeOption(Option option , boolean throwEvent) {
         if(playerOptions.contains(option)){
-            if(throwEvent)Game.getInstance().throwGameEvent(new OptionRemovedFromPlayer(option));
+            if(throwEvent)Game.getInstance().throwGameEvent(new GameEvent(new Object[]{option},GameEvent.GameEventType.OPTION_REMOVED_FROM_PLAYER));
             playerOptions.remove(option);
         }
     }

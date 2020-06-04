@@ -99,10 +99,12 @@ public class ResourceManager {
         try ( ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(Paths.get(dirPath + "\\" + projectName + "\\" + projectName + ".game")))) {
             oos.writeObject(data);
             ObjectOutputStream oos2;
-
-            for (String key : Game.getInstance().getGUIKeys()) {
-                oos2 = new ObjectOutputStream(Files.newOutputStream(Paths.get(dirPath + "\\" + projectName + "\\Images\\GUI\\" + key + ".jpg")));
-                Game.getInstance().writeImage(oos2, key);
+            
+            if(Game.getInstance().getGUIKeys()!=null){
+                for (String key : Game.getInstance().getGUIKeys()) {
+                    oos2 = new ObjectOutputStream(Files.newOutputStream(Paths.get(dirPath + "\\" + projectName + "\\Images\\GUI\\" + key + ".jpg")));
+                    Game.getInstance().writeImage(oos2, key);
+                }
             }
 
             for (Room r : Game.getInstance().getAllRooms()) {

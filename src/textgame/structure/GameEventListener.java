@@ -9,7 +9,7 @@ import textgame.structure.gameEvents.GameEvent;
 import java.util.ArrayList;
 import textgame.structure.actions.Action;
 import textgame.structure.gameEvents.GameEvent.GameEventType;
-import textgame.structure.gameEvents.GameEventListenerActed;
+
 
 /**
  *
@@ -47,42 +47,48 @@ public class GameEventListener implements java.io.Serializable {
     void listen(GameEvent gameEvent) {
         
         hasExpectedValue = true;
-        System.out.println("-GAME-EVENT-LISTENER-: Expects GameEvent: "+expectedEventType);
-        System.out.println("-GAME-EVENT-LISTENER-: Got GameEvent: "+gameEvent.getEventType());
-        if (!enabled ||gameEvent.getEventType()!= expectedEventType) {
+        //System.out.println("-GAME-EVENT-LISTENER-: Expects GameEvent: "+expectedEventType);
+        //System.out.println("-GAME-EVENT-LISTENER-: Got GameEvent: "+gameEvent.getGameEventType());
+        if (!enabled ||gameEvent.getGameEventType()!= expectedEventType) {
             return;
         }
-        System.out.print("Expected values values: ");
+        /*System.out.print("-GAME-EVENT-LISTENER-:Expected values values: ");
         for (int i = 0; i < expectedValues.length; i++) {
             System.out.print(expectedValues[i]+": " +expectedValues[i].getClass().toGenericString()+", ");
         }
-        System.out.println("");
-        System.out.print("Got values values: ");
+        System.out.print("-GAME-EVENT-LISTENER-:Got values values: ");
         for (int i = 0; i < gameEvent.getValues().length; i++) {
             System.out.print(gameEvent.getValues()[i]+": " +gameEvent.getValues()[i].getClass().toGenericString()+", ");
         }
-        System.out.println("");
+        //System.out.println("");*/
         
         for (int i = 0; i < expectedValues.length; i++) {
             if (i >= gameEvent.getValues().length) {
                 break;
             }
             if (gameEvent.getValues()[i] instanceof Integer && expectedValues[i] instanceof Integer ) {
+               System.out.println("--GAME-EV-L: GOT THE INTEGER");
                hasExpectedValue= comparatorTest((Integer) gameEvent.getValues()[i], (Integer)expectedValues[i]);
-               if(!hasExpectedValue)break;
+               System.out.println("--GAME-EV-L: PASSED TEST "+hasExpectedValue);
+               break;
             }
-            if (!expectedValues[i].equals(gameEvent.getValues()[i])) {
+            else if (!expectedValues[i].equals(gameEvent.getValues()[i])) {
                 hasExpectedValue = false;
                 break;
             }
         }
         if (hasExpectedValue) {
-            System.out.println("EVENT-LISTENER: Acting.");
+            if(gameEvent.getGameEventType()==GameEventType.CUSTOM_VALUE_CHANGED)System.out.println("EVENT-LISTENER:"+name+" Acting. Got"+ gameEvent.getGameEventType()+"  "+gameEvent.getValues()[0].toString()+"  "+gameEvent.getValues()[1].toString());
+            System.out.println("EVENT-LISTENER:"+name+" Acting. Got 2 "+ gameEvent.getGameEventType()+"  "+gameEvent.getValues()[0].toString());
             act();
+            return ;
         }
+        if(gameEvent.getGameEventType()==GameEventType.CUSTOM_VALUE_CHANGED)System.out.println("EVENT-LISTENER:"+name+" Got "+ gameEvent.getGameEventType()+"  "+gameEvent.getValues()[0].toString()+"  "+gameEvent.getValues()[1].toString());
+        return;
     }
 
     private boolean comparatorTest(Integer tempInt, Integer expectedValue) {
+        System.out.println("--GEL--: COMPARATOR " +numberComparator +" numbers "+ tempInt +"  "+ expectedValue);
         switch (numberComparator) {
             case ANY:
                 return true;
@@ -157,6 +163,7 @@ public class GameEventListener implements java.io.Serializable {
     }
 
     public void setExpectedValues(Object[] expectedValue) {
+        System.out.println("-GAME-EVENT-LISTENER-: Values set to:"+expectedValue.toString());
         this.expectedValues = expectedValue;
     }
 
@@ -169,7 +176,7 @@ public class GameEventListener implements java.io.Serializable {
     }
 
     private void act() {
-        Game.getInstance().throwGameEvent(new GameEventListenerActed(this));
+        Game.getInstance().throwGameEvent(new GameEvent(new Object[]{this},GameEventType.GAME_EVENT_LISTENER_ACTED));
         for (Action a : actions) {
             a.act();
         }

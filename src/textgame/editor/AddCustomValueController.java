@@ -53,7 +53,7 @@ public class AddCustomValueController implements Initializable {
                 warning_label.setText("Name must not be empty");
             } else if (Game.getInstance().getPlayer().hasCustomValue(name_TextField.getText())) {
                 isOK = false;
-                warning_label.setText("A custom value with name " + name_TextField.getText() + " alredy exists.");
+                warning_label.setText("A custom value with name \"" + name_TextField.getText() + "\" already exists.");
             } else {
                 warning_label.setText("");
                 isOK = true;

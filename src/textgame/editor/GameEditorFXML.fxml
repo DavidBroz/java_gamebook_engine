@@ -22,8 +22,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="textgame.editor.GameEditorFXMLController">
     <stylesheets>
@@ -428,19 +426,8 @@
                                           <VBox prefHeight="200.0" prefWidth="100.0">
                                              <children>
                                                 <Label fx:id="game_RoomNameFontExample_Label" text="Room name" />
-                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
-                                                   <children>
-                                                      <Text fx:id="game_DescriptionFontExample_Text" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a very long text that is here to represent a description of the room so you have a better idea how the font looks when it is a long text like this one." />
-                                                   </children>
-                                                </TextFlow>
-                                                <TextFlow prefHeight="200.0" prefWidth="200.0">
-                                                   <children>
-                                                      <Text fx:id="game_InfoLineFontExample_Text" strokeType="OUTSIDE" strokeWidth="0.0" text="Info line:">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Text>
-                                                   </children></TextFlow>
+                                                <Label fx:id="game_InfoLineFontExample_Text" text="Info line:" />
+                                                <Label fx:id="game_DescriptionFontExample_Text" text="This is a very long text that is here to represent a description of the room so you have a better idea how the font looks when it is a long text like this one." />
                                                 <Button fx:id="game_ButtonFontExample_Button" mnemonicParsing="false" text="Example button" />
                                              </children>
                                           </VBox>
@@ -462,8 +449,8 @@
                               </Label>
                               <HBox fx:id="startRoom_HBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                                  <children>
-                                    <Label text="Start room" underline="true" />
-                                    <Label text="Unnamed_room" />
+                                    <Label onDragDropped="#playerStartRoomOnDragDropped" onDragOver="#playerStartRoomOnDragOver" text="Start room" underline="true" />
+                                    <Label fx:id="playerCurrentRoomLabel" onDragDropped="#playerStartRoomOnDragDropped" onDragOver="#playerStartRoomOnDragOver" text="Unnamed_room" />
                                  </children>
                               </HBox>
                               <VBox>
